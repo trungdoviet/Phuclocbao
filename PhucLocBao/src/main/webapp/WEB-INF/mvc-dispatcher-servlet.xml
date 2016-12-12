@@ -18,5 +18,6 @@
 			<value>.jsp</value>
 		</property>
 	</bean>
+	<import resource="springBeanConfig.xml"/>
 
 </beans>

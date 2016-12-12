@@ -7,33 +7,60 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+
+import vn.com.phuclocbao.delegator.LoginDelegator;
+import vn.com.phuclocbao.viewbean.LoginBean;
+
+
 @Controller
-public class LoginController {
+public class LoginController
+{
+		@Autowired
+		private LoginDelegator loginDelegate;
 
-	private static int counter = 0;
-	private static final String VIEW_INDEX = "index";
-	private final static org.slf4j.Logger logger = LoggerFactory.getLogger(LoginController.class);
+		@RequestMapping(value="/index",method=RequestMethod.GET)
+		public ModelAndView displayLogin(HttpServletRequest request, HttpServletResponse response, LoginBean loginBean)
+		{
+			ModelAndView model = new ModelAndView("index");
+			//LoginBean loginBean = new LoginBean();
+			model.addObject("loginBean", loginBean);
+			return model;
+		}
+		@RequestMapping(value="/login",method=RequestMethod.POST)
+		public ModelAndView executeLogin(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("loginBean")LoginBean loginBean)
+		{
+				ModelAndView model= null;
+				try
+				{
+						boolean isValidUser = loginDelegate.isValidUser(loginBean.getUsername(), loginBean.getPassword());
+						if(isValidUser)
+						{
+								System.out.println("User Login Successful");
+								request.setAttribute("loggedInUser", loginBean.getUsername());
+								model = new ModelAndView("home");
+						}
+						else
+						{
+								model = new ModelAndView("login");
+								request.setAttribute("message", "Invalid credentials!!");
+						}
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String welcome(ModelMap model) {
+				}
+				catch(Exception e)
+				{
+						e.printStackTrace();
+				}
 
-		model.addAttribute("message", "Welcome");
-		model.addAttribute("counter", ++counter);
-		logger.debug("[welcome] counter : {}", counter);
-
-		// Spring uses InternalResourceViewResolver and return back index.jsp
-		return VIEW_INDEX;
-
-	}
-
-	@RequestMapping(value = "/{name}", method = RequestMethod.GET)
-	public String welcomeName(@PathVariable String name, ModelMap model) {
-
-		model.addAttribute("message", "Welcome " + name);
-		model.addAttribute("counter", ++counter);
-		logger.debug("[welcomeName] counter : {}", counter);
-		return VIEW_INDEX;
-
-	}
-
+				return model;
+		}
 }
