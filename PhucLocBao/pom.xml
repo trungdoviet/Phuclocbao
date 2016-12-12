@@ -65,6 +65,12 @@
 			<artifactId>jstl</artifactId>
 			<version>${jstl.version}</version>
 		</dependency>
+		<!-- @Inject -->
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
   </dependencies>
   <build>
     <finalName>PhucLocBao</finalName>
@@ -100,7 +106,7 @@
 			<artifactId>tomcat7-maven-plugin</artifactId>
 			<version>2.2</version>
 			<configuration>
-				<path>/CounterWebApp</path>
+				<path>/</path>
 			</configuration>
 		  </plugin>
 
