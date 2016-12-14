@@ -28,16 +28,17 @@ public class LoginController
 		@Autowired
 		private LoginDelegator loginDelegate;
 
-		@RequestMapping(value="/index",method=RequestMethod.GET)
+		@RequestMapping(value="/",method=RequestMethod.GET)
 		public ModelAndView displayLogin(HttpServletRequest request, HttpServletResponse response, LoginBean loginBean)
 		{
 			ModelAndView model = new ModelAndView("index");
-			//LoginBean loginBean = new LoginBean();
 			model.addObject("loginBean", loginBean);
 			return model;
 		}
+		
 		@RequestMapping(value="/login",method=RequestMethod.POST)
-		public ModelAndView executeLogin(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("loginBean")LoginBean loginBean)
+		public ModelAndView executeLogin(HttpServletRequest request, HttpServletResponse response, 
+														@ModelAttribute("loginBean")LoginBean loginBean)
 		{
 				ModelAndView model= null;
 				try
