@@ -6,9 +6,13 @@
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
    http://www.springframework.org/schema/context
    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-
-
-
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+    
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="messages" />
+    </bean>
+    
 	<bean id="loginDelegator" class="vn.com.phuclocbao.delegator.LoginDelegator">
 		<property name="userService" ref="userService"></property>
 	</bean>
@@ -28,5 +32,5 @@
 		<property name="username" value="root" />
 		<property name="password" value="toor" />
 	</bean>  -->
-
+	<bean id="loginUserValidator" class="vn.com.phuclocbao.validator.LoginUserValidator" />
 </beans>

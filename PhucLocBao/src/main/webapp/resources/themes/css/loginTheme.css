@@ -147,3 +147,7 @@ body{
 ::-moz-input-placeholder{
    color: rgba(255,255,255,0.6);
 }
+.error{
+     color: #ff0000;
+     font-weight: bold;
+}

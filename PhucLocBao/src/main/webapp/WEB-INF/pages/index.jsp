@@ -31,8 +31,10 @@
 			<div class="login">
 					<font color="red">${message}</font>
 					<form:form id="loginForm" method="post" action="login" modelAttribute="loginBean" autocomplete="off">
-						<form:input type="text" placeholder="username" name="username" path=""/><br>
-						<form:input type="password" placeholder="password" name="password" path="" autocomplete="new-password"/><br>
+						<form:input type="text" placeholder="username" name="username" path="username"/><br>
+						<form:errors path="username" cssClass="error" />
+						<form:input type="password" placeholder="password" name="password" path="password" autocomplete="new-password"/><br>
+						<form:errors path="password" cssClass="error" />
 						<input type="submit" value="Login">
 					</form:form>
 			</div>
