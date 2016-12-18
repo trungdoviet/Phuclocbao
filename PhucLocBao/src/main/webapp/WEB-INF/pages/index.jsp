@@ -20,12 +20,12 @@
 			</div>
 			<br>
 			<div class="login">
-					<font class="error">${message}</font>
 					<form:form id="loginForm" method="post" action="login" modelAttribute="loginBean" autocomplete="off">
 						<form:input type="text" placeholder="username" name="username" path="username"/><br>
 						<form:errors path="username" cssClass="error" />
 						<form:input type="password" placeholder="password" name="password" path="password" autocomplete="new-password"/><br>
 						<form:errors path="password" cssClass="error" />
+						<font class="error">${message}</font>
 						<input type="submit" value="Login">
 					</form:form>
 			</div>

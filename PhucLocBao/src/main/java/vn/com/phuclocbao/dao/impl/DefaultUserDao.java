@@ -1,17 +1,20 @@
 package vn.com.phuclocbao.dao.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import vn.com.phuclocbao.dao.BaseDaoJpaImpl;
 import vn.com.phuclocbao.dao.UserDao;
+import vn.com.phuclocbao.dto.UserAccountDto;
 import vn.com.phuclocbao.entity.UserAccount;
 @Repository
 @Transactional
@@ -37,6 +40,17 @@ public class DefaultUserDao extends BaseDaoJpaImpl<UserAccount, Long> implements
 		@Override
 		public EntityManager getEm() {
 			return manager;
+		}
+
+
+		@Override
+		public UserAccount getUserByUsername(String username) throws PersistenceException {
+			if(StringUtils.isNotEmpty(username)){
+				TypedQuery<UserAccount> query = getEm().createNamedQuery("getUserByUsername", UserAccount.class);
+				query.setParameter("username", username);
+				return query.getSingleResult();
+			}
+			return null;
 		}
 
 }

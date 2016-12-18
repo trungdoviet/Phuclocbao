@@ -1,11 +1,16 @@
 package vn.com.phuclocbao.entity;
 
-import java.io.Serializable;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
+import vn.com.phuclocbao.entity.base.IBaseEntity;
 
 @javax.persistence.Entity
 @javax.persistence.Table(name="tblUser")
-public class UserAccount implements Serializable
-{
+@NamedQueries({
+	@NamedQuery(name = "getUserByUsername", query = "SELECT user FROM UserAccount user WHERE user.username = :username")
+})
+public class UserAccount implements IBaseEntity {
   /** SerialVersionUID */
   private static final long serialVersionUID = 8710777840096998292L;
 

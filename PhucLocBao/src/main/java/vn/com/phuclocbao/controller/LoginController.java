@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 
+import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,14 +24,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 import vn.com.phuclocbao.delegator.LoginDelegator;
+import vn.com.phuclocbao.dto.UserAccountDto;
 import vn.com.phuclocbao.service.UserService;
+import vn.com.phuclocbao.util.MessageBundleUtil;
 import vn.com.phuclocbao.validator.LoginUserValidator;
 import vn.com.phuclocbao.viewbean.LoginBean;
 
 
 @Controller
 public class LoginController {
-	private static org.apache.log4j.Logger logger = Logger.getLogger(LoginController.class);
+		private static org.apache.log4j.Logger logger = Logger.getLogger(LoginController.class);
 		@Autowired
 		private LoginDelegator loginDelegate;
 		@Autowired
@@ -61,14 +65,14 @@ public class LoginController {
 				try{
 						boolean isValidUser = loginDelegate.isValidUser(loginBean.getUsername(), loginBean.getPassword());
 						if(isValidUser){
-								System.out.println("User Login Successful");
 								request.setAttribute("loggedInUser", loginBean.getUsername());
+								UserAccountDto userAccount = loginDelegate.getUserService().getUserByUsername(loginBean.getUsername());
+								System.out.println("User Login Successful with username:" + userAccount.getUsername());
 								model = new ModelAndView("home");
 						}
-						else
-						{
+						else {
 								model = new ModelAndView("index");
-								request.setAttribute("message", "Invalid credentials!!");
+								request.setAttribute("message", MessageBundleUtil.getMessage("error.userLoginFailed"));
 						}
 
 				}catch(Exception e) {

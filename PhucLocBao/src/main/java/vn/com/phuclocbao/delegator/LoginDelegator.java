@@ -13,18 +13,15 @@ public class LoginDelegator
 		@Autowired
 		private UserService userService;
 
-		public UserService getUserService()
-		{
+		public UserService getUserService(){
 				return this.userService;
 		}
 
-		public void setUserService(UserService userService)
-		{
+		public void setUserService(UserService userService){
 				this.userService = userService;
 		}
 
-		public boolean isValidUser(String username, String password) 
-    {
+		public boolean isValidUser(String username, String password)   {
 		    return userService.isValidUser(username, password);
     }
 }

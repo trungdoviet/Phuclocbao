@@ -1,10 +1,10 @@
 package vn.com.phuclocbao.entity;
 
-import java.io.Serializable;
+import vn.com.phuclocbao.entity.base.IBaseEntity;
 
 @javax.persistence.Entity
 @javax.persistence.Table(name="tblCompanyType")
-public class CompanyType implements Serializable
+public class CompanyType implements IBaseEntity
 {
   /** SerialVersionUID */
   private static final long serialVersionUID = 4464142490188581885L;
