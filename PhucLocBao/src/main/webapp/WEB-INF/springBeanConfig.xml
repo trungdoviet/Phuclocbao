@@ -1,11 +1,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
    http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
    http://www.springframework.org/schema/context
-   http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+   http://www.springframework.org/schema/tx 
+   http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
     <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
     
@@ -25,12 +28,38 @@
 		<!-- <property name="dataSource" ref="dataSource"></property> -->
 	</bean>
 
-	 <!-- <bean id="dataSource"
+	  <bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/jcg" />
+		<property name="url" value="jdbc:mysql://localhost:3306/phuclocbao" />
 		<property name="username" value="root" />
-		<property name="password" value="toor" />
-	</bean>  -->
+		<property name="password" value="123456789" />
+	</bean>  
+	<bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+	<bean id="entityManagerFactoryBean"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="plb_unit" />
+        <property name="dataSource" ref="dataSource" />
+       <!--  <property name="persistenceXmlLocation" value="META-INF/persistence.xml" /> -->
+         <property name="packagesToScan" value="vn.com.phuclocbao.entity" />
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+        <property name="jpaDialect" >
+        	<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"></bean>
+        </property>
+        <property name="jpaProperties">
+         <props>
+            <prop key="hibernate.hbm2ddl.auto">validate</prop>
+            <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+            <prop key="hibernate.show_sql">true</prop>
+         </props>
+      </property>
+    </bean>
+	 <bean id="jpaVendorAdapter"
+        class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+    </bean>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+      <property name="entityManagerFactory" ref="entityManagerFactoryBean" />
+   </bean>
+	<!-- Validator -->
 	<bean id="loginUserValidator" class="vn.com.phuclocbao.validator.LoginUserValidator" />
 </beans>

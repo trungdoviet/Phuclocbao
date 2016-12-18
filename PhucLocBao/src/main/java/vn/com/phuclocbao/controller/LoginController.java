@@ -1,5 +1,6 @@
 package vn.com.phuclocbao.controller;
 
+import org.apache.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,17 +22,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 import vn.com.phuclocbao.delegator.LoginDelegator;
+import vn.com.phuclocbao.service.UserService;
 import vn.com.phuclocbao.validator.LoginUserValidator;
 import vn.com.phuclocbao.viewbean.LoginBean;
 
 
 @Controller
-public class LoginController
-{
+public class LoginController {
+	private static org.apache.log4j.Logger logger = Logger.getLogger(LoginController.class);
 		@Autowired
 		private LoginDelegator loginDelegate;
 		@Autowired
 		LoginUserValidator validator;
+		
 		
 		@RequestMapping(value="/",method=RequestMethod.GET)
 		public ModelAndView displayLogin(HttpServletRequest request, HttpServletResponse response, LoginBean loginBean)
@@ -55,11 +58,9 @@ public class LoginController
 			        return model;
 			    }
 			    
-				try
-				{
+				try{
 						boolean isValidUser = loginDelegate.isValidUser(loginBean.getUsername(), loginBean.getPassword());
-						if(isValidUser)
-						{
+						if(isValidUser){
 								System.out.println("User Login Successful");
 								request.setAttribute("loggedInUser", loginBean.getUsername());
 								model = new ModelAndView("home");
@@ -70,9 +71,7 @@ public class LoginController
 								request.setAttribute("message", "Invalid credentials!!");
 						}
 
-				}
-				catch(Exception e)
-				{
+				}catch(Exception e) {
 						e.printStackTrace();
 				}
 

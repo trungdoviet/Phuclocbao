@@ -12,15 +12,6 @@
    		 
 	</head>
 	<body>
-		<%-- <font color="red">${message}</font>
-		<form:form id="loginForm" method="post" action="login" modelAttribute="loginBean">
-
-			<form:label path="username">Enter your user-name</form:label>
-			<form:input id="username" name="username" path="" /><br>
-			<form:label path="username">Please enter your password</form:label>
-			<form:password id="password" name="password" path="" /><br>
-			<input type="submit" value="Submit" /> --%>
-			
 		<div class="body"></div>
 		<div class="grad"></div>
 		<div class="wrapper">
@@ -29,7 +20,7 @@
 			</div>
 			<br>
 			<div class="login">
-					<font color="red">${message}</font>
+					<font class="error">${message}</font>
 					<form:form id="loginForm" method="post" action="login" modelAttribute="loginBean" autocomplete="off">
 						<form:input type="text" placeholder="username" name="username" path="username"/><br>
 						<form:errors path="username" cssClass="error" />
