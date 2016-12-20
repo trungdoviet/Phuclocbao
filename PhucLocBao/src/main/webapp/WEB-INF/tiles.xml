@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">  
+
+<tiles-definitions>  
+ 
+   <!-- Base Definition -->
+   <definition name="base-definition" 
+       template="/WEB-INF/pages/layouts/defaultLayout.jsp">  
+       <put-attribute name="title" value="" />  
+       <put-attribute name="header" value="/WEB-INF/pages/templates/defaultHeader.jsp" />  
+       <put-attribute name="menu" value="/WEB-INF/pages/templates/defaultMenu.jsp" />  
+       <put-attribute name="body" value="" />  
+       <put-attribute name="footer" value="/WEB-INF/pages/templates/defaultFooter.jsp" />  
+   </definition>  
+ 
+   <!-- Home Page -->
+   <definition name="home" extends="base-definition">  
+       <put-attribute name="title" value="Welcome" />  
+       <put-attribute name="body" value="/WEB-INF/pages/home.jsp" />  
+   </definition>  
+
+   <!-- Contracts Page -->
+   <definition name="contracts" extends="base-definition">  
+       <put-attribute name="title" value="contracts" />  
+       <put-attribute name="body" value="/WEB-INF/pages/contracts.jsp" />  
+   </definition> 
+   <!-- login definition --> 
+ <definition name="index" 
+       template="/WEB-INF/pages/layouts/loginPage.jsp">  
+       <put-attribute name="title" value="Phuc Loc Bao - Trang Dang nhap" />  
+       <put-attribute name="body" value="/WEB-INF/pages/index.jsp" />
+   </definition>  
+</tiles-definitions>

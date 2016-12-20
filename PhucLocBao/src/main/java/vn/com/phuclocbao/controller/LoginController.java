@@ -20,7 +20,6 @@ import vn.com.phuclocbao.util.MessageBundleUtil;
 import vn.com.phuclocbao.validator.LoginUserValidator;
 import vn.com.phuclocbao.viewbean.LoginBean;
 
-
 @Controller
 public class LoginController {
 		private static org.apache.log4j.Logger logger = Logger.getLogger(LoginController.class);
@@ -68,8 +67,8 @@ public class LoginController {
 				try{
 						boolean isValidUser = loginDelegate.isValidUser(loginBean.getUsername(), loginBean.getPassword());
 						if(isValidUser){
-								request.setAttribute("loggedInUser", loginBean.getUsername());
 								UserAccountDto userAccount = loginDelegate.getUserService().getUserByUsername(loginBean.getUsername());
+								request.setAttribute("loggedInUser", userAccount.getFullname());
 								plbSession = new PLBSession();
 								plbSession.setUserAccount(userAccount);
 								request.getSession().setAttribute(PLBSession.SESSION_ATTRIBUTE_KEY, plbSession);
