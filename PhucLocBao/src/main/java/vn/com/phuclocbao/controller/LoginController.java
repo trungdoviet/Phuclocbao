@@ -29,7 +29,7 @@ public class LoginController {
 		LoginUserValidator validator;
 	
 		
-		@RequestMapping(value="/",method=RequestMethod.GET)
+		@RequestMapping(value={"/", "/index"},method=RequestMethod.GET)
 		public ModelAndView displayLogin(HttpServletRequest request, HttpServletResponse response, LoginBean loginBean){
 			ModelAndView model = null;
 			PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
@@ -85,5 +85,14 @@ public class LoginController {
 				}
 
 				return model;
+		}
+		
+		@RequestMapping(value="/logout",method=RequestMethod.GET)
+		public ModelAndView performLogout(HttpServletRequest request, HttpServletResponse response, LoginBean loginBean){
+			ModelAndView model = null;
+			request.getSession().removeAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+			System.out.println("User logout");
+			model = new ModelAndView("redirect:/index");
+			return model;
 		}
 }
