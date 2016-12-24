@@ -6,9 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.enums.MenuDefinition;
+import vn.com.phuclocbao.viewbean.ContractBean;
 
 
 
@@ -31,10 +33,12 @@ public class NavigationController {
 	}
 	
 	@RequestMapping(value = { "/newContract"}, method = RequestMethod.GET)
-	public String openNewContract(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+	public ModelAndView openNewContract(HttpServletRequest request, HttpServletResponse response, ContractBean contractBean) {
+		ModelAndView model = new ModelAndView("newContract");
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.NEW_CONTRACT);
-		return "newContract";
+		model.addObject("contractBean", contractBean);
+		return model;
 	}
 
 }

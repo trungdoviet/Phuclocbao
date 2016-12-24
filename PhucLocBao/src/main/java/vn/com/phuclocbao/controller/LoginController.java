@@ -34,7 +34,7 @@ public class LoginController {
 			ModelAndView model = null;
 			PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 			if(plbSession != null && plbSession.getUserAccount() != null){
-				model = new ModelAndView("home");
+				model = new ModelAndView("redirect:/home");
 				request.setAttribute("loggedInUser", plbSession.getUserAccount().getFullname());
 			} else {
 				model = new ModelAndView("index");

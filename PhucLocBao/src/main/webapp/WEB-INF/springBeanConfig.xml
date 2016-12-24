@@ -62,4 +62,5 @@
    </bean>
 	<!-- Validator -->
 	<bean id="loginUserValidator" class="vn.com.phuclocbao.validator.LoginUserValidator" />
+	<bean id="newContractValidator" class="vn.com.phuclocbao.validator.NewContractValidator" />
 </beans>

@@ -9,7 +9,18 @@ public class ContractDto implements IBaseDTO
    * Identifier
    */
   private java.lang.Integer id;
-
+  private CompanyDto company;
+  private java.lang.Double totalAmount;
+  private java.lang.Double feeADay;
+  private java.util.Date startDate;
+  private java.util.Date expireDate;
+  private java.lang.Integer periodOfPayment;
+  private String notifyBeforePeriod;
+  private java.lang.String contractType;
+  private CustomerDto customer;
+  private TransportOwnerDto owner;
+  private java.util.List<PaymentScheduleDto> paymentSchedules;
+  private java.lang.String note;
   /**
    * Gets the field id.
    * @return the value of the field id; may be null.
@@ -27,11 +38,6 @@ public class ContractDto implements IBaseDTO
   {
     id = _id;
   }
-
-  private CompanyDto company;
-
-  
-  private java.lang.Double totalAmount;
 
   /**
    * Gets the field totalAmount.
@@ -51,7 +57,7 @@ public class ContractDto implements IBaseDTO
     totalAmount = _totalAmount;
   }
 
-  private java.lang.Double feeADay;
+ 
 
   /**
    * Gets the field feeADay.
@@ -71,8 +77,6 @@ public class ContractDto implements IBaseDTO
     feeADay = _feeADay;
   }
 
-  private java.util.Date startDate;
-
   /**
    * Gets the field startDate.
    * @return the value of the field startDate; may be null.
@@ -91,7 +95,7 @@ public class ContractDto implements IBaseDTO
     startDate = _startDate;
   }
 
-  private java.util.Date expireDate;
+  
 
   /**
    * Gets the field expireDate.
@@ -111,7 +115,7 @@ public class ContractDto implements IBaseDTO
     expireDate = _expireDate;
   }
 
-  private java.lang.Integer periodOfPayment;
+  
 
   /**
    * Gets the field periodOfPayment.
@@ -131,7 +135,7 @@ public class ContractDto implements IBaseDTO
     periodOfPayment = _periodOfPayment;
   }
 
-  private String notifyBeforePeriod;
+  
 
   /**
    * Gets the field notifyBeforePeriod.
@@ -151,7 +155,6 @@ public class ContractDto implements IBaseDTO
     notifyBeforePeriod = _notifyBeforePeriod;
   }
 
-  private java.lang.String note;
 
   /**
    * Gets the field note.
@@ -171,7 +174,7 @@ public class ContractDto implements IBaseDTO
     note = _note;
   }
 
-  private java.lang.String contractType;
+  
 
   /**
    * Gets the field contractType.
@@ -190,17 +193,6 @@ public class ContractDto implements IBaseDTO
   {
     contractType = _contractType;
   }
-
-  private CustomerDto customer;
-
-  
-
-  private TransportOwnerDto owner;
-
-  
-
-  private java.util.List<PaymentScheduleDto> paymentSchedules;
-
 
 	public CompanyDto getCompany() {
 		return company;
