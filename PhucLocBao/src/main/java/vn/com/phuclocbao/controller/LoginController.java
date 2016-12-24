@@ -29,7 +29,7 @@ public class LoginController {
 		LoginUserValidator validator;
 	
 		
-		@RequestMapping(value={"/", "/index"},method=RequestMethod.GET)
+		@RequestMapping(value={"/", "/index", "/login"},method=RequestMethod.GET)
 		public ModelAndView displayLogin(HttpServletRequest request, HttpServletResponse response, LoginBean loginBean){
 			ModelAndView model = null;
 			PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);

@@ -17,8 +17,8 @@ public class LoginUserValidator implements Validator {
 
 	@Override
 	public void validate(Object target, Errors errors) {
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "error.username", "Username is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "error.password", "Password is required.");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "error.username", "Username là bắt buộc.");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "error.password", "Password là bắt buộc.");
 	}
 
 }

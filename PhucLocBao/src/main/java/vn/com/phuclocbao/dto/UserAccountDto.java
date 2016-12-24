@@ -106,24 +106,16 @@ public class UserAccountDto implements IBaseDTO{
 	    email = _email;
 	  }
 
-	  private vn.com.phuclocbao.entity.CompanyEntity companyEntity;
+	  public CompanyDto getCompanyEntity() {
+		return companyEntity;
+	}
 
-	  /**
-	   * Gets the field companyEntity.
-	   * @return the value of the field companyEntity; may be null.
-	   */
-	  public vn.com.phuclocbao.entity.CompanyEntity getCompanyEntity()
-	  {
-	    return companyEntity;
-	  }
+	public void setCompanyEntity(CompanyDto companyEntity) {
+		this.companyEntity = companyEntity;
+	}
 
-	  /**
-	   * Sets the field companyEntity.
-	   * @param _companyEntity the new value of the field companyEntity.
-	   */
-	  public void setCompanyEntity(vn.com.phuclocbao.entity.CompanyEntity _companyEntity)
-	  {
-	    companyEntity = _companyEntity;
-	  }
+	private CompanyDto companyEntity;
+
+	 
  
 }

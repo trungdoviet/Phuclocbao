@@ -2,12 +2,17 @@ package vn.com.phuclocbao.converter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.ConvertUtilsBean;
+import org.apache.commons.beanutils.PropertyUtilsBean;
+import org.apache.commons.beanutils.converters.DateConverter;
+import org.apache.commons.beanutils.converters.DateTimeConverter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
@@ -25,13 +30,36 @@ public class BaseConverter<D extends IBaseDTO, E extends IBaseEntity> {
 		String[] allIgnoreProps = new String[0];
 		allIgnoreProps = collectAllIgnoredProps(allIgnoreProps, ignoredProperties);
 		
-		return populateProperty(entity, dest, allIgnoreProps);
+		 populateProperty(entity, dest, allIgnoreProps);
+		 return toDtoExtraProps(entity, dest);
+	}
+	
+	public D toDtoExtraProps(E entity, D dest) throws BusinessException{
+		return dest;
+	}
+	
+	public D toDtoExtraObject( E entity, D dest, String... ignoredProperties) throws BusinessException{
+		D dto = toDto(entity, dest, ignoredProperties);
+		return doExtra(entity, dto);
+	}
+	
+	public D doExtra(E entity, D dest) throws BusinessException{
+		return dest;
 	}
 	
 	public E toEntity( D dto, E dest, String... ignoredProperties) throws BusinessException{
 		String[] allIgnoreProps = new String[0];
 		allIgnoreProps = collectAllIgnoredProps(allIgnoreProps, ignoredProperties);
 		return populateProperty(dto, dest, allIgnoreProps);
+	}
+	
+	public E toEntityExtra( D dto, E dest, String... ignoredProperties) throws BusinessException{
+		E en = toEntity(dto, dest, ignoredProperties);
+		return toEntityExtra(dto, en);
+	}
+	
+	public E toEntityExtra(D dto, E dest) throws BusinessException{
+		return dest;
 	}
 	public String[] getIgnoredProperties(){
 		return null;
@@ -88,9 +116,19 @@ public class BaseConverter<D extends IBaseDTO, E extends IBaseEntity> {
  */
 protected <T> T populateProperty(Object source, T dest, String... ignoredProperties) throws BusinessException{
 	try{
-	 	Map<String, String> properties = BeanUtils.describe(source);
-		ignoreProperty(properties, ignoredProperties);
-		BeanUtils.populate(dest, properties);
+		DateTimeConverter dtConverter = new DateConverter();
+        dtConverter.setPattern("dd.MM.yyyy");
+        
+		ConvertUtilsBean convertUtilsBean = new ConvertUtilsBean();
+        convertUtilsBean.deregister(Date.class);
+        convertUtilsBean.register(dtConverter, Date.class);
+        BeanUtilsBean beanUtilsBean = new BeanUtilsBean(convertUtilsBean, new PropertyUtilsBean());
+        Map<String, String> properties = beanUtilsBean.describe(source);
+        ignoreProperty(properties, ignoredProperties);
+        beanUtilsBean.populate(dest, properties);
+
+        
+		//BeanUtils.populate(dest, properties);
 	 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 		 logger.error(e.getMessage(), e);
 		throw new BusinessException(PLBErrorCode.CONVERTION_EXCEPTION.name());
