@@ -37,10 +37,10 @@
 		</footer>
 		<script src="<c:url value='/resources/js/jquery-1.11.1.min.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/bootstrap.min.js' />"><!-- comment --></script>
-		<script src="<c:url value='/resources/js/chart.min.js' />"><!-- comment --></script>
+		<%-- <script src="<c:url value='/resources/js/chart.min.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/chart-data.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/easypiechart.js' />"><!-- comment --></script>
-		<script src="<c:url value='/resources/js/easypiechart-data.js' />"><!-- comment --></script>
+		<script src="<c:url value='/resources/js/easypiechart-data.js' />"><!-- comment --></script> --%>
 		<script src="<c:url value='/resources/js/bootstrap-datepicker.js' />"><!-- comment --></script>
 </body>
 </html>

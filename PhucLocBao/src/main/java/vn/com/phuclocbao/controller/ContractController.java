@@ -9,9 +9,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/")
 public class ContractController {
-	@RequestMapping(value = { "/contracts"}, method = RequestMethod.GET)
+	/*@RequestMapping(value = { "/contracts"}, method = RequestMethod.GET)
 	public String productsPage(ModelMap model) {
 		return "contracts";
 	}
+	
+	@RequestMapping(value = { "/newContract"}, method = RequestMethod.GET)
+	public String createNewContract(ModelMap model) {
+		return "newContract";
+	}*/
 
 }

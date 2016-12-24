@@ -19,6 +19,12 @@
        <put-attribute name="body" value="/WEB-INF/pages/home.jsp" />  
    </definition>  
 
+	<!-- Create Contracts Page -->
+   <definition name="newContract" extends="base-definition">  
+       <put-attribute name="title" value="Tạo mới hợp đồng" />  
+       <put-attribute name="body" value="/WEB-INF/pages/newContract.jsp" />  
+   </definition> 
+   
    <!-- Contracts Page -->
    <definition name="contracts" extends="base-definition">  
        <put-attribute name="title" value="contracts" />  

@@ -1,3 +1,4 @@
+<%@ page import="vn.com.phuclocbao.bean.PLBSession" %>
 <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
 		<form role="search">
 			<div class="form-group">
@@ -5,9 +6,9 @@
 			</div>
 		</form>
 		<ul class="nav menu">
-			<li class="active"><a href="${pageContext.request.contextPath}/home"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Tổng Quan</a></li>
-			<li><a href="${pageContext.request.contextPath}/contracts"><svg class="glyph stroked calendar"><use xlink:href="#stroked-calendar"></use></svg> Hợp đồng</a></li>
-			<li><a href="charts.html"><svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg> Charts</a></li>
+			<li class='<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("home")%>'><a href="${pageContext.request.contextPath}/home"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Tổng Quan</a></li>
+			<li class='<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("newContract")%>'><a href="${pageContext.request.contextPath}/newContract"><svg class="glyph stroked pencil"><use xlink:href="#stroked-pencil"></use></svg>Tạo hợp đồng</a></li>
+			<li class='<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("contracts")%>'><a href="${pageContext.request.contextPath}/contracts"><svg class="glyph stroked calendar"><use xlink:href="#stroked-calendar"></use></svg> Hợp đồng cũ</a></li>
 			<li><a href="tables.html"><svg class="glyph stroked table"><use xlink:href="#stroked-table"></use></svg> Tables</a></li>
 			<li><a href="forms.html"><svg class="glyph stroked pencil"><use xlink:href="#stroked-pencil"></use></svg> Forms</a></li>
 			<li><a href="panels.html"><svg class="glyph stroked app-window"><use xlink:href="#stroked-app-window"></use></svg> Alerts &amp; Panels</a></li>
