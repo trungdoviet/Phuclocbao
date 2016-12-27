@@ -1,3 +1,7 @@
 .error{
      color: #f15757;
 }
+.readonlyDate.form-control[readonly]{
+	cursor:hand;
+	background-color: #fff;
+}

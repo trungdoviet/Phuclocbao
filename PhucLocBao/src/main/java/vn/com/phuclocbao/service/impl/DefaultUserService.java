@@ -39,7 +39,7 @@ public class DefaultUserService implements UserService {
 		if(entity == null){
 			throw new BusinessException(PLBErrorCode.USER_CAN_NOT_BE_FOUND.name());
 		}
-		return UserAccountConverter.getInstance().toDto(entity, new UserAccountDto());
+		return UserAccountConverter.getInstance().toDtoExtraObject(entity, new UserAccountDto());
 	}
 
 }

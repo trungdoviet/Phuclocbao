@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.enums.MenuDefinition;
+import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.viewbean.ContractBean;
 
 
@@ -37,6 +38,13 @@ public class NavigationController {
 		ModelAndView model = new ModelAndView("newContract");
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.NEW_CONTRACT);
+		if(contractBean == null){
+			contractBean = new ContractBean();
+		}
+		contractBean.setCurrentCompany(plbSession.getUserAccount().getCompanyEntity());
+		contractBean.getContractDto().getCompany().setId(contractBean.getCurrentCompany().getId());
+		contractBean.setCities(VietnamCityService.loadCities());
+		System.out.println("==Current company:" + plbSession.getUserAccount().getCompanyEntity());
 		model.addObject("contractBean", contractBean);
 		return model;
 	}

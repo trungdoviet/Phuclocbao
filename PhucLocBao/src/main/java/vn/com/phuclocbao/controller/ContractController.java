@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import vn.com.phuclocbao.bean.PLBSession;
+import vn.com.phuclocbao.enums.MenuDefinition;
+import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.validator.LoginUserValidator;
 import vn.com.phuclocbao.validator.NewContractValidator;
 import vn.com.phuclocbao.viewbean.ContractBean;
@@ -44,11 +47,24 @@ public class ContractController {
 		ModelAndView model = null;
 		if (result.hasErrors()) {
 			model = new ModelAndView("newContract");
+			contractBean = populateFormData(request, contractBean, model);
 		} else {
 			model = new ModelAndView("home");
 		}
 		logger.info("AAAAAAAAAAAAAAAAaa:" + contractBean.getContractDto().getCustomer().getIdNo());
 		return model;
+	}
+
+	private ContractBean populateFormData(HttpServletRequest request, ContractBean contractBean, ModelAndView model) {
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		if(contractBean == null){
+			contractBean = new ContractBean();
+		}
+		contractBean.setCurrentCompany(plbSession.getUserAccount().getCompanyEntity());
+		contractBean.getContractDto().getCompany().setId(contractBean.getCurrentCompany().getId());
+		contractBean.setCities(VietnamCityService.loadCities());
+		model.addObject("contractBean", contractBean);
+		return contractBean;
 	}
 	
 	@RequestMapping(value = { "/newContractAction/cancel"}, method = RequestMethod.GET)

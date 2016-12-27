@@ -35,12 +35,43 @@
 		<footer id="footer">
 			<tiles:insertAttribute name="footer" />
 		</footer>
-		<script src="<c:url value='/resources/js/jquery-1.11.1.min.js' />"><!-- comment --></script>
+		<%-- <script src="<c:url value='/resources/js/jquery-1.11.1.min.js' />"><!-- comment --></script> --%>
+		<script src="<c:url value="/resources/js/jquery-3.1.1.js" />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/bootstrap.min.js' />"><!-- comment --></script>
-		<%-- <script src="<c:url value='/resources/js/chart.min.js' />"><!-- comment --></script>
-		<script src="<c:url value='/resources/js/chart-data.js' />"><!-- comment --></script>
-		<script src="<c:url value='/resources/js/easypiechart.js' />"><!-- comment --></script>
-		<script src="<c:url value='/resources/js/easypiechart-data.js' />"><!-- comment --></script> --%>
+	 	<script src="<c:url value='/resources/js/inputmask/inputmask.js' />"><!-- comment --></script>
+		<script src="<c:url value='/resources/js/inputmask/inputmask.numeric.extensions.js' />"><!-- comment --></script>
+		<script src="<c:url value='/resources/js/inputmask/inputmask.regex.extensions.js' />"><!-- comment --></script> --%>
+		<script src="<c:url value='/resources/js/inputmask/jquery.inputmask.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/bootstrap-datepicker.js' />"><!-- comment --></script>
+		<script>
+			/*$('#calendar').datepicker({
+				}); */
+				!function ($) {
+					$( document ).ready(function() {
+						$("#totalAmount").inputmask('999.999.999.999 VNĐ', { numericInput: true, rightAlign: true, placeholder:" " });
+						$("#feeADay").inputmask('999.999.999 VNĐ', { numericInput: true, rightAlign: true, placeholder:" " });
+						$("#periodOfPayment").inputmask('Regex', { regex: "^[1-2][0-9]?$|^30$", rightAlign: true, "oncomplete": function(){ console.log('inputmask complete'); }})
+						$( "#startDate" ).datepicker({
+						    format: 'dd/mm/yyyy',
+						    todayHighlight: true,
+						    clearBtn:true,
+						    autoclose:true
+						});
+						$( "#expireDate" ).datepicker({
+							format: 'dd/mm/yyyy',
+						    clearBtn:true,
+						    autoclose:true
+						});
+						$("#startDate").inputmask("99/99/9999",{ "oncomplete": function(){ console.log('inputmask complete'); } });
+					});
+				}(window.jQuery);
+				
+			$(window).on('resize', function () {
+			  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+			})
+			$(window).on('resize', function () {
+			  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+			})
+		</script>	
 </body>
 </html>
