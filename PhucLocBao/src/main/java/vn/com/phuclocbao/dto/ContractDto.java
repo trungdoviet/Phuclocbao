@@ -1,6 +1,7 @@
 package vn.com.phuclocbao.dto;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import vn.com.phuclocbao.dto.base.IBaseDTO;
 
@@ -16,6 +17,7 @@ public class ContractDto implements IBaseDTO
    */
   private java.lang.Integer id;
   private CompanyDto company;
+  @NumberFormat(pattern="###.###.###.###")
   private java.lang.Double totalAmount;
   private java.lang.Double feeADay;
   @DateTimeFormat(pattern ="dd/MM/yyyy")

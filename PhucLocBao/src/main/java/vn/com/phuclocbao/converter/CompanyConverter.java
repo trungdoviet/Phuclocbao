@@ -27,6 +27,7 @@ public class CompanyConverter extends BaseConverter<CompanyDto, CompanyEntity>{
 		return dest;
 	}
 
+
 	
 	
 	

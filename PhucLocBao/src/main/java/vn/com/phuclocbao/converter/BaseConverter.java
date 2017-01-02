@@ -23,7 +23,7 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 
-public class BaseConverter<D extends IBaseDTO, E extends IBaseEntity> {
+public abstract class BaseConverter<D extends IBaseDTO, E extends IBaseEntity> implements ObjectConvertable<D, E>{
 	private static org.apache.log4j.Logger logger = Logger.getLogger(LoginController.class);
 	
 	public D toDto( E entity, D dest, String... ignoredProperties) throws BusinessException{
@@ -34,19 +34,6 @@ public class BaseConverter<D extends IBaseDTO, E extends IBaseEntity> {
 		 return toDtoExtraProps(entity, dest);
 	}
 	
-	public D toDtoExtraProps(E entity, D dest) throws BusinessException{
-		return dest;
-	}
-	
-	public D toDtoExtraObject( E entity, D dest, String... ignoredProperties) throws BusinessException{
-		D dto = toDto(entity, dest, ignoredProperties);
-		return doExtra(entity, dto);
-	}
-	
-	public D doExtra(E entity, D dest) throws BusinessException{
-		return dest;
-	}
-	
 	public E toEntity( D dto, E dest, String... ignoredProperties) throws BusinessException{
 		String[] allIgnoreProps = new String[0];
 		allIgnoreProps = collectAllIgnoredProps(allIgnoreProps, ignoredProperties);
@@ -55,12 +42,10 @@ public class BaseConverter<D extends IBaseDTO, E extends IBaseEntity> {
 	
 	public E toEntityExtra( D dto, E dest, String... ignoredProperties) throws BusinessException{
 		E en = toEntity(dto, dest, ignoredProperties);
-		return toEntityExtra(dto, en);
+		return toEntityExtraProps(dto, en);
 	}
 	
-	public E toEntityExtra(D dto, E dest) throws BusinessException{
-		return dest;
-	}
+	
 	public String[] getIgnoredProperties(){
 		return null;
 	}
@@ -149,5 +134,7 @@ protected <T> T populateProperty(Object source, T dest, String... ignoredPropert
 		}
 		return 0;
 	}
+
+
 	
 }

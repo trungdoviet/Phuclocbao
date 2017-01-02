@@ -4,11 +4,11 @@
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
    http://www.springframework.org/schema/beans
-   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/beans/spring-beans.xsd
    http://www.springframework.org/schema/context
-   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+   http://www.springframework.org/schema/context/spring-context.xsd
    http://www.springframework.org/schema/tx 
-   http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+   http://www.springframework.org/schema/tx/spring-tx.xsd">
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
     <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
     
@@ -24,8 +24,18 @@
 	<bean id="userService" class="vn.com.phuclocbao.service.impl.DefaultUserService">
 		<property name="userDao" ref="userDao"></property>
 	</bean>
+	<bean id="companyService" class="vn.com.phuclocbao.service.impl.DefaultCompanyService">
+	</bean>
+	<bean id="contractService" class="vn.com.phuclocbao.service.impl.DefaultContractService">
+		<property name="companyDao" ref="companyDao"></property>
+		<property name="contractDao" ref="contractDao"></property>
+	</bean>
 
 	<bean name="userDao" class="vn.com.phuclocbao.dao.impl.DefaultUserDao">
+	</bean>
+	<bean name="companyDao" class="vn.com.phuclocbao.dao.impl.DefaultCompanyDao">
+	</bean>
+	<bean name="contractDao" class="vn.com.phuclocbao.dao.impl.DefaultContractDao">
 	</bean>
 
 	  <bean id="dataSource"

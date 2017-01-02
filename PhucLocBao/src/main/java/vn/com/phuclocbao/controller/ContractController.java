@@ -23,6 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.enums.MenuDefinition;
+import vn.com.phuclocbao.exception.BusinessException;
+import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.validator.LoginUserValidator;
 import vn.com.phuclocbao.validator.NewContractValidator;
@@ -34,6 +36,11 @@ import vn.com.phuclocbao.viewbean.LoginBean;
 @Controller
 @RequestMapping("/")
 public class ContractController {
+	
+	@Autowired
+	@Qualifier(value="contractService")
+	ContractService contractService;
+	
 	@Autowired
 	@Qualifier("newContractValidator")
 	NewContractValidator validator;
@@ -55,6 +62,12 @@ public class ContractController {
 			model = new ModelAndView("newContract");
 			contractBean = populateFormData(request, contractBean, model);
 		} else {
+			try {
+				contractService.saveNewContract(contractBean.getContractDto());
+			} catch (BusinessException e) {
+				logger.error(e);
+				e.printStackTrace();
+			}
 			model = new ModelAndView("home");
 		}
 		logger.info("AAAAAAAAAAAAAAAAaa:" + contractBean.getContractDto().getStartDate());

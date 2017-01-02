@@ -1,5 +1,7 @@
 package vn.com.phuclocbao.entity;
 
+import java.util.Date;
+
 import vn.com.phuclocbao.entity.base.IBaseEntity;
 
 /**
@@ -36,46 +38,28 @@ public class PaymentSchedule implements IBaseEntity
     id = _id;
   }
 
-  private java.lang.String payDate;
+  private Date payDate;
 
-  /**
-   * Gets the field payDate.
-   * @return the value of the field payDate; may be null.
-   */
-  public java.lang.String getPayDate()
-  {
-    return payDate;
-  }
+  private Date notifiedDate;
 
-  /**
-   * Sets the field payDate.
-   * @param _payDate the new value of the field payDate.
-   */
-  public void setPayDate(java.lang.String _payDate)
-  {
-    payDate = _payDate;
-  }
+  
+  public Date getPayDate() {
+	return payDate;
+}
 
-  private java.lang.String notifiedDate;
+public void setPayDate(Date payDate) {
+	this.payDate = payDate;
+}
 
-  /**
-   * Gets the field notifiedDate.
-   * @return the value of the field notifiedDate; may be null.
-   */
-  public java.lang.String getNotifiedDate()
-  {
-    return notifiedDate;
-  }
+public Date getNotifiedDate() {
+	return notifiedDate;
+}
 
-  /**
-   * Sets the field notifiedDate.
-   * @param _notifiedDate the new value of the field notifiedDate.
-   */
-  public void setNotifiedDate(java.lang.String _notifiedDate)
-  {
-    notifiedDate = _notifiedDate;
-  }
-  @javax.persistence.Column(length=1)
+public void setNotifiedDate(Date notifiedDate) {
+	this.notifiedDate = notifiedDate;
+}
+
+@javax.persistence.Column(length=1)
   private String finish;
 
   /**

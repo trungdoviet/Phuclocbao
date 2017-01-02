@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.service.VietnamCityService;
+import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.viewbean.ContractBean;
 
@@ -51,7 +52,7 @@ public class NavigationController {
 		Date today = DateTimeUtil.getCurrentDate();
 		contractBean.getContractDto().setStartDate(today);
 		contractBean.getContractDto().setExpireDate(DateTimeUtil.addMoreDate(today, 30));
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat(ConstantVariable.DATE_FORMAT);
 		System.out.println(dateFormat.format(today));
 		contractBean.setCities(VietnamCityService.loadCities());
 		System.out.println("==Current company:" + plbSession.getUserAccount().getCompanyEntity());
