@@ -8,6 +8,10 @@ public class CompanyTypeDto implements IBaseDTO
 {
 
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8513706214652504245L;
+/**
    * Identifier
    */
   @javax.persistence.Id

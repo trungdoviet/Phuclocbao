@@ -141,24 +141,73 @@
 							</spring:bind>
 							
 							<%-- 
-							<spring:bind path="contractDto.customer.province">		
-								<div class="form-group ${status.error ? 'has-error' : ''}" style="margin-top: -6px;">
-									<label>Tỉnh/Thành phố:</label>
-									<form:select class="form-control" name="customerProvince" path="contractDto.customer.province">
-										<option value="">--Chọn Tỉnh/TP--</option>
-										<option value="HCM">TP.Hồ Chí Minh</option>
-										<option value="HN">Hà Nội</option>
-										<option value="CB">Cao Bằng</option>
-										<option value="LC">Lai Châu</option>
-									</form:select>
-									<form:errors path="contractDto.customer.province"  cssClass="error" />
-								</div>
-							</spring:bind> --%>
+								payment schedule here
+							 --%>
 						</div>
 					</div>
 				</div>
 		</div><!-- /.col-->
 	</div><!-- /.row -->
+	
+	<!-- Owner -->
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>Thông tin thêm</div>
+					<div class="panel-body">
+						<div class="col-md-6">
+							<spring:bind path="contractDto.owner.name">		
+								<div class="form-group ${status.error ? 'has-error' : ''}">
+									<label>Người xác minh:</label>
+									<form:input class="form-control" placeholder="vd: Nguyễn Văn A" name="ownerName" path="contractDto.owner.name"/>
+									<form:errors path="contractDto.owner.name"  cssClass="error" />
+								</div>
+							</spring:bind>
+							
+							<spring:bind path="contractDto.owner.transportType">		
+								<div class="form-group ${status.error ? 'has-error' : ''}">
+									<label>Loại xe:</label>
+									<form:input class="form-control" placeholder="vd: Airblade, SH" name="transportType" path="contractDto.owner.transportType"/>
+									<form:errors path="contractDto.owner.transportType"  cssClass="error" />
+								</div>
+							</spring:bind>
+							
+							 <spring:bind path="contractDto.owner.numberPlate">
+								<div class="form-group ${status.error ? 'has-error' : ''}">
+									<label>Biển kiểm soát:</label>
+									<form:input class="form-control" placeholder="vd: 99V3-999.00" name="numberPlate" path="contractDto.owner.numberPlate"/>
+									<form:errors path="contractDto.owner.numberPlate"  cssClass="error" />
+								</div>
+							</spring:bind>
+							 <spring:bind path="contractDto.owner.chassisFrameNumber">
+								<div class="form-group ${status.error ? 'has-error' : ''}">
+									<label>Số khung:</label>
+									<form:input class="form-control" placeholder="vd: FJ900..." name="chassisFrameNumber" path="contractDto.owner.chassisFrameNumber"/>
+									<form:errors path="contractDto.owner.chassisFrameNumber"  cssClass="error" />
+								</div>
+							</spring:bind>
+						</div>
+						<div class="col-md-6">
+							<spring:bind path="contractDto.owner.chassisNumber">
+								<div class="form-group ${status.error ? 'has-error' : ''}">
+									<label>Số máy:</label>
+									<form:input class="form-control" placeholder="vd: AXB88..." name="chassisNumber" path="contractDto.owner.chassisNumber"/>
+									<form:errors path="contractDto.owner.chassisNumber"  cssClass="error" />
+								</div>
+							</spring:bind>
+							<spring:bind path="contractDto.owner.detail">
+								<div class="form-group ${status.error ? 'has-error' : ''}">
+									<label>Chi tiết:</label>
+									<form:textarea class="form-control" placeholder="thông tin thêm" rows="6" name="ownerDetail" path="contractDto.owner.detail"/>
+									<form:errors path="contractDto.owner.detail"  cssClass="error" />
+								</div>
+							</spring:bind>		
+						</div>
+					</div>
+				</div>
+		</div><!-- /.col-->
+	</div><!-- /.row -->
+	
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="pull-right">

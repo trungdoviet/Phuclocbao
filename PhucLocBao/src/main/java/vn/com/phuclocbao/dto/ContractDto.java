@@ -1,18 +1,26 @@
 package vn.com.phuclocbao.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import vn.com.phuclocbao.dto.base.IBaseDTO;
 
 public class ContractDto implements IBaseDTO
 {
 
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1117368368843602077L;
+/**
    * Identifier
    */
   private java.lang.Integer id;
   private CompanyDto company;
   private java.lang.Double totalAmount;
   private java.lang.Double feeADay;
+  @DateTimeFormat(pattern ="dd/MM/yyyy")
   private java.util.Date startDate;
+  @DateTimeFormat(pattern ="dd/MM/yyyy")
   private java.util.Date expireDate;
   private java.lang.Integer periodOfPayment;
   private String notifyBeforePeriod;

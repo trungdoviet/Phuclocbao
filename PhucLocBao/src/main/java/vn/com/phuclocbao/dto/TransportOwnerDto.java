@@ -8,10 +8,20 @@ public class TransportOwnerDto implements IBaseDTO
 {
 
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2324975191690413218L;
+/**
    * Identifier
    */
   private java.lang.Integer id;
-
+  private java.lang.String detail;
+  private java.lang.String name;
+  private java.lang.String transportType;
+  private java.lang.String numberPlate;
+  private java.lang.String chassisNumber;
+  private java.lang.String chassisFrameNumber;
+  private ContractDto contract;
   /**
    * Gets the field id.
    * @return the value of the field id; may be null.
@@ -30,8 +40,6 @@ public class TransportOwnerDto implements IBaseDTO
     id = _id;
   }
 
-  @javax.persistence.Column(length=255)
-  private java.lang.String name;
 
   /**
    * Gets the field name.
@@ -51,7 +59,7 @@ public class TransportOwnerDto implements IBaseDTO
     name = _name;
   }
 
-  private java.lang.String transportType;
+
 
   /**
    * Gets the field transportType.
@@ -71,7 +79,7 @@ public class TransportOwnerDto implements IBaseDTO
     transportType = _transportType;
   }
 
-  private java.lang.String numberPlate;
+  
 
   /**
    * Gets the field numberPlate.
@@ -91,7 +99,7 @@ public class TransportOwnerDto implements IBaseDTO
     numberPlate = _numberPlate;
   }
 
-  private java.lang.String chassisNumber;
+ 
 
   /**
    * Gets the field chassisNumber.
@@ -111,7 +119,7 @@ public class TransportOwnerDto implements IBaseDTO
     chassisNumber = _chassisNumber;
   }
 
-  private java.lang.String chassisFrameNumber;
+ 
 
   /**
    * Gets the field chassisFrameNumber.
@@ -131,7 +139,7 @@ public class TransportOwnerDto implements IBaseDTO
     chassisFrameNumber = _chassisFrameNumber;
   }
 
-  private java.lang.String detail;
+
 
   /**
    * Gets the field detail.
@@ -159,6 +167,6 @@ public void setContract(ContractDto contract) {
 	this.contract = contract;
 }
 
-private ContractDto contract;
+
 
 }

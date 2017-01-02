@@ -8,6 +8,10 @@ public class PaymentScheduleDto implements IBaseDTO
 {
 
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2899315636278632718L;
+/**
    * Identifier
    */
   private java.lang.Integer id;

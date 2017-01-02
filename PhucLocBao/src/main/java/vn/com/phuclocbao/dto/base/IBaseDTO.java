@@ -1,4 +1,7 @@
 package vn.com.phuclocbao.dto.base;
-public interface IBaseDTO {
+
+import java.io.Serializable;
+
+public interface IBaseDTO extends Serializable{
 	public Integer getId();
 }

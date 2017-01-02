@@ -54,12 +54,10 @@
 						$( "#startDate" ).datepicker({
 						    format: 'dd/mm/yyyy',
 						    todayHighlight: true,
-						    clearBtn:true,
 						    autoclose:true
 						});
 						$( "#expireDate" ).datepicker({
 							format: 'dd/mm/yyyy',
-						    clearBtn:true,
 						    autoclose:true
 						});
 						$("#startDate").inputmask("99/99/9999",{ "oncomplete": function(){ console.log('inputmask complete'); } });

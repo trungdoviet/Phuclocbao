@@ -1,10 +1,14 @@
 package vn.com.phuclocbao.controller;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -36,7 +40,9 @@ public class ContractController {
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		System.out.println("=======Binding validator");
-		binder.setValidator(validator);
+		 binder.registerCustomEditor(Date.class,     
+                 new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10));   
+		 binder.setValidator(validator);
 	}
 	private static org.apache.log4j.Logger logger = Logger.getLogger(LoginController.class);
 	@RequestMapping(value = { "/newContractAction"}, params="save", method = RequestMethod.POST)
@@ -51,7 +57,7 @@ public class ContractController {
 		} else {
 			model = new ModelAndView("home");
 		}
-		logger.info("AAAAAAAAAAAAAAAAaa:" + contractBean.getContractDto().getCustomer().getIdNo());
+		logger.info("AAAAAAAAAAAAAAAAaa:" + contractBean.getContractDto().getStartDate());
 		return model;
 	}
 

@@ -6,6 +6,10 @@ import vn.com.phuclocbao.dto.base.IBaseDTO;
 
 public class CompanyDto implements IBaseDTO {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7660820456273994327L;
+	/**
 	 * Identifier
 	 */
 	private java.lang.Integer id;
