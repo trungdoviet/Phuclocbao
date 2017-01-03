@@ -15,7 +15,7 @@ public class Contract implements IBaseEntity
    * Identifier
    */
   @javax.persistence.Id
-  @javax.persistence.GeneratedValue
+  @javax.persistence.GeneratedValue()
   private java.lang.Integer id;
 
   /**

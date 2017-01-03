@@ -67,9 +67,13 @@
 	 <bean id="jpaVendorAdapter"
         class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
     </bean>
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-      <property name="entityManagerFactory" ref="entityManagerFactoryBean" />
-   </bean>
+    <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactoryBean" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaDialect" ref="jpaDialect" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="txManager" />
 	<!-- Validator -->
 	<bean id="loginUserValidator" class="vn.com.phuclocbao.validator.LoginUserValidator" />
 	<bean id="newContractValidator" class="vn.com.phuclocbao.validator.NewContractValidator" />

@@ -11,7 +11,7 @@ import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.entity.CompanyEntity;
 @Repository
 @Transactional
-public class DefaultCompanyDao extends BaseDaoJpaImpl<CompanyEntity, Long> implements CompanyDao
+public class DefaultCompanyDao extends BaseDaoJpaImpl<CompanyEntity, Integer> implements CompanyDao
 {
 	@PersistenceContext
 	private EntityManager manager;

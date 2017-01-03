@@ -6,6 +6,7 @@ import java.util.Objects;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,8 @@ import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.BaseService;
 import vn.com.phuclocbao.service.ContractService;
+import vn.com.phuclocbao.util.DateTimeUtil;
 @Service
-@Transactional
 public class DefaultContractService extends BaseService implements ContractService {
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DefaultContractService.class);
 	@Autowired
@@ -32,6 +33,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 	@Autowired
 	private ContractDao contractDao;
 	
+	@Transactional
 	@Override
 	public boolean saveNewContract(ContractDto contractDto) throws BusinessException {
 	  Long id = methodWrapper(new PersistenceExecutable<Long>() {
@@ -40,18 +42,32 @@ public class DefaultContractService extends BaseService implements ContractServi
 		public Long execute() throws BusinessException, ClassNotFoundException, IOException {
 			Contract contract = new Contract();
 			if(contractDto.getCompany() != null){
-				CompanyEntity company = companyDao.findById(Long.valueOf(contractDto.getCompany().getId()));
+				CompanyEntity company = companyDao.findById(contractDto.getCompany().getId());
 				if(company == null){
 					logger.error("Company which has id "+contractDto.getCompany().getId() + " can not be found");
 					throw new BusinessException(PLBErrorCode.OBJECT_NOT_FOUND.name());
 				}
 				contract = ContractConverter.getInstance().toNewContract(contractDto, contract);
-				contract.setCompany(company);
-				contract.getCompany().getContracts().add(contract);
-				Contract persistedObject = contractDao.persist(contract);
+				contract.setFeeADay(1000D);
+				contract.setStartDate(DateTimeUtil.getCurrentDate());
+				contract.setExpireDate(DateTimeUtil.getCurrentDate());
+				contract.setTotalAmount(20000D);
+				contract.setPeriodOfPayment(10);
+				mapReference(contract, company);
+				Contract persistedObject = contractDao.merge(contract);
 				return Long.valueOf(persistedObject.getId());
 			}
 			return null;
+		}
+
+		private void mapReference(Contract contract, CompanyEntity company) {
+			contract.setCompany(company);
+			contract.getCompany().getContracts().add(contract);
+			contract.getCustomer().setContract(contract);
+			contract.getOwner().setContract(contract);
+			if(CollectionUtils.isNotEmpty(contract.getPaymentSchedules())){
+				contract.getPaymentSchedules().forEach(item -> item.setContract(contract));
+			}
 		}
 	  });
 		return Objects.nonNull(id);

@@ -1,6 +1,10 @@
 package vn.com.phuclocbao.converter;
+import java.util.HashSet;
+
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.entity.Contract;
+import vn.com.phuclocbao.entity.Customer;
+import vn.com.phuclocbao.entity.TransportOwner;
 import vn.com.phuclocbao.exception.BusinessException;
 
 public class ContractConverter extends BaseConverter<ContractDto, Contract>{
@@ -36,11 +40,14 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 	}
 
 	public Contract toNewContract(ContractDto dto, Contract entity) throws BusinessException {
-		entity = this.toEntity(dto, entity, getIgnoredProperties());
+		entity = this.toEntity(dto, entity, "id");
 		//entity.setCompany(CompanyConverter.getInstance().toEntity(dto.getCompany(),entity.getCompany()));
-		entity.setCustomer(CustomerConverter.getInstance().toEntity(dto.getCustomer(), entity.getCustomer()));
-		entity.setOwner(TransportOwnerConverter.getInstance().toEntity(dto.getOwner(), entity.getOwner()));
-		entity.setPaymentSchedules(PaymentScheduleConverter.getInstance().toEntities(dto.getPaymentSchedules()));
+		entity.setCustomer(new Customer());
+		entity.setOwner(new TransportOwner());
+		entity.setPaymentSchedules(new HashSet<>());
+		entity.setCustomer(CustomerConverter.getInstance().toEntity(dto.getCustomer(), entity.getCustomer(),"id"));
+		entity.setOwner(TransportOwnerConverter.getInstance().toEntity(dto.getOwner(), entity.getOwner(),"id"));
+		entity.setPaymentSchedules(PaymentScheduleConverter.getInstance().toEntities(dto.getPaymentSchedules(),"id"));
 		return entity;
 	}
 	

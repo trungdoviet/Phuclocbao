@@ -342,7 +342,7 @@ public class CompanyEntity implements IBaseEntity
 	  {
 	    investBeforeStartDate = _investBeforeStartDate;
 	  }
-	  @javax.persistence.OneToMany(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER, mappedBy="company", orphanRemoval=false)
+	  @javax.persistence.OneToMany(fetch=javax.persistence.FetchType.EAGER, mappedBy="company", orphanRemoval=false)
 	  private java.util.Set<vn.com.phuclocbao.entity.Contract> contracts;
 
 	  /**

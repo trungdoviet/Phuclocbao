@@ -2,6 +2,8 @@ package vn.com.phuclocbao.entity;
 
 import java.util.Date;
 
+import javax.persistence.GenerationType;
+
 import vn.com.phuclocbao.entity.base.IBaseEntity;
 
 /**
@@ -17,7 +19,7 @@ public class PaymentSchedule implements IBaseEntity
    * Identifier
    */
   @javax.persistence.Id
-  @javax.persistence.GeneratedValue
+  @javax.persistence.GeneratedValue(strategy=GenerationType.IDENTITY)
   private java.lang.Integer id;
 
   /**

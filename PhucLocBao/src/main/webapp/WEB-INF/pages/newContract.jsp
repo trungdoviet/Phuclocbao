@@ -76,7 +76,7 @@
 							<spring:bind path="contractDto.contractType">		
 								<div class="form-group ${status.error ? 'has-error' : ''}">
 									<label>Loại hình:</label>
-									<form:select disabled="true" class="form-control" name="customerProvince" path="contractDto.contractType">
+									<form:select readonly="true" class="form-control" name="customerProvince" path="contractDto.contractType">
 										<option value="RMB">Cho thuê xe</option>
 										<!-- <option value="HN"></option> -->
 									</form:select>

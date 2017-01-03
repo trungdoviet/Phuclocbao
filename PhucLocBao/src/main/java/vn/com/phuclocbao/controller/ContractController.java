@@ -62,7 +62,11 @@ public class ContractController {
 			model = new ModelAndView("newContract");
 			contractBean = populateFormData(request, contractBean, model);
 		} else {
+			PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+			contractBean.setCurrentCompany(plbSession.getUserAccount().getCompanyEntity());
+			contractBean.getContractDto().getCompany().setId(contractBean.getCurrentCompany().getId());
 			try {
+				
 				contractService.saveNewContract(contractBean.getContractDto());
 			} catch (BusinessException e) {
 				logger.error(e);
