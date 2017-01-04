@@ -48,11 +48,11 @@ public class DefaultContractService extends BaseService implements ContractServi
 					throw new BusinessException(PLBErrorCode.OBJECT_NOT_FOUND.name());
 				}
 				contract = ContractConverter.getInstance().toNewContract(contractDto, contract);
-				contract.setFeeADay(1000D);
+				/*contract.setFeeADay(1000D);
 				contract.setStartDate(DateTimeUtil.getCurrentDate());
 				contract.setExpireDate(DateTimeUtil.getCurrentDate());
 				contract.setTotalAmount(20000D);
-				contract.setPeriodOfPayment(10);
+				contract.setPeriodOfPayment(10);*/
 				mapReference(contract, company);
 				Contract persistedObject = contractDao.merge(contract);
 				return Long.valueOf(persistedObject.getId());

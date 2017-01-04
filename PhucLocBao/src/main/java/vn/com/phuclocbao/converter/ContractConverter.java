@@ -40,7 +40,7 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 	}
 
 	public Contract toNewContract(ContractDto dto, Contract entity) throws BusinessException {
-		entity = this.toEntity(dto, entity, "id");
+		entity = this.toEntityExtra(dto, entity, "id");
 		//entity.setCompany(CompanyConverter.getInstance().toEntity(dto.getCompany(),entity.getCompany()));
 		entity.setCustomer(new Customer());
 		entity.setOwner(new TransportOwner());

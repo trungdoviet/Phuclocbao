@@ -25,6 +25,8 @@ import vn.com.phuclocbao.viewbean.ContractBean;
 @RequestMapping("/")
 public class NavigationController {
 	
+	public static final int DEFAULT_PERIOD_OF_PAYMENT = 10;
+
 	@RequestMapping(value = { "/home"}, method = RequestMethod.GET)
 	public String productsPage(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
@@ -52,6 +54,7 @@ public class NavigationController {
 		Date today = DateTimeUtil.getCurrentDate();
 		contractBean.getContractDto().setStartDate(today);
 		contractBean.getContractDto().setExpireDate(DateTimeUtil.addMoreDate(today, 30));
+		contractBean.getContractDto().setPeriodOfPayment(DEFAULT_PERIOD_OF_PAYMENT);
 		DateFormat dateFormat = new SimpleDateFormat(ConstantVariable.DATE_FORMAT);
 		System.out.println(dateFormat.format(today));
 		contractBean.setCities(VietnamCityService.loadCities());

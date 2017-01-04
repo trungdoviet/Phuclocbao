@@ -13,6 +13,7 @@
 	<link href="<c:url value='/resources/css/mainPage.css' />" rel="stylesheet"></link>
 	<link href="<c:url value='/resources/css/styles.css'/> " rel="stylesheet"></link>
 	<script src="<c:url value='/resources/js/lumino.glyphs.js' />"><!-- comment --></script>
+	<script src="<c:url value="/resources/js/jquery-3.1.1.js" />"><!-- comment --></script>
 	<!--[if lt IE 9]>
 	<script src="<c:url value='/resources/js/html5shiv.js' />"></script>
 	<script src="<c:url value='/resources/js/respond.min.js' />"></script>
@@ -36,7 +37,7 @@
 			<tiles:insertAttribute name="footer" />
 		</footer>
 		<%-- <script src="<c:url value='/resources/js/jquery-1.11.1.min.js' />"><!-- comment --></script> --%>
-		<script src="<c:url value="/resources/js/jquery-3.1.1.js" />"><!-- comment --></script>
+		
 		<script src="<c:url value='/resources/js/bootstrap.min.js' />"><!-- comment --></script>
 	 	<script src="<c:url value='/resources/js/inputmask/inputmask.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/inputmask/inputmask.numeric.extensions.js' />"><!-- comment --></script>
@@ -54,12 +55,18 @@
 						 $("#totalAmount").autoNumeric("init", {
 					        aSep: '.',
 					        aDec: ',', 
-					        aSign: 'VNĐ '
+					        pSign: 's',
+					        aSign: ' VNĐ',
+					        vMin: 0, 
+					        vMax: 9999999999
 					    });
 						 $("#feeADay").autoNumeric("init", {
 						        aSep: '.',
 						        aDec: ',', 
-						        aSign: 'VNĐ '
+						        pSign: 's',
+						        aSign: ' VNĐ',
+						        vMin: 0, 
+						        vMax: 999999999
 						    });
 						$("#periodOfPayment").inputmask('Regex', { regex: "^[1-2][0-9]?$|^30$", rightAlign: true, "oncomplete": function(){ console.log('inputmask complete'); }})
 						$( "#startDate" ).datepicker({
@@ -72,6 +79,7 @@
 						    autoclose:true
 						});
 						$("#startDate").inputmask("99/99/9999",{ "oncomplete": function(){ console.log('inputmask complete'); } });
+						
 					});
 				}(window.jQuery);
 				

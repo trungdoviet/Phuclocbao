@@ -86,6 +86,9 @@ public class ContractController {
 		contractBean.setCurrentCompany(plbSession.getUserAccount().getCompanyEntity());
 		contractBean.getContractDto().getCompany().setId(contractBean.getCurrentCompany().getId());
 		contractBean.setCities(VietnamCityService.loadCities());
+		if(contractBean.getContractDto().getPeriodOfPayment() == null || contractBean.getContractDto().getPeriodOfPayment()  <= 0){
+			contractBean.getContractDto().setPeriodOfPayment(NavigationController.DEFAULT_PERIOD_OF_PAYMENT);
+		}
 		model.addObject("contractBean", contractBean);
 		return contractBean;
 	}

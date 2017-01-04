@@ -15,13 +15,13 @@
  
    <!-- Home Page -->
    <definition name="home" extends="base-definition">  
-       <put-attribute name="title" value="Phuc Loc Bao Website" />  
+       <put-attribute name="title" value="Phúc Lộc Bảo Website" />  
        <put-attribute name="body" value="/WEB-INF/pages/home.jsp" />  
    </definition>  
 
 	<!-- Create Contracts Page -->
    <definition name="newContract" extends="base-definition">  
-       <put-attribute name="title" value="Tạo mới hợp đồng" />  
+       <put-attribute name="title" value="Tạo mới hợp đồng - Phúc Lộc Bảo" />  
        <put-attribute name="body" value="/WEB-INF/pages/newContract.jsp" />  
    </definition> 
    
@@ -33,7 +33,7 @@
    <!-- login definition --> 
  <definition name="index" 
        template="/WEB-INF/pages/layouts/loginPage.jsp">  
-       <put-attribute name="title" value="Phuc Loc Bao - Trang Dang nhap" />  
+       <put-attribute name="title" value="Phúc Lộc Bảo" />  
        <put-attribute name="body" value="/WEB-INF/pages/index.jsp" />
    </definition>  
 </tiles-definitions>

@@ -98,14 +98,14 @@
 							 <spring:bind path="contractDto.totalAmount">
 								<div class="form-group ${status.error ? 'has-error' : ''}">
 									<label>Số tiền:</label>
-									<form:input id="totalAmount" class="form-control" placeholder="VNĐ" name="totalAmount" path="contractDto.totalAmount"/>
+									<form:input id="totalAmount" class="form-control" style="text-align: right;" placeholder="VNĐ" name="totalAmount" path="contractDto.totalAmount"/>
 									<form:errors path="contractDto.totalAmount" cssClass="error" />
 								</div>
 							</spring:bind>
 							 <spring:bind path="contractDto.feeADay">
 								<div class="form-group ${status.error ? 'has-error' : ''}">
 									<label>Phí thuê/1 ngày:</label>
-									<form:input id="feeADay" class="form-control" placeholder="VNĐ" name="feeADay" path="contractDto.feeADay"/>
+									<form:input id="feeADay" class="form-control" style="text-align: right;" placeholder="VNĐ" name="feeADay" path="contractDto.feeADay"/>
 									<form:errors path="contractDto.feeADay" cssClass="error" />
 								</div>
 							</spring:bind>
@@ -212,7 +212,7 @@
 		<div class="col-lg-12">
 			<div class="pull-right">
 				<spring:url value="/newContractAction/cancel" var="cancelUrl" />
-				<button type="submit" class="btn btn-primary" name="save">
+				<button id="btnNewContract" type="submit" class="btn btn-primary" name="save">
 					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 					Tạo hợp đồng
 				</button>
@@ -224,4 +224,15 @@
 		</div>
 	</div>
 </form:form>
+<script type="text/javascript">
+$( document ).ready(function() {
+	$( "#btnNewContract" ).on( "click", function() {
+		 var totalAmount = $("#totalAmount").autoNumeric("get");
+		 $("#totalAmount").val(totalAmount);
+		 
+		 var feeAday =  $("#feeADay").autoNumeric("get");
+		 $("#feeADay").val(feeAday);
+	});
+});
+</script>
 </div>
