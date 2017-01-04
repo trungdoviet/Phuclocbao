@@ -43,13 +43,24 @@
 		<script src="<c:url value='/resources/js/inputmask/inputmask.regex.extensions.js' />"><!-- comment --></script> --%>
 		<script src="<c:url value='/resources/js/inputmask/jquery.inputmask.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/bootstrap-datepicker.js' />"><!-- comment --></script>
+		<script src="<c:url value='/resources/js/autoNumeric.js' />"><!-- comment --></script>
 		<script>
 			/*$('#calendar').datepicker({
 				}); */
 				!function ($) {
 					$( document ).ready(function() {
-						$("#totalAmount").inputmask('999.999.999.999 VNĐ', { numericInput: true, rightAlign: true, placeholder:" " });
-						$("#feeADay").inputmask('999.999.999 VNĐ', { numericInput: true, rightAlign: true, placeholder:" " });
+						//$("#totalAmount").inputmask('999999999999', {alias:"decimal", numericInput: true, rightAlign: true, placeholder:" " ,groupSeparator :"."});
+						//$("#feeADay").inputmask('999999999', { numericInput: true, rightAlign: true, placeholder:" ",groupSeparator :"." });
+						 $("#totalAmount").autoNumeric("init", {
+					        aSep: '.',
+					        aDec: ',', 
+					        aSign: 'VNĐ '
+					    });
+						 $("#feeADay").autoNumeric("init", {
+						        aSep: '.',
+						        aDec: ',', 
+						        aSign: 'VNĐ '
+						    });
 						$("#periodOfPayment").inputmask('Regex', { regex: "^[1-2][0-9]?$|^30$", rightAlign: true, "oncomplete": function(){ console.log('inputmask complete'); }})
 						$( "#startDate" ).datepicker({
 						    format: 'dd/mm/yyyy',

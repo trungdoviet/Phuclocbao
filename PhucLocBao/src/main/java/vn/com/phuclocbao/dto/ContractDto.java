@@ -19,6 +19,7 @@ public class ContractDto implements IBaseDTO
   private CompanyDto company;
   @NumberFormat(pattern="###.###.###.###")
   private java.lang.Double totalAmount;
+  @NumberFormat(pattern="###.###.###")
   private java.lang.Double feeADay;
   @DateTimeFormat(pattern ="dd/MM/yyyy")
   private java.util.Date startDate;
