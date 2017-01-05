@@ -140,9 +140,39 @@
 								</div>
 							</spring:bind>
 							
-							<%-- 
-								payment schedule here
-							 --%>
+							<div class="form-group">
+								<label>Lịch trả phí:</label>
+								<div>Ngày 13/1/2015 <input type="checkbox" value="">Trả phí</label>
+								</div>
+								<div>Ngày 13/2/2015 <input type="checkbox" value="">Trả phí</label>
+								</div>
+								<div class="funkyradio">
+							        <div class="funkyradio-default">
+							            <input type="checkbox" name="checkbox" id="checkbox1" checked/>
+							            <label for="checkbox1">First Option default</label>
+							        </div>
+							        <div class="funkyradio-primary">
+							            <input type="checkbox" name="checkbox" id="checkbox2" checked/>
+							            <label for="checkbox2">Second Option primary</label>
+							        </div>
+							        <div class="funkyradio-success">
+							            <input type="checkbox" name="checkbox" id="checkbox3" checked/>
+							            <label for="checkbox3">Third Option success</label>
+							        </div>
+							        <div class="funkyradio-danger">
+							            <input type="checkbox" name="checkbox" id="checkbox4" checked/>
+							            <label for="checkbox4">Fourth Option danger</label>
+							        </div>
+							        <div class="funkyradio-warning">
+							            <input type="checkbox" name="checkbox" id="checkbox5" checked/>
+							            <label for="checkbox5">Fifth Option warning</label>
+							        </div>
+							        <div class="funkyradio-info">
+							            <input type="checkbox" name="checkbox" id="checkbox6" checked/>
+							            <label for="checkbox6">Sixth Option info</label>
+							        </div>
+							    </div>
+							</div>
 						</div>
 					</div>
 				</div>
