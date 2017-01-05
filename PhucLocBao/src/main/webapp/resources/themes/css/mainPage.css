@@ -7,7 +7,9 @@
 }
 
 /*Checkbox*/
-
+.funkyradio{
+	width:50%;
+}
 .funkyradio div {
   clear: both;
   overflow: hidden;

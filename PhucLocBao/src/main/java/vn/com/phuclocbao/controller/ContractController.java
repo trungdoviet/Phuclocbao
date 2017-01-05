@@ -26,6 +26,7 @@ import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.service.VietnamCityService;
+import vn.com.phuclocbao.util.PaymentScheduleParser;
 import vn.com.phuclocbao.validator.LoginUserValidator;
 import vn.com.phuclocbao.validator.NewContractValidator;
 import vn.com.phuclocbao.viewbean.ContractBean;
@@ -66,7 +67,9 @@ public class ContractController {
 			contractBean.setCurrentCompany(plbSession.getUserAccount().getCompanyEntity());
 			contractBean.getContractDto().getCompany().setId(contractBean.getCurrentCompany().getId());
 			try {
-				
+				String paymentInfo =  contractBean.getPaidInfo();
+				logger.info("payment schedule:" + contractBean.getPaidInfo());
+				contractBean.getContractDto().setPaymentSchedules(PaymentScheduleParser.parsePaymentSchedule(paymentInfo));
 				contractService.saveNewContract(contractBean.getContractDto());
 			} catch (BusinessException e) {
 				logger.error(e);

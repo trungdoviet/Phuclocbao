@@ -24,6 +24,7 @@ import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.BaseService;
 import vn.com.phuclocbao.service.ContractService;
+import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.DateTimeUtil;
 @Service
 public class DefaultContractService extends BaseService implements ContractService {
@@ -42,22 +43,28 @@ public class DefaultContractService extends BaseService implements ContractServi
 		public Long execute() throws BusinessException, ClassNotFoundException, IOException {
 			Contract contract = new Contract();
 			if(contractDto.getCompany() != null){
+				buildNotifiedDate(contractDto);
 				CompanyEntity company = companyDao.findById(contractDto.getCompany().getId());
 				if(company == null){
 					logger.error("Company which has id "+contractDto.getCompany().getId() + " can not be found");
 					throw new BusinessException(PLBErrorCode.OBJECT_NOT_FOUND.name());
 				}
 				contract = ContractConverter.getInstance().toNewContract(contractDto, contract);
-				/*contract.setFeeADay(1000D);
-				contract.setStartDate(DateTimeUtil.getCurrentDate());
-				contract.setExpireDate(DateTimeUtil.getCurrentDate());
-				contract.setTotalAmount(20000D);
-				contract.setPeriodOfPayment(10);*/
 				mapReference(contract, company);
 				Contract persistedObject = contractDao.merge(contract);
 				return Long.valueOf(persistedObject.getId());
 			}
 			return null;
+		}
+
+		private void buildNotifiedDate(ContractDto contractDto) {
+			if(CollectionUtils.isNotEmpty(contractDto.getPaymentSchedules())){
+				contractDto.getPaymentSchedules().stream()
+				.filter(item -> ConstantVariable.NO_OPTION.equalsIgnoreCase(item.getFinish()))
+				.forEach(item ->{
+					item.setNotifiedDate(DateTimeUtil.addMoreDate(item.getPayDate(), -contractDto.getPeriodOfPayment()));
+				});
+			}
 		}
 
 		private void mapReference(Contract contract, CompanyEntity company) {

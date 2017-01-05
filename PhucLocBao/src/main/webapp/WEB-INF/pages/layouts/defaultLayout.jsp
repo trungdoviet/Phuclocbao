@@ -44,12 +44,13 @@
 		<script src="<c:url value='/resources/js/inputmask/inputmask.regex.extensions.js' />"><!-- comment --></script> --%>
 		<script src="<c:url value='/resources/js/inputmask/jquery.inputmask.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/bootstrap-datepicker.js' />"><!-- comment --></script>
+		<script src="<c:url value='/resources/js/date.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/autoNumeric.js' />"><!-- comment --></script>
+		<script src="<c:url value='/resources/js/phuclocbao.js' />"><!-- comment --></script>
 		<script>
-			/*$('#calendar').datepicker({
-				}); */
 				!function ($) {
 					$( document ).ready(function() {
+						initDateLocally();
 						//$("#totalAmount").inputmask('999999999999', {alias:"decimal", numericInput: true, rightAlign: true, placeholder:" " ,groupSeparator :"."});
 						//$("#feeADay").inputmask('999999999', { numericInput: true, rightAlign: true, placeholder:" ",groupSeparator :"." });
 						 $("#totalAmount").autoNumeric("init", {
@@ -60,6 +61,13 @@
 					        vMin: 0, 
 					        vMax: 9999999999
 					    });
+						 $("#periodOfPayment").autoNumeric("init", {
+						        aSep: '.',
+						        aDec: ',', 
+						        pSign: 's',
+						        vMin: 0, 
+						        vMax: 30
+						    });
 						 $("#feeADay").autoNumeric("init", {
 						        aSep: '.',
 						        aDec: ',', 
@@ -68,15 +76,17 @@
 						        vMin: 0, 
 						        vMax: 999999999
 						    });
-						$("#periodOfPayment").inputmask('Regex', { regex: "^[1-2][0-9]?$|^30$", rightAlign: true, "oncomplete": function(){ console.log('inputmask complete'); }})
+						//$("#periodOfPayment").inputmask('Regex', { regex: "^[1-2][0-9]?$|^30$", rightAlign: true, "oncomplete": function(){ console.log('inputmask complete'); }})
 						$( "#startDate" ).datepicker({
 						    format: 'dd/mm/yyyy',
 						    todayHighlight: true,
-						    autoclose:true
+						    autoclose:true,
+						    language: 'vi'
 						});
 						$( "#expireDate" ).datepicker({
 							format: 'dd/mm/yyyy',
-						    autoclose:true
+						    autoclose:true,
+						    language: 'vi'
 						});
 						$("#startDate").inputmask("99/99/9999",{ "oncomplete": function(){ console.log('inputmask complete'); } });
 						
