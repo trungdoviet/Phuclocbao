@@ -8,8 +8,12 @@
 
 /*Checkbox*/
 .funkyradio{
-	width:50%;
+/* 	width:50%; */
 }
+.funkyradio .paymsgchk{
+	color:green;
+}
+
 .funkyradio div {
   clear: both;
   overflow: hidden;

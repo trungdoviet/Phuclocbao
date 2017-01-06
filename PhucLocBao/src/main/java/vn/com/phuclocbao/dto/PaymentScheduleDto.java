@@ -17,7 +17,16 @@ public class PaymentScheduleDto implements IBaseDTO
    * Identifier
    */
   private java.lang.Integer id;
-
+  private Date expectedPayDate;
+  
+  
+  public Date getExpectedPayDate() {
+	return expectedPayDate;
+  }
+	
+  public void setExpectedPayDate(Date expectedPayDate) {
+		this.expectedPayDate = expectedPayDate;
+  }
   /**
    * Gets the field id.
    * @return the value of the field id; may be null.

@@ -38,6 +38,7 @@ public class PaymentScheduleConvertTest {
 		assertThat(orderList.get(0).getFinish(), is(equalTo("Y")));
 		assertThat(orderList.get(0).getPayDate(), is(not(nullValue())));
 		assertThat(orderList.get(0).getNotifiedDate(), is(not(nullValue())));
+		assertThat(orderList.get(0).getExpectedPayDate(), is(not(nullValue())));
 		assertThat(orderList.get(0).getContract(), is((nullValue())));
 	}
 	
@@ -56,6 +57,7 @@ public class PaymentScheduleConvertTest {
 		Date now = DateTimeUtil.getCurrentDate();
 		dto.setPayDate(now);
 		dto.setNotifiedDate(DateTimeUtil.addMoreDate(now, 3));
+		dto.setExpectedPayDate(now);
 		dto.setContract(createContract());
 		
 		return dto;

@@ -20,12 +20,15 @@ public class PaymentScheduleParser {
 			String[] dates = paymentInfo.split(",");
 			if(ArrayUtils.isNotEmpty(dates)){
 				dtos = Arrays.asList(dates).stream()
-					.filter(item -> item.split(":").length == 2)
+					.filter(item -> item.split(":").length == 3)
 					.map(LambdaExceptionUtil.rethrowFunction( item -> {
 						String temp[] = item.split(":");
 						PaymentScheduleDto dto = new PaymentScheduleDto();
-						dto.setPayDate(DateTimeUtil.parseDate(temp[0]));
+						dto.setExpectedPayDate(DateTimeUtil.parseDate(temp[0]));
 						dto.setFinish(temp[1]);
+						if(StringUtils.isNotEmpty(temp[2]) && !temp[2].equalsIgnoreCase("nil")){
+							dto.setPayDate(DateTimeUtil.parseDate(temp[2]));
+						}
 						return dto;
 					})).collect(Collectors.toList());
 			}

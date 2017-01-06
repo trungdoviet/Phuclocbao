@@ -237,7 +237,8 @@
         <h4 class="modal-title">Xác nhận</h4>
       </div>
       <div class="modal-body">
-        <p>Xác nhận thanh toán tới ngày: <span id="payDateString"></span></p>
+        <p>Xác nhận thanh toán tới ngày: <span id="expectedPayDateString"></span></p>
+        <p>Tổng số tiền phải thanh toán<span id="amountSession"></span> <b><span id="totalPaidAmount"></span></b></p>
       </div>
       <input type="hidden" id="paymentDateIndentity">
       <div class="modal-footer">
@@ -252,6 +253,7 @@ $( document ).ready(function() {
 	 initNewContractPageButtons();
 	 populatePaymentSchedules();
 	 initPaymentPopup();
+	 initInputEvent();
 });
 </script>
 </div>

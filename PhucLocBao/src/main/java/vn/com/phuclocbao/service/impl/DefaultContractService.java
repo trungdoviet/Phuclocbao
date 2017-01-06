@@ -62,7 +62,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 				contractDto.getPaymentSchedules().stream()
 				.filter(item -> ConstantVariable.NO_OPTION.equalsIgnoreCase(item.getFinish()))
 				.forEach(item ->{
-					item.setNotifiedDate(DateTimeUtil.addMoreDate(item.getPayDate(), -contractDto.getPeriodOfPayment()));
+					item.setNotifiedDate(DateTimeUtil.addMoreDate(item.getExpectedPayDate(), -contractDto.getPeriodOfPayment()));
 				});
 			}
 		}

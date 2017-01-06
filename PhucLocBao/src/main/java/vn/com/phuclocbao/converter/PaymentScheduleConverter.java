@@ -25,13 +25,14 @@ public class PaymentScheduleConverter extends BaseConverter<PaymentScheduleDto, 
 
 	@Override
 	public String[] getIgnoredProperties() {
-		return new String[]{ "contract", "payDate", "notifiedDate"};
+		return new String[]{ "contract", "payDate", "notifiedDate","expectedPayDate"};
 	}
 
 	@Override
 	public PaymentSchedule toEntityExtraProps(PaymentScheduleDto dto, PaymentSchedule dest) throws BusinessException {
 		dest.setPayDate(dto.getPayDate());
 		dest.setNotifiedDate(dto.getNotifiedDate());
+		dest.setExpectedPayDate(dto.getExpectedPayDate());
 		return dest;
 	}
 

@@ -21,8 +21,20 @@ public class PaymentSchedule implements IBaseEntity
   @javax.persistence.Id
   @javax.persistence.GeneratedValue(strategy=GenerationType.IDENTITY)
   private java.lang.Integer id;
+  private Date payDate;
+  private Date notifiedDate;
+  private Date expectedPayDate;
+  
+  
+  public Date getExpectedPayDate() {
+	return expectedPayDate;
+  }
+	
+  public void setExpectedPayDate(Date expectedPayDate) {
+		this.expectedPayDate = expectedPayDate;
+  }
 
-  /**
+/**
    * Gets the field id.
    * @return the value of the field id; may be null.
    */
@@ -40,9 +52,7 @@ public class PaymentSchedule implements IBaseEntity
     id = _id;
   }
 
-  private Date payDate;
-
-  private Date notifiedDate;
+  
 
   
   public Date getPayDate() {

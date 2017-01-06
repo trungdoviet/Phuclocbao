@@ -68,6 +68,7 @@ drop table if exists tblCompany;
         finish varchar(1),
         notifiedDate datetime,
         payDate datetime,
+        expectedPayDate datetime,
         contract_id integer,
         primary key (id)
     );
