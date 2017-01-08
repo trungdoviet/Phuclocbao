@@ -27,21 +27,21 @@ public class NavigationController {
 	
 	public static final int DEFAULT_PERIOD_OF_PAYMENT = 10;
 
-	@RequestMapping(value = { "/home"}, method = RequestMethod.GET)
+	@RequestMapping(value = { "/home"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public String productsPage(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.HOME);
 		return "home";
 	}
 	
-	@RequestMapping(value = { "/contracts"}, method = RequestMethod.GET)
+	@RequestMapping(value = { "/contracts"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public String openContract(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.CONTRACT);
 		return "contracts";
 	}
 	
-	@RequestMapping(value = { "/newContract"}, method = RequestMethod.GET)
+	@RequestMapping(value = { "/newContract"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView openNewContract(HttpServletRequest request, HttpServletResponse response, ContractBean contractBean) {
 		ModelAndView model = new ModelAndView("newContract");
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
@@ -56,6 +56,7 @@ public class NavigationController {
 		contractBean.getContractDto().setExpireDate(DateTimeUtil.addMoreDate(today, 30));
 		contractBean.getContractDto().setPeriodOfPayment(DEFAULT_PERIOD_OF_PAYMENT);
 		DateFormat dateFormat = new SimpleDateFormat(ConstantVariable.DATE_FORMAT);
+		contractBean.setSearchedCustomerContract(null);
 		System.out.println(dateFormat.format(today));
 		contractBean.setCities(VietnamCityService.loadCities());
 		System.out.println("==Current company:" + plbSession.getUserAccount().getCompanyEntity());

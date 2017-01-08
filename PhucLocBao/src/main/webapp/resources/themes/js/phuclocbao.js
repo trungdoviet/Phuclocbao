@@ -1,7 +1,16 @@
+var Phuclocbao = Phuclocbao || {};
+Phuclocbao.GlobalVar=Phuclocbao.GlobalVar || {};
+Phuclocbao.GlobalVar.Enums = Phuclocbao.GlobalVar.Enums || {}; 
 StateEnum = {
     CHECKED : "Y",
     UNCHECKED : "N"
 };
+Phuclocbao.GlobalVar.Enums.ContractState = {
+		IN_PROGRESS:"IN_PROGRESS",
+		FINISH:"FINISH",
+		BAD:"BAD"
+};
+
 function initDateLocally(){
 	$.fn.datepicker.dates['vi'] = {
 		    days: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
@@ -11,6 +20,159 @@ function initDateLocally(){
 		    monthsShort: ["Một", "Hai", "Ba", "Bốn", "Năm", "Sáu", "Bảy", "Tám", "Chín", "Mười", "Mười một", "Mười hai"],
 		    today: "Hôm nay"
 		};
+}
+function initNewContractPage(){
+	initInput();
+	initNewContractPageButtons();
+	 populatePaymentSchedules();
+	 initPaymentPopup();
+	 initInputEvent();
+}
+
+function initInput(){
+	 $("#totalAmount").autoNumeric("init", {
+	        aSep: '.',
+	        aDec: ',', 
+	        pSign: 's',
+	        aSign: ' VNĐ',
+	        vMin: 0, 
+	        vMax: 9999999999
+	    });
+		 $("#periodOfPayment").autoNumeric("init", {
+		        aSep: '.',
+		        aDec: ',', 
+		        pSign: 's',
+		        vMin: 0, 
+		        vMax: 30
+		    });
+		 $("#feeADay").autoNumeric("init", {
+		        aSep: '.',
+		        aDec: ',', 
+		        pSign: 's',
+		        aSign: ' VNĐ',
+		        vMin: 0, 
+		        vMax: 999999999
+		    });
+		 $("#customerBirthYear").autoNumeric("init", {
+		        aSep: '',
+		        aDec: '.', 
+		        vMin: 0, 
+		        vMax: 9999
+		    });
+		//$("#periodOfPayment").inputmask('Regex', { regex: "^[1-2][0-9]?$|^30$", rightAlign: true, "oncomplete": function(){ console.log('inputmask complete'); }})
+		$( "#startDate" ).datepicker({
+		    format: 'dd/mm/yyyy',
+		    todayHighlight: true,
+		    autoclose:true,
+		    language: 'vi'
+		});
+		$( "#expireDate" ).datepicker({
+			format: 'dd/mm/yyyy',
+		    autoclose:true,
+		    language: 'vi'
+		});
+		$("#startDate").inputmask("99/99/9999",{ "oncomplete": function(){ console.log('inputmask complete'); } });
+		$("#customerIdNo").autocomplete({
+			source: function( request, response ) {
+				var search = {}
+				search["customerId"] = $("#customerIdNo").val();
+				Phuclocbao.GlobalVar.customerData = undefined;
+				$.ajax({
+					type : "POST",
+					contentType : "application/json",
+					url : "search/getContract",
+					data : JSON.stringify(search),
+					dataType : 'json',
+					timeout : 100000,
+					success : function(data) {
+						Phuclocbao.GlobalVar.customerData = data;
+						console.log("SUCCESS: ", data);
+						response($.map(data.customers, function (item) {
+				            return {
+				                label: item.idNo,
+				                value: item.idNo
+				            };
+				        }));
+					},
+					error : function(e) {
+						console.log("ERROR: ", e);
+						//display(e);
+					},
+					done : function(e) {
+						console.log("DONE");
+					}
+				});
+
+		      },
+		      minLength: 2,
+		      select: function( event, ui ) {
+		    	  var selectedCustomer = findSelectedCustomer(ui.item.value);
+		    	  if(selectedCustomer != undefined){
+		    		  $("#customerName").val(selectedCustomer.name);
+		    		  $("#customerBirthYear").autoNumeric('set', selectedCustomer.birthYear);
+		    		  $("#customerPhone").val(selectedCustomer.phone);
+		    		  $("#customerAddress").val(selectedCustomer.address);
+		    		  $("#customerProvince").val(selectedCustomer.province);
+		    	  }
+		    	  var selectedContract = findSelectedCustomerContract(ui.item.value);
+		    	  if(selectedContract != undefined){
+		    		  var text = "";
+		    		  for(var i = 0; i < selectedContract.contracts.length; i++){
+		    			  var contract = selectedContract.contracts[i];
+		    			  text += "<div class='group width-100p'>";
+		    			  text +=   "<div class='list-group-item list-group-item-"+getContractStateClass(contract.state)+" '>"+getContractStateLabel(contract.state)+"</div>";
+		    			  text +=   "<div class='list-group-item-label'><a class='list-group-link'  href='#' data-id='"+contract.id+"'>Hợp đồng ngày " +contract.startDate+ "</a><br></div>";
+		    			  text += "</div>";
+		    		  }
+		    		  $("#plbContractPanel").html(text);
+		    		  $("#plbAvailableContract").show();
+		    	  }
+		        console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+		      }
+		});
+		
+}
+function getContractStateClass(state){
+	if(Phuclocbao.GlobalVar.Enums.ContractState.IN_PROGRESS == state){
+		return "warning"
+	} else if(Phuclocbao.GlobalVar.Enums.ContractState.FINISH == state){
+		return "success"
+	}else if(Phuclocbao.GlobalVar.Enums.ContractState.BAD == state){
+		return "danger"
+	}
+}
+function getContractStateLabel(state){
+	if(Phuclocbao.GlobalVar.Enums.ContractState.IN_PROGRESS == state){
+		return "HĐ Mới"
+	} else if(Phuclocbao.GlobalVar.Enums.ContractState.FINISH == state){
+		return "HĐ Cũ"
+	}else if(Phuclocbao.GlobalVar.Enums.ContractState.BAD == state){
+		return "HĐ Xấu"
+	}
+}
+function findSelectedCustomer(idNo){
+	if(Phuclocbao.GlobalVar.customerData != undefined){
+		var customers = Phuclocbao.GlobalVar.customerData.customers;
+		for(var i = 0; i < customers.length; i++){
+			if(customers[i].idNo == idNo){
+				return customers[i];
+			}
+		}
+
+	}
+	return undefined;
+}
+function findSelectedCustomerContract(idNo){
+	if(Phuclocbao.GlobalVar.customerData != undefined){
+		var customers = Phuclocbao.GlobalVar.customerData.customerContracts;
+		for(var i = 0; i < customers.length; i++){
+			if(customers[i].idNo == idNo){
+				return customers[i];
+			}
+		}
+
+	}
+	return undefined;
 }
 function initInputEvent(){
 	$("#periodOfPayment").change(function(){
@@ -265,4 +427,11 @@ function parseSchedulePaymentFromString(paymentString){
 		return periodOfPayments;
 	}
 	return undefined;
+}
+
+function hideAlert(id){
+	$("#"+id).fadeTo(2000, 500).slideUp(500, function(){
+        $("#"+id).slideUp(500);
+         });   
+     
 }

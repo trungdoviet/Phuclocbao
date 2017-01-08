@@ -5,7 +5,26 @@
 	cursor:hand;
 	background-color: #fff;
 }
-
+.group:after { visibility: hidden; display: block; font-size: 0; content: " "; clear: both; height: 0; }
+.group { display: inline-block; clear: both; padding: 3px;}
+.width-100p{
+	width: 100%;
+}
+/*contract*/
+.plb-contract div.list-group-item{
+	width:7%;
+	float:left;
+	margin-left: 5px;
+	padding:1px 8px;
+	border-radius:4px;
+}
+.plb-contract .list-group-item-label{
+	width:90%;
+	float:left;
+}
+.plb-contract .list-group-link{
+	margin-left:5px;
+}
 /*Checkbox*/
 .funkyradio{
 /* 	width:50%; */

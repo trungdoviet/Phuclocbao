@@ -1,6 +1,8 @@
 package vn.com.phuclocbao.entity;
 
 import javax.persistence.GenerationType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 import vn.com.phuclocbao.entity.base.IBaseEntity;
 
@@ -8,6 +10,9 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
  */
 @javax.persistence.Entity
 @javax.persistence.Table(name="tblCustomer")
+@NamedQueries({
+	@NamedQuery(name = "Customer_getCustomerByContainingId", query = "SELECT customer FROM Customer customer WHERE customer.idNo LIKE :customerIdNo")
+})
 public class Customer implements IBaseEntity
 {
   /** SerialVersionUID */
@@ -19,8 +24,18 @@ public class Customer implements IBaseEntity
   @javax.persistence.Id
   @javax.persistence.GeneratedValue(strategy=GenerationType.IDENTITY)
   private java.lang.Integer id;
+  private Integer birthYear;
+  
+  
+  public Integer getBirthYear() {
+	return birthYear;
+  }
+	
+  public void setBirthYear(Integer birthYear) {
+		this.birthYear = birthYear;
+  }
 
-  /**
+/**
    * Gets the field id.
    * @return the value of the field id; may be null.
    */

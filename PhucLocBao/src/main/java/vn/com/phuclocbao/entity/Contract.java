@@ -17,7 +17,7 @@ public class Contract implements IBaseEntity
   @javax.persistence.Id
   @javax.persistence.GeneratedValue()
   private java.lang.Integer id;
-
+  
   /**
    * Gets the field id.
    * @return the value of the field id; may be null.
@@ -181,8 +181,20 @@ public class Contract implements IBaseEntity
   {
     notifyBeforePeriod = _notifyBeforePeriod;
   }
+  
+  @javax.persistence.Column(length=20)
+  private String state;
+  
 
-  @javax.persistence.Column(length=1024)
+  public String getState() {
+	return state;
+  }
+	
+  public void setState(String state) {
+	this.state = state;
+  }
+
+@javax.persistence.Column(length=1024)
   private java.lang.String note;
 
   /**

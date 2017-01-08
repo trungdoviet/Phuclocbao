@@ -30,6 +30,9 @@
 		<property name="companyDao" ref="companyDao"></property>
 		<property name="contractDao" ref="contractDao"></property>
 	</bean>
+	<bean id="customerService" class="vn.com.phuclocbao.service.impl.DefaultCustomerService">
+		<property name="customerDao" ref="customerDao"></property>
+	</bean>
 
 	<bean name="userDao" class="vn.com.phuclocbao.dao.impl.DefaultUserDao">
 	</bean>
@@ -37,7 +40,8 @@
 	</bean>
 	<bean name="contractDao" class="vn.com.phuclocbao.dao.impl.DefaultContractDao">
 	</bean>
-
+	<bean name="customerDao" class="vn.com.phuclocbao.dao.impl.DefaultCustomerDao">
+	</bean>
 	  <bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />

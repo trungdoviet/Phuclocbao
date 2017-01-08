@@ -1,5 +1,8 @@
 package vn.com.phuclocbao.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import vn.com.phuclocbao.bean.Views;
 import vn.com.phuclocbao.dto.base.IBaseDTO;
 
 /**
@@ -13,13 +16,29 @@ public class CustomerDto implements IBaseDTO {
 	/**
 	 * Identifier
 	 */
+	@JsonView(Views.Public.class)
 	private java.lang.Integer id;
+	@JsonView(Views.Public.class)
 	private java.lang.String idNo;
+	@JsonView(Views.Public.class)
 	private java.lang.String name;
+	@JsonView(Views.Public.class)
 	private java.lang.String phone;
+	@JsonView(Views.Public.class)
 	private java.lang.String address;
+	@JsonView(Views.Public.class)
 	private java.lang.String province;
 	private ContractDto contract;
+	@JsonView(Views.Public.class)
+	private Integer birthYear;
+
+	public Integer getBirthYear() {
+		return birthYear;
+	}
+
+	public void setBirthYear(Integer birthYear) {
+		this.birthYear = birthYear;
+	}
 
 	/**
 	 * Gets the field id.

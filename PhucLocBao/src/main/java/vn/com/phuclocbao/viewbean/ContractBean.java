@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import vn.com.phuclocbao.bean.CityDto;
+import vn.com.phuclocbao.bean.CustomerContract;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.CustomerDto;
@@ -14,6 +15,7 @@ public class ContractBean{
 	private CompanyDto currentCompany;
 	private List<CityDto> cities;
 	private String paidInfo;
+	private CustomerContract searchedCustomerContract;
 	
 	public CompanyDto getCurrentCompany() {
 		return currentCompany;
@@ -46,4 +48,11 @@ public class ContractBean{
 	public void setPaidInfo(String paidInfo) {
 		this.paidInfo = paidInfo;
 	}
+	public CustomerContract getSearchedCustomerContract() {
+		return searchedCustomerContract;
+	}
+	public void setSearchedCustomerContract(CustomerContract searchedCustomerContract) {
+		this.searchedCustomerContract = searchedCustomerContract;
+	}
+	
 }

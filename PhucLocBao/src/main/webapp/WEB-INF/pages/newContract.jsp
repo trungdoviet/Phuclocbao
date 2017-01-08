@@ -1,5 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@include file="includes/jstl.jsp"%>
 <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 	<div class="row">
 		<ol class="breadcrumb">
@@ -23,21 +24,28 @@
 							<spring:bind path="contractDto.customer.idNo">
 								<div class="form-group ${status.error ? 'has-error' : ''}">
 									<label>Số CMND/Số GPLX:</label>
-									<form:input class="form-control" placeholder="vd: BA-012345678" name="customerIdNo" path="contractDto.customer.idNo"/>
+									<form:input id="customerIdNo" class="form-control" placeholder="vd: BA-012345678" name="customerIdNo" path="contractDto.customer.idNo"/>
 									<form:errors path="contractDto.customer.idNo" cssClass="error" />
 								</div>
 							</spring:bind>
 							<spring:bind path="contractDto.customer.name">
 								<div class="form-group ${status.error ? 'has-error' : ''}">
 									<label>Tên khách hàng:</label>
-									<form:input class="form-control" placeholder="vd: Nguyễn Văn A" name="customerName" path="contractDto.customer.name"/>
+									<form:input id="customerName" autocomplete="new-password" class="form-control" placeholder="vd: Nguyễn Văn A" name="customerName" path="contractDto.customer.name"/>
 									<form:errors path="contractDto.customer.name" cssClass="error" />
+								</div>
+							</spring:bind>
+							<spring:bind path="contractDto.customer.birthYear">
+								<div class="form-group ${status.error ? 'has-error' : ''}">
+									<label>Năm sinh:</label>
+									<form:input id="customerBirthYear" class="form-control" placeholder="vd: 1970" name="customerBirthYear" path="contractDto.customer.birthYear"/>
+									<form:errors path="contractDto.customer.birthYear" cssClass="error" />
 								</div>
 							</spring:bind>
 							<spring:bind path="contractDto.customer.phone">		
 								<div class="form-group ${status.error ? 'has-error' : ''}">
 									<label>Số điện thoại:</label>
-									<form:input class="form-control" placeholder="vd: 0909 123456" name="customerPhone" path="contractDto.customer.phone"/>
+									<form:input id="customerPhone" class="form-control" placeholder="vd: 0909 123456" name="customerPhone" path="contractDto.customer.phone"/>
 									<form:errors path="contractDto.customer.phone" cssClass="error" />
 								</div>		
 							</spring:bind>						
@@ -46,14 +54,14 @@
 							<spring:bind path="contractDto.customer.address">
 								<div class="form-group ${status.error ? 'has-error' : ''}">
 									<label>Địa chỉ:</label>
-									<form:textarea class="form-control" placeholder="vd: B64 Bạch Đằng" rows="6" name="customerAddress" path="contractDto.customer.address"/>
+									<form:textarea id="customerAddress" class="form-control" placeholder="vd: B64 Bạch Đằng" rows="6" name="customerAddress" path="contractDto.customer.address"/>
 									<form:errors path="contractDto.customer.address"  cssClass="error" />
 								</div>
 							</spring:bind>
 							<spring:bind path="contractDto.customer.province">		
 								<div class="form-group ${status.error ? 'has-error' : ''}" style="margin-top: -6px;">
 									<label>Tỉnh/Thành phố:</label>
-									<form:select class="form-control" name="customerProvince" path="contractDto.customer.province">
+									<form:select class="form-control" id="customerProvince" name="customerProvince" path="contractDto.customer.province">
 										<form:option value="" label="--Chọn Tỉnh/TP--" />
 										<form:options items="${contractBean.cities}" itemValue="code" itemLabel="name"  />
 									</form:select>
@@ -61,6 +69,26 @@
 								</div>
 							</spring:bind>
 						</div>
+						<div id="plbAvailableContract" class="col-md-12" style="display:none">
+							<div class="form-group">
+								<label>Danh sách hợp đồng tìm được</label>
+							</div>
+							<div  id="plbContractPanel" class="list-group plb-contract">
+							<!-- <div class="group width-100p">
+								  <div class="list-group-item list-group-item-success" >HĐ Mới</div>
+								  <div class="list-group-item-label"><a class="list-group-link" href="#">Cras sit amet nibh libero</a><br></div>
+								</div> -->
+								<c:if test="${contractBean.searchedCustomerContract != null}">
+									<c:forEach var="contract" items="${contractBean.searchedCustomerContract.contracts}" varStatus="loop">
+										<div class="group width-100p"> 
+									  <div class="list-group-item list-group-item-success" >HĐ Mới</div>
+									  <div class="list-group-item-label"><a class="list-group-link" href="#">Hợp đồng ngày ${contract.startDate}</a><br></div>
+									</div>
+									</c:forEach>
+								</c:if>
+							</div>
+						</div>
+						
 					</div>
 				</div>
 		</div><!-- /.col-->
@@ -250,10 +278,7 @@
 </div><!-- /.modal -->
 <script type="text/javascript">
 $( document ).ready(function() {
-	 initNewContractPageButtons();
-	 populatePaymentSchedules();
-	 initPaymentPopup();
-	 initInputEvent();
+	initNewContractPage();
 });
 </script>
 </div>

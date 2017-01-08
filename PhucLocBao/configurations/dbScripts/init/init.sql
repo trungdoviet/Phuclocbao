@@ -45,6 +45,7 @@ drop table if exists tblCompany;
         feeADay double precision not null,
         note varchar(1024),
         notifyBeforePeriod varchar(1),
+        state varchar(20),
         periodOfPayment integer not null,
         startDate datetime not null,
         totalAmount double precision not null,
@@ -59,6 +60,7 @@ drop table if exists tblCompany;
         name varchar(255) not null,
         phone varchar(255) not null,
         province varchar(255),
+        birthYear integer,
         contract_id integer not null,
         primary key (id)
     );
@@ -136,7 +138,7 @@ drop table if exists tblCompany;
         
 INSERT INTO `phuclocbao`.`tblcompanytype` (`name`) VALUES ('Trụ sở chính');
 INSERT INTO `phuclocbao`.`tblcompanytype` (`name`) VALUES ('Chi nhánh');
-INSERT INTO `phuclocbao`.`tblcompany` (`address`,`description`,`name`, `companytype`) VALUES ('39b Truong son','Axon active','Axon active vietnam','1');
+INSERT INTO `phuclocbao`.`tblcompany` (`address`,`description`,`name`, `companytype`) VALUES ('B64, Bạch Đằng, Tân Bình, TP.HCM','Thế chấp xe tại tphcm','Phúc Lộc Bảo','1');
 
-INSERT INTO `phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `companyEntity_id`) VALUES ('test@mail.com', 'phuc loc bao', '123456', 'phuclocbao', '1');
+INSERT INTO `phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao', '123456', 'phuclocbao', '1');
 

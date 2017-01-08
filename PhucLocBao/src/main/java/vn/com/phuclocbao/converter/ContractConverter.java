@@ -5,6 +5,7 @@ import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.entity.Contract;
 import vn.com.phuclocbao.entity.Customer;
 import vn.com.phuclocbao.entity.TransportOwner;
+import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.exception.BusinessException;
 
 public class ContractConverter extends BaseConverter<ContractDto, Contract>{
@@ -41,7 +42,7 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 
 	public Contract toNewContract(ContractDto dto, Contract entity) throws BusinessException {
 		entity = this.toEntityExtra(dto, entity, "id");
-		//entity.setCompany(CompanyConverter.getInstance().toEntity(dto.getCompany(),entity.getCompany()));
+		entity.setState(ContractStatusType.IN_PROGRESS.getName());
 		entity.setCustomer(new Customer());
 		entity.setOwner(new TransportOwner());
 		entity.setPaymentSchedules(new HashSet<>());
