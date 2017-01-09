@@ -6,4 +6,5 @@ import vn.com.phuclocbao.exception.BusinessException;
 public interface ContractDao {
 	public Contract persist( Contract entity) throws BusinessException;
 	public Contract merge( Contract entity) throws BusinessException;
+	public Contract findById(Integer id) throws BusinessException;
 }

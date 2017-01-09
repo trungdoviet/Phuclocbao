@@ -26,9 +26,16 @@ function initNewContractPage(){
 	initNewContractPageButtons();
 	 populatePaymentSchedules();
 	 initPaymentPopup();
+	 initContractPopup();
 	 initInputEvent();
 }
-
+function showhideAvailableContractPanel(){
+	if($("#plbContractPanel").html().trim() != ""){
+		$("#plbAvailableContract").show();
+	} else{
+		$("#plbAvailableContract").hide();
+	}
+}
 function initInput(){
 	 $("#totalAmount").autoNumeric("init", {
 	        aSep: '.',
@@ -86,7 +93,6 @@ function initInput(){
 					timeout : 100000,
 					success : function(data) {
 						Phuclocbao.GlobalVar.customerData = data;
-						console.log("SUCCESS: ", data);
 						response($.map(data.customers, function (item) {
 				            return {
 				                label: item.idNo,
@@ -96,7 +102,6 @@ function initInput(){
 					},
 					error : function(e) {
 						console.log("ERROR: ", e);
-						//display(e);
 					},
 					done : function(e) {
 						console.log("DONE");
@@ -121,7 +126,7 @@ function initInput(){
 		    			  var contract = selectedContract.contracts[i];
 		    			  text += "<div class='group width-100p'>";
 		    			  text +=   "<div class='list-group-item list-group-item-"+getContractStateClass(contract.state)+" '>"+getContractStateLabel(contract.state)+"</div>";
-		    			  text +=   "<div class='list-group-item-label'><a class='list-group-link'  href='#' data-id='"+contract.id+"'>Hợp đồng ngày " +contract.startDate+ "</a><br></div>";
+		    			  text +=   "<div class='list-group-item-label'><a class='list-group-link' data-toggle='modal' data-target='#contractDetail'  href='#' data-id='"+contract.id+"'>Hợp đồng ngày " +contract.startDate+ "</a><br></div>";
 		    			  text += "</div>";
 		    		  }
 		    		  $("#plbContractPanel").html(text);
@@ -236,7 +241,7 @@ function calculatePaymentSchedule(){
 	if(periodString != ""){
 		var startDate = Date.parseExact ( startDateString,dateFormat);
 		var expireDate = Date.parseExact ( expireDateString,dateFormat);
-		var period = parseInt(periodString);
+		var period = parseInt(periodString) - 1;
 		var periodOfPayments = [];
 		if(startDate.compareTo(expireDate) <= 0){
 			var nextPayDay = startDate;
@@ -249,11 +254,13 @@ function calculatePaymentSchedule(){
 				} else {
 					stop = true;
 				}
+				if(periodOfPayments.length == 1){
+					period++;
+				}
 			}while (!stop);
 			var objTemp = createPaymentSchedule(expireDate.toString(dateFormat),"",StateEnum.UNCHECKED);
 			periodOfPayments.push(objTemp);
 			return periodOfPayments;
-			console.log("5555:" + periodOfPayments);
 		}
 	}
 	return undefined;
@@ -272,6 +279,34 @@ function initNewContractPageButtons(){
 		 $("#feeADay").val(feeAday);
 		 
 		 collectPaymentSchedule();
+	});
+}
+function initContractPopup(){
+	$('#contractDetail').on('shown.bs.modal', function (event) {
+		var linkTag = $(event.relatedTarget);
+		var contractId = $(linkTag).attr('data-id');
+		if(contractId == ""){
+			return;
+		}
+		var search = {}
+		search["contractId"] = contractId;
+		$.ajax({
+			type : "POST",
+			contentType : "application/json",
+			url : "search/getContractDetail",
+			data : JSON.stringify(search),
+			dataType : 'json',
+			timeout : 100000,
+			success : function(data) {
+				console.log("Contract" + data);
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
+		});
 	});
 }
 function initPaymentPopup(){

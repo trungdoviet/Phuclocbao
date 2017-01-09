@@ -3,7 +3,8 @@ package vn.com.phuclocbao.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;import java.util.stream.Collector;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -86,5 +87,11 @@ public class VietnamCityService {
 		});
 		
 		return dtos.stream().sorted((c1, c2) -> StringUtils.compare(c1.getCode(), c2.getCode())).collect(Collectors.toList());
+	}
+	public static String getProvinceName(String code){
+		if(cities.containsKey(code)){
+			return (String) cities.get(code);
+		}
+		return StringUtils.EMPTY;
 	}
 }

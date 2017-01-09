@@ -74,18 +74,22 @@
 								<label>Danh sách hợp đồng tìm được</label>
 							</div>
 							<div  id="plbContractPanel" class="list-group plb-contract">
-							<!-- <div class="group width-100p">
-								  <div class="list-group-item list-group-item-success" >HĐ Mới</div>
-								  <div class="list-group-item-label"><a class="list-group-link" href="#">Cras sit amet nibh libero</a><br></div>
-								</div> -->
 								<c:if test="${contractBean.searchedCustomerContract != null}">
 									<c:forEach var="contract" items="${contractBean.searchedCustomerContract.contracts}" varStatus="loop">
 										<div class="group width-100p"> 
-									  <div class="list-group-item list-group-item-success" >HĐ Mới</div>
-									  <div class="list-group-item-label"><a class="list-group-link" href="#">Hợp đồng ngày ${contract.startDate}</a><br></div>
+										 <c:if test="${contract.state == 'IN_PROGRESS'}">
+										  	<div class="list-group-item list-group-item-warning" >HĐ Mới </div>
+										 </c:if>
+										 <c:if test="${contract.state == 'FINISH'}">
+										  	<div class="list-group-item list-group-item-success" >HĐ Cũ</div>
+										  </c:if>
+										   <c:if test="${contract.state == 'BAD'}">
+										  	<div class="list-group-item list-group-item-bad" >HĐ Xấu</div>
+										  </c:if>
+									  <div class="list-group-item-label"><a class="list-group-link" data-toggle='modal' data-target='#contractDetail' data-id='${contract.id}' href="#">Hợp đồng ngày ${contract.startDate}</a><br></div>
 									</div>
 									</c:forEach>
-								</c:if>
+								  </c:if>
 							</div>
 						</div>
 						
@@ -104,7 +108,7 @@
 							<spring:bind path="contractDto.contractType">		
 								<div class="form-group ${status.error ? 'has-error' : ''}">
 									<label>Loại hình:</label>
-									<form:select readonly="true" class="form-control" name="customerProvince" path="contractDto.contractType">
+									<form:select readonly="true" class="form-control" name="contractType" path="contractDto.contractType">
 										<option value="RMB">Cho thuê xe</option>
 										<!-- <option value="HN"></option> -->
 									</form:select>
@@ -276,9 +280,28 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div class="modal fade" id="contractDetail" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Thông tin hợp đồng</h4>
+      </div>
+      <div class="modal-body">
+        <p>Something</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="paymentClose">Đóng</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <script type="text/javascript">
 $( document ).ready(function() {
 	initNewContractPage();
+	showhideAvailableContractPanel();
 });
 </script>
 </div>

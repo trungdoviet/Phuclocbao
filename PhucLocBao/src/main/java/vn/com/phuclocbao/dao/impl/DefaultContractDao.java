@@ -11,7 +11,7 @@ import vn.com.phuclocbao.dao.ContractDao;
 import vn.com.phuclocbao.entity.Contract;
 @Repository
 @Transactional
-public class DefaultContractDao extends BaseDaoJpaImpl<Contract, Long> implements ContractDao {
+public class DefaultContractDao extends BaseDaoJpaImpl<Contract, Integer> implements ContractDao {
 	@PersistenceContext
 	private EntityManager manager;
 	@Override

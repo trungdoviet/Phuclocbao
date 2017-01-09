@@ -3,11 +3,13 @@ package vn.com.phuclocbao.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import org.apache.commons.lang3.time.DateUtils;
+import java.util.concurrent.TimeUnit;
 
 public class DateTimeUtil {
 	public static Date getCurrentDate(){
@@ -30,4 +32,22 @@ public class DateTimeUtil {
 		DateFormat df = new SimpleDateFormat(ConstantVariable.DATE_FORMAT);
 		return df.format(date);
 	}
+	public static long daysBetweenDates(Date first, Date last){
+		long diff = last.getTime() - first.getTime();
+		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+	}
+	public static int calculateLocalDates(LocalDate birthDate, LocalDate currentDate) {
+        if ((birthDate != null) && (currentDate != null)) {
+            return Period.between(birthDate, currentDate).getYears();
+        } else {
+            return 0;
+        }
+    }
+	public static LocalDate convertToLocalDate(Date input){
+		return input.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+	public static int calculateDayBetween(Date firstDate, Date currentDate) {
+		return calculateLocalDates(convertToLocalDate(firstDate), convertToLocalDate(currentDate));
+	}
+	
 }

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import vn.com.phuclocbao.controller.LoginController;
 import vn.com.phuclocbao.converter.ContractConverter;
 import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.dao.ContractDao;
@@ -26,6 +25,7 @@ import vn.com.phuclocbao.service.BaseService;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.DateTimeUtil;
+import vn.com.phuclocbao.view.ContractView;
 @Service
 public class DefaultContractService extends BaseService implements ContractService {
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DefaultContractService.class);
@@ -97,6 +97,19 @@ public class DefaultContractService extends BaseService implements ContractServi
 	}
 	public void setContractDao(ContractDao contractDao) {
 		this.contractDao = contractDao;
+	}
+	@Override
+	public ContractView findContractById(Integer id) throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<ContractView>() {
+			@Override
+			public ContractView execute() throws BusinessException, ClassNotFoundException, IOException {
+				Contract contract = contractDao.findById(id);
+				if(contract != null) {
+					return ContractConverter.getInstance().toContractView(contract);
+				}
+				return null;
+			}
+		});
 	}
 	
 
