@@ -289,7 +289,27 @@
         <h4 class="modal-title">Thông tin hợp đồng</h4>
       </div>
       <div class="modal-body">
-        <p>Something</p>
+        
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<!-- <div class="panel-heading"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Thông tin khách hàng</div> -->
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-4">
+								dsasad
+								</div>
+								<div class="col-md-8">
+								thong tin
+								</div>
+							</div>
+						</div>
+					</div>
+						
+				</div>
+			</div><!--/.row-->
+        
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" id="paymentClose">Đóng</button>

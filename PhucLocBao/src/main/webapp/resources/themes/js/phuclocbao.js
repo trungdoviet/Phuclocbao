@@ -26,7 +26,7 @@ function initNewContractPage(){
 	initNewContractPageButtons();
 	 populatePaymentSchedules();
 	 initPaymentPopup();
-	 initContractPopup();
+	 //initContractPopup();
 	 initInputEvent();
 }
 function showhideAvailableContractPanel(){
@@ -126,7 +126,7 @@ function initInput(){
 		    			  var contract = selectedContract.contracts[i];
 		    			  text += "<div class='group width-100p'>";
 		    			  text +=   "<div class='list-group-item list-group-item-"+getContractStateClass(contract.state)+" '>"+getContractStateLabel(contract.state)+"</div>";
-		    			  text +=   "<div class='list-group-item-label'><a class='list-group-link' data-toggle='modal' data-target='#contractDetail'  href='#' data-id='"+contract.id+"'>Hợp đồng ngày " +contract.startDate+ "</a><br></div>";
+		    			  text +=   "<div class='list-group-item-label'><a class='list-group-link' onclick='"+_getContractFunc(contract.id)+"'  href='#' data-id='"+contract.id+"'>Hợp đồng ngày " +contract.startDate+ "</a><br></div>";
 		    			  text += "</div>";
 		    		  }
 		    		  $("#plbContractPanel").html(text);
@@ -136,6 +136,9 @@ function initInput(){
 		      }
 		});
 		
+}
+function _getContractFunc(id){
+	return "openContractDetail("+id+")";
 }
 function getContractStateClass(state){
 	if(Phuclocbao.GlobalVar.Enums.ContractState.IN_PROGRESS == state){
@@ -281,7 +284,33 @@ function initNewContractPageButtons(){
 		 collectPaymentSchedule();
 	});
 }
-function initContractPopup(){
+
+function openContractDetail(contractId){
+	if(contractId == ""){
+		return false;
+	}
+	var search = {};
+	search["contractId"] = contractId;
+	$.ajax({
+		type : "POST",
+		contentType : "application/json",
+		url : "search/getContractDetail",
+		data : JSON.stringify(search),
+		dataType : 'json',
+		timeout : 100000,
+		success : function(data) {
+			console.log(data);
+			$('#contractDetail').modal("show");
+		},
+		error : function(e) {
+			console.log("ERROR: ", e);
+		},
+		done : function(e) {
+			console.log("DONE");
+		}
+	});
+}
+/*function initContractPopup(){
 	$('#contractDetail').on('shown.bs.modal', function (event) {
 		var linkTag = $(event.relatedTarget);
 		var contractId = $(linkTag).attr('data-id');
@@ -298,7 +327,7 @@ function initContractPopup(){
 			dataType : 'json',
 			timeout : 100000,
 			success : function(data) {
-				console.log("Contract" + data);
+				console.log(data);
 			},
 			error : function(e) {
 				console.log("ERROR: ", e);
@@ -308,7 +337,7 @@ function initContractPopup(){
 			}
 		});
 	});
-}
+}*/
 function initPaymentPopup(){
 	$('#paymentModal').on('shown.bs.modal', function (event) {
 		var dateFormat = "dd/MM/yyyy"; 
