@@ -9,7 +9,8 @@ import vn.com.phuclocbao.bean.Views;
 public class ContractView {
 	@JsonView(Views.Contract.class)
 	private String companyName;
-	
+	@JsonView(Views.Contract.class)
+	private String phone;
 	@JsonView(Views.Contract.class)
 	private String contractType;
 	@JsonView(Views.Contract.class)
@@ -25,6 +26,12 @@ public class ContractView {
 	@JsonView(Views.Contract.class)
 	private PropertyDetail propertyDetail;
 	
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 	public PropertyDetail getPropertyDetail() {
 		return propertyDetail;
 	}

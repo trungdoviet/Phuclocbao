@@ -255,7 +255,7 @@
 				</button>
 				<button type="button" class="btn btn-slave" name="cancel" onclick="location.href='${cancelUrl}'">
 					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-					Đóng
+					Thoát
 				</button>
 			</div>
 		</div>
@@ -274,7 +274,7 @@
       </div>
       <input type="hidden" id="paymentDateIndentity">
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" id="paymentClose">Đóng</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="paymentClose">Thoát</button>
         <button type="button" class="btn btn-primary" id="paymentOk">Đồng ý</button>
       </div>
     </div><!-- /.modal-content -->
@@ -293,15 +293,64 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="panel panel-default">
-						<!-- <div class="panel-heading"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Thông tin khách hàng</div> -->
+						<h5 class="text-center"><span class="glyphicon glyphicon-user" aria-hidden="true"></span><strong class="bottom-line">Thông tin khách hàng</strong></h5>
 						<div class="panel-body">
 							<div class="row">
-								<div class="col-md-4">
-								dsasad
-								</div>
-								<div class="col-md-8">
-								thong tin
-								</div>
+								<div class="col-md-4 text-right"><strong class="bottom-line">Số CMND/GPLX:</strong></div><div id="cdIdNo" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Tên khách hàng:</strong></div><div id="cdCustomerName" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Năm sinh</strong></div><div id="cdCustomerBirthyear" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Số điện thoại:</strong></div><div id="cdCustomerPhone" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Địa chỉ:</strong></div><div id="cdCustomerAddress" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Tỉnh/Thành phố:</strong></div><div id="cdCustomerProvince" class="col-md-8 text-left"></div>
+							</div>
+						</div>
+						<h5 class="text-center"><span class="glyphicon glyphicon-link" aria-hidden="true"></span><strong class="bottom-line">Thông tin hợp đồng</strong></h5>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Công ty:</strong></div><div id="cdCompanyName" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Số điện thoại Công ty:</strong></div><div id="cdCompanyPhone" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Loại hình:</strong></div><div id="cdContractType" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Số tiền:</strong></div><div id="cdTotalAmount" class="col-md-8 text-right"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Ngày thuê:</strong></div><div id="cdStartDate" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Lịch trả phí:</strong></div><div id="cdPaymentSchedule" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Ngày hết hạn:</strong></div><div id="cdExpireDate" class="col-md-8 text-left"></div>
+							</div>
+						</div>
+						<h5 class="text-center"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><strong class="bottom-line">Thông tin tài sản</strong></h5>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Loại xe:</strong></div><div id="cdTransportType" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right "><strong class="bottom-line">Biển kiểm soát:</strong></div><div id="cdNumberPlate" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right "><strong class="bottom-line">Số khung:</strong></div><div id="cdChassisFrameNumber" class="col-md-8 text-left"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 text-right "><strong class="bottom-line">Số máy:</strong></div><div id="cdChassisNumber" class="col-md-8 text-left"></div>
 							</div>
 						</div>
 					</div>

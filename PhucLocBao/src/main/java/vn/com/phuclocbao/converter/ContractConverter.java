@@ -24,8 +24,8 @@ import vn.com.phuclocbao.view.PropertyDetail;
 public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 
 	private static ContractConverter instance;
-	private static final String PAYMENT_SCHEDULE_TEMPLATE = "<span id='exPayDate'> Ngày: {0}</span> Đã thanh toán ({1}) - Trước {2} ngày";
-	private static final String PAYMENT_SCHEDULE_TEMPLATE_NOT_DONE_YET = "<span id='exPayDate'> Ngày: {0}</span>";
+	private static final String PAYMENT_SCHEDULE_TEMPLATE = "<span id='exPayDate'> Ngày: <strong>{0}</strong></span><span class='glyphicon glyphicon-ok color-check-day' aria-hidden='true'></span> Đã thanh toán ({1}) - Trước {2} ngày";
+	private static final String PAYMENT_SCHEDULE_TEMPLATE_NOT_DONE_YET = "<span id='exPayDate'> Ngày: <strong>{0}</strong></span>";
 	private static final String PARAM_EXPECTED_PAY_DATE = "{0}";
 	private static final String PARAM_PAY_DATE = "{1}";
 	private static final String PARAM_PRIOR_TO_DATE = "{2}";
@@ -73,6 +73,7 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 	public ContractView toContractView(Contract contract){
 		ContractView view = new ContractView();
 		view.setCompanyName(contract.getCompany().getName());
+		view.setPhone(contract.getCompany().getPhoneNumber());
 		view.setContractType(ContractType.getValueByName(contract.getContractType()).getDesc());
 		view.setExpireDate(DateTimeUtil.date2String(contract.getExpireDate()));
 		view.setStartDate(DateTimeUtil.date2String(contract.getStartDate()));

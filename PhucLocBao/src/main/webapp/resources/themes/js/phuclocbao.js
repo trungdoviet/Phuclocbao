@@ -214,6 +214,8 @@ function populatePaymentSchedules(){
 			content +="</div>";
 		}
 		$("#paymentPeriodPanel").html(content);
+	}else {
+		$("#paymentPeriodPanel").html("");
 	}
 }
 function getStateByCode(code){
@@ -300,15 +302,63 @@ function openContractDetail(contractId){
 		timeout : 100000,
 		success : function(data) {
 			console.log(data);
-			$('#contractDetail').modal("show");
+			populateContractDetail(data);
 		},
 		error : function(e) {
+			
 			console.log("ERROR: ", e);
 		},
 		done : function(e) {
 			console.log("DONE");
 		}
 	});
+}
+function populateContractDetail(data){
+	if(data.code == null){
+		var numberConf = {
+		        aSep: '.',
+		        aDec: ',', 
+		        pSign: 's',
+		        aSign: ' VNĐ',
+		        vMin: 0, 
+		        vMax: 99999999999
+		};
+		var contract = data.contract;
+		//customer
+		$("#cdCustomerName").text(contract.customerView.name);
+		$("#cdCustomerPhone").text(contract.customerView.phone);
+		$("#cdIdNo").text(contract.customerView.idNo);
+		$("#cdCustomerProvince").text(contract.customerView.province);
+		$("#cdCustomerBirthyear").text(contract.customerView.birthYear);
+		$("#cdCustomerAddress").text(contract.customerView.address);
+		//contract
+		$("#cdCompanyName").text(contract.companyName);
+		$("#cdCompanyPhone").text(contract.phone);
+		$("#cdContractType").text(contract.contractType);
+		$("#cdExpireDate").text(contract.expireDate);
+		$("#cdStartDate").text(contract.startDate);
+		$("#cdTotalAmount").text($.fn.autoFormat(contract.totalAmount,numberConf));
+		var payments = contract.paymentScheduleDetails;
+		var paymentText = "";
+		for(var i = 0; i < payments.length; i++){
+			paymentText += "<div>"
+			paymentText += payments[i];
+			paymentText += "</div>"
+		}
+		$("#cdPaymentSchedule").html(paymentText);
+		//additional info
+		$("#cdTransportType").text(contract.propertyDetail.type);
+		$("#cdNumberPlate").text(contract.propertyDetail.numberPlate);
+		$("#cdChassisFrameNumber").text(contract.propertyDetail.chassisFrameNumber);
+		$("#cdChassisNumber").text(contract.propertyDetail.chassisNumber);
+		$('#contractDetail').modal("show");
+	} else {
+		showErrorDialog(msg);
+	}
+}
+function showErrorDialog(msg){
+	$("#messageContent").text("Đã có lỗi xảy ra:" + msg);
+	$("#errorModal").modal("show");
 }
 /*function initContractPopup(){
 	$('#contractDetail').on('shown.bs.modal', function (event) {

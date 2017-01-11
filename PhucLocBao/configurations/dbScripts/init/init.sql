@@ -138,7 +138,7 @@ drop table if exists tblCompany;
         
 INSERT INTO `phuclocbao`.`tblcompanytype` (`name`) VALUES ('Trụ sở chính');
 INSERT INTO `phuclocbao`.`tblcompanytype` (`name`) VALUES ('Chi nhánh');
-INSERT INTO `phuclocbao`.`tblcompany` (`address`,`description`,`name`, `companytype`) VALUES ('B64, Bạch Đằng, Tân Bình, TP.HCM','Thế chấp xe tại tphcm','Phúc Lộc Bảo','1');
+INSERT INTO `phuclocbao`.`tblcompany` (`address`,`description`,`name`, `companytype`, `phoneNumber`) VALUES ('B64, Bạch Đằng, Tân Bình, TP.HCM','Thế chấp xe tại tphcm','Phúc Lộc Bảo','1' '0965506248');
 
 INSERT INTO `phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao', '123456', 'phuclocbao', '1');
 

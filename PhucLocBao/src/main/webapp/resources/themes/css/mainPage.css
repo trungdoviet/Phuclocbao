@@ -25,6 +25,20 @@
 .plb-contract .list-group-link{
 	margin-left:5px;
 }
+.modal-body {
+    max-height: 700px;
+    
+}
+.modal-dialog{
+	width: 800px;
+}
+.color-check-day{
+	color: #30a5ff;
+	padding-left: 3px;
+}
+.bottom-line{
+	border-bottom: solid 1px #cdcdcd;
+}
 /*Checkbox*/
 .funkyradio{
 /* 	width:50%; */
