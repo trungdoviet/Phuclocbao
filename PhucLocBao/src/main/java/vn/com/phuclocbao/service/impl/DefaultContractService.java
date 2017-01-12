@@ -1,6 +1,7 @@
 package vn.com.phuclocbao.service.impl;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.EntityManager;
@@ -19,6 +20,7 @@ import vn.com.phuclocbao.dao.PersistenceExecutable;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.entity.Contract;
+import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.BaseService;
@@ -106,6 +108,20 @@ public class DefaultContractService extends BaseService implements ContractServi
 				Contract contract = contractDao.findById(id);
 				if(contract != null) {
 					return ContractConverter.getInstance().toContractView(contract);
+				}
+				return null;
+			}
+		});
+	}
+	@Override
+	public List<ContractDto> findContractsByStateAndId(ContractStatusType state, Integer companyId)
+			throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<List<ContractDto>>() {
+			@Override
+			public List<ContractDto> execute() throws BusinessException, ClassNotFoundException, IOException {
+				List<Contract> contracts = contractDao.getContractByStatusAndCompanyId(state, companyId);
+				if(CollectionUtils.isNotEmpty(contracts)) {
+					//return ContractConverter.getInstance().toDto(entity, dest, ignoredProperties)
 				}
 				return null;
 			}

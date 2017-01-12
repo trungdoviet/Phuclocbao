@@ -9,11 +9,6 @@
 		</ol>
 	</div><!--/.row-->
 	
-	<!-- <div class="row">
-		<div class="col-lg-12">
-			<h1 class="page-header">Tạo hợp đồng mới</h1>
-		</div>
-	</div> --><!--/.row-->
 <form:form role="form" id="newContractForm" method="post" action="newContractAction" modelAttribute="contractBean">
 	<div class="row">
 		<div class="col-lg-12">

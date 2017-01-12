@@ -15,7 +15,8 @@ public class MenuBean {
 		items = new HashMap<>();
 		items.put(MenuDefinition.HOME.getName(), new MenuItem());
 		items.put(MenuDefinition.NEW_CONTRACT.getName(), new MenuItem());
-		items.put(MenuDefinition.CONTRACT.getName(), new MenuItem());
+		items.put(MenuDefinition.MANAGE_CONTRACT.getName(), new MenuItem());
+		items.put(MenuDefinition.OLD_CONTRACT.getName(), new MenuItem());
 		makeActive(MenuDefinition.HOME);
 	}
 	

@@ -6,6 +6,7 @@ encoding//src/main/resources/messages.properties=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/home.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/index.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/layouts/loginPage.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/pages/mngContracts.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/newContract.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/templates/defaultHeader.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/templates/defaultMenu.jsp=UTF-8

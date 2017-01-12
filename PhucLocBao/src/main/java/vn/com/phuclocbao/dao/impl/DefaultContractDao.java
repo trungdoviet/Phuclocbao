@@ -1,7 +1,10 @@
 package vn.com.phuclocbao.dao.impl;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.com.phuclocbao.dao.BaseDaoJpaImpl;
 import vn.com.phuclocbao.dao.ContractDao;
 import vn.com.phuclocbao.entity.Contract;
+import vn.com.phuclocbao.enums.ContractStatusType;
+import vn.com.phuclocbao.exception.BusinessException;
 @Repository
 @Transactional
 public class DefaultContractDao extends BaseDaoJpaImpl<Contract, Integer> implements ContractDao {
@@ -17,6 +22,14 @@ public class DefaultContractDao extends BaseDaoJpaImpl<Contract, Integer> implem
 	@Override
 	public EntityManager getEm() {
 		return manager;
+	}
+	@Override
+	public List<Contract> getContractByStatusAndCompanyId(ContractStatusType state, Integer id)
+			throws BusinessException {
+		TypedQuery<Contract> query = getEm().createNamedQuery("Contract_getContractByStatusAndCompany", Contract.class);
+		query.setParameter("contractState", state.getName());
+		query.setParameter("companyId", id);
+		return query.getResultList();
 	}
 
 }

@@ -25,10 +25,16 @@
        <put-attribute name="body" value="/WEB-INF/pages/newContract.jsp" />  
    </definition> 
    
-   <!-- Contracts Page -->
-   <definition name="contracts" extends="base-definition">  
-       <put-attribute name="title" value="contracts" />  
-       <put-attribute name="body" value="/WEB-INF/pages/contracts.jsp" />  
+   <!--Manage Contracts Page -->
+   <definition name="mngContracts" extends="base-definition">  
+       <put-attribute name="title" value="Quản lý hợp đồng - Phúc Lộc Bảo" />  
+       <put-attribute name="body" value="/WEB-INF/pages/mngContracts.jsp" />  
+   </definition> 
+   
+   <!--Old Contracts Page -->
+   <definition name="oldContracts" extends="base-definition">  
+       <put-attribute name="title" value="Hợp đồng cũ - Phúc Lộc Bảo" />  
+       <put-attribute name="body" value="/WEB-INF/pages/oldContracts.jsp" />  
    </definition> 
    <!-- login definition --> 
  <definition name="index" 

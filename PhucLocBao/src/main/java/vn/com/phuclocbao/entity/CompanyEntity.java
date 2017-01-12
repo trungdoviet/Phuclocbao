@@ -16,7 +16,31 @@ public class CompanyEntity implements IBaseEntity
 	  @javax.persistence.Id
 	  @javax.persistence.GeneratedValue
 	  private java.lang.Integer id;
-
+	  @javax.persistence.Column(nullable=false, length=255)
+	  private java.lang.String name;
+	  @javax.persistence.Column(length=255)
+	  private java.lang.String address;
+	  @javax.persistence.Column(length=255)
+	  private java.lang.String description;
+	  @javax.persistence.OneToMany(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER, mappedBy="companyEntity", orphanRemoval=false)
+	  private java.util.Set<vn.com.phuclocbao.entity.UserAccount> userAccounts;
+	  @javax.persistence.ManyToOne(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER)
+	  @javax.persistence.JoinColumn(name="companytype")
+	  private vn.com.phuclocbao.entity.CompanyType type;
+	  @javax.persistence.Column(length=100)
+	  private java.lang.String city;
+	  @javax.persistence.Column(length=100)
+	  private java.lang.String phoneNumber;
+	  private java.lang.String motobikeRentingFund;
+	  private java.lang.String fax;
+	  private java.lang.String totalFund;
+	  private java.lang.Double revenueBeforeStartDate;
+	  private java.lang.Double costBeforeStartDate;
+	  @javax.persistence.OneToMany(fetch=javax.persistence.FetchType.EAGER, mappedBy="company", orphanRemoval=false)
+	  private java.util.Set<vn.com.phuclocbao.entity.Contract> contracts;
+	  private java.util.Date startDate;
+	  private java.lang.Double originalFund;
+	  private java.lang.String investBeforeStartDate;
 	  /**
 	   * Gets the field id.
 	   * @return the value of the field id; may be null.
@@ -34,9 +58,6 @@ public class CompanyEntity implements IBaseEntity
 	  {
 	    id = _id;
 	  }
-
-	  @javax.persistence.Column(nullable=false, length=255)
-	  private java.lang.String name;
 
 	  /**
 	   * Gets the field name.
@@ -56,8 +77,7 @@ public class CompanyEntity implements IBaseEntity
 	    name = _name;
 	  }
 
-	  @javax.persistence.Column(length=255)
-	  private java.lang.String address;
+	 
 
 	  /**
 	   * Gets the field address.
@@ -77,8 +97,7 @@ public class CompanyEntity implements IBaseEntity
 	    address = _address;
 	  }
 
-	  @javax.persistence.Column(length=255)
-	  private java.lang.String description;
+	  
 
 	  /**
 	   * Gets the field description.
@@ -98,9 +117,7 @@ public class CompanyEntity implements IBaseEntity
 	    description = _description;
 	  }
 
-	  @javax.persistence.OneToMany(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER, mappedBy="companyEntity", orphanRemoval=false)
-	  private java.util.Set<vn.com.phuclocbao.entity.UserAccount> userAccounts;
-
+	 
 	  /**
 	   * Gets the field userAccounts.
 	   * @return the value of the field userAccounts; may be null.
@@ -119,9 +136,7 @@ public class CompanyEntity implements IBaseEntity
 	    userAccounts = _userAccounts;
 	  }
 
-	  @javax.persistence.ManyToOne(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER)
-	  @javax.persistence.JoinColumn(name="companytype")
-	  private vn.com.phuclocbao.entity.CompanyType type;
+	  
 
 	  /**
 	   * Gets the field type.
@@ -141,8 +156,7 @@ public class CompanyEntity implements IBaseEntity
 	    type = _type;
 	  }
 
-	  @javax.persistence.Column(length=100)
-	  private java.lang.String city;
+	 
 
 	  /**
 	   * Gets the field city.
@@ -162,8 +176,7 @@ public class CompanyEntity implements IBaseEntity
 	    city = _city;
 	  }
 
-	  @javax.persistence.Column(length=100)
-	  private java.lang.String phoneNumber;
+	 
 
 	  /**
 	   * Gets the field phoneNumber.
@@ -183,9 +196,7 @@ public class CompanyEntity implements IBaseEntity
 	    phoneNumber = _phoneNumber;
 	  }
 
-	  private java.lang.String fax;
-
-	  /**
+	  	  /**
 	   * Gets the field fax.
 	   * @return the value of the field fax; may be null.
 	   */
@@ -203,7 +214,7 @@ public class CompanyEntity implements IBaseEntity
 	    fax = _fax;
 	  }
 
-	  private java.lang.Double originalFund;
+	 
 
 	  /**
 	   * Gets the field originalFund.
@@ -223,8 +234,7 @@ public class CompanyEntity implements IBaseEntity
 	    originalFund = _originalFund;
 	  }
 
-	  private java.lang.String totalFund;
-
+	 
 	  /**
 	   * Gets the field totalFund.
 	   * @return the value of the field totalFund; may be null.
@@ -243,7 +253,7 @@ public class CompanyEntity implements IBaseEntity
 	    totalFund = _totalFund;
 	  }
 
-	  private java.lang.String motobikeRentingFund;
+	  
 
 	  /**
 	   * Gets the field motobikeRentingFund.
@@ -263,7 +273,7 @@ public class CompanyEntity implements IBaseEntity
 	    motobikeRentingFund = _motobikeRentingFund;
 	  }
 
-	  private java.util.Date startDate;
+	  
 
 	  /**
 	   * Gets the field startDate.
@@ -283,7 +293,7 @@ public class CompanyEntity implements IBaseEntity
 	    startDate = _startDate;
 	  }
 
-	  private java.lang.Double revenueBeforeStartDate;
+	 
 
 	  /**
 	   * Gets the field revenueBeforeStartDate.
@@ -303,7 +313,7 @@ public class CompanyEntity implements IBaseEntity
 	    revenueBeforeStartDate = _revenueBeforeStartDate;
 	  }
 
-	  private java.lang.Double costBeforeStartDate;
+	 
 
 	  /**
 	   * Gets the field costBeforeStartDate.
@@ -323,7 +333,7 @@ public class CompanyEntity implements IBaseEntity
 	    costBeforeStartDate = _costBeforeStartDate;
 	  }
 
-	  private java.lang.String investBeforeStartDate;
+	  
 
 	  /**
 	   * Gets the field investBeforeStartDate.
@@ -342,8 +352,7 @@ public class CompanyEntity implements IBaseEntity
 	  {
 	    investBeforeStartDate = _investBeforeStartDate;
 	  }
-	  @javax.persistence.OneToMany(fetch=javax.persistence.FetchType.EAGER, mappedBy="company", orphanRemoval=false)
-	  private java.util.Set<vn.com.phuclocbao.entity.Contract> contracts;
+	  
 
 	  /**
 	   * Gets the field contracts.

@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.enums.MenuDefinition;
+import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.DateTimeUtil;
@@ -26,7 +29,10 @@ import vn.com.phuclocbao.viewbean.ContractBean;
 public class NavigationController {
 	
 	public static final int DEFAULT_PERIOD_OF_PAYMENT = 10;
-
+	@Autowired
+	@Qualifier(value="contractService")
+	ContractService contractService;
+	
 	@RequestMapping(value = { "/home"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public String productsPage(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
@@ -34,11 +40,18 @@ public class NavigationController {
 		return "home";
 	}
 	
-	@RequestMapping(value = { "/contracts"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public String openContract(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+	@RequestMapping(value = { "/mngContracts"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public String openManageContract(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
-		plbSession.getMenuBean().makeActive(MenuDefinition.CONTRACT);
-		return "contracts";
+		plbSession.getMenuBean().makeActive(MenuDefinition.MANAGE_CONTRACT);
+		return "mngContracts";
+	}
+	
+	@RequestMapping(value = { "/oldContracts"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public String openOldContract(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		plbSession.getMenuBean().makeActive(MenuDefinition.OLD_CONTRACT);
+		return "oldContracts";
 	}
 	
 	@RequestMapping(value = { "/newContract"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")

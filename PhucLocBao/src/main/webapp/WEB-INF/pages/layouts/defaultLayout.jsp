@@ -6,12 +6,14 @@
 <html>
 
 <head>
+	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title><tiles:getAsString name="title" /></title>
 	<link href="<c:url value='/resources/css/bootstrap.css' />"  rel="stylesheet"></link>
 	<link href="<c:url value='/resources/css/jquery-ui.css' />"  rel="stylesheet"></link>
 	<link href="<c:url value='/resources/css/mainPage.css' />" rel="stylesheet"></link>
+	<link href="<c:url value='/resources/css/bootstrap-table.css' />" rel="stylesheet"></link>
 	<link href="<c:url value='/resources/css/styles.css'/> " rel="stylesheet"></link>
 	<script src="<c:url value='/resources/js/lumino.glyphs.js' />"><!-- comment --></script>
 	<script src="<c:url value="/resources/js/jquery-3.1.1.js" />"><!-- comment --></script>
@@ -47,6 +49,7 @@
 		<script src="<c:url value='/resources/js/date.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/autoNumeric.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/jquery-ui.min.js' />"><!-- comment --></script>
+		<script src="<c:url value='/resources/js/bootstrap-table.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/phuclocbao.js' />"><!-- comment --></script>
 		<script>
 				!function ($) {

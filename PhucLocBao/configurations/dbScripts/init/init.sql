@@ -1,5 +1,5 @@
 use phuclocbao;
-drop table if exists tblCompany;
+	drop table if exists tblCompany;
 
     drop table if exists tblCompanyType;
 
@@ -12,7 +12,11 @@ drop table if exists tblCompany;
     drop table if exists tblTransportOwner;
 
     drop table if exists tblUser;
-
+    
+    drop table if exists tblContractHistory;
+    
+	drop table if exists tblUserHistory;
+	
     create table tblCompany (
         id integer not null auto_increment,
         address varchar(255),
@@ -96,6 +100,33 @@ drop table if exists tblCompany;
         companyEntity_id integer,
         primary key (id)
     );
+    create table tblContractHistory (
+        id integer not null auto_increment,
+        fee double precision,
+        logDate datetime,
+        note varchar(255),
+        payoff double precision,
+        rentingAmount double precision,
+        contract_id integer,
+        primary key (id)
+    );
+
+    create table tblUserHistory (
+        id integer not null auto_increment,
+        accountName varchar(30),
+        actionType varchar(255),
+        companyName varchar(255),
+        detail varchar(1000),
+        happenTime datetime,
+        primary key (id)
+    );
+
+    alter table tblContractHistory 
+        add index FK_94esdgauny8ocnrmwmj4uo34a (contract_id), 
+        add constraint FK_94esdgauny8ocnrmwmj4uo34a 
+        foreign key (contract_id) 
+        references tblContract (id);
+    
 
     alter table tblCustomer 
         add constraint UK_3o2aqpijjd7i6f5galmbyc8d8 unique (contract_id);

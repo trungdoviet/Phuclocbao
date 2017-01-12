@@ -28,6 +28,7 @@ public class CompanyDto implements IBaseDTO {
 	private java.lang.Double costBeforeStartDate;
 	private java.lang.String investBeforeStartDate;
 	private java.util.List<ContractDto> contracts;
+	private java.util.List<ContractHistoryDto> histories;
 
 	/**
 	 * Gets the field id.
@@ -330,6 +331,14 @@ public class CompanyDto implements IBaseDTO {
 
 	public void setContracts(java.util.List<ContractDto> contracts) {
 		this.contracts = contracts;
+	}
+
+	public java.util.List<ContractHistoryDto> getHistories() {
+		return histories;
+	}
+
+	public void setHistories(java.util.List<ContractHistoryDto> histories) {
+		this.histories = histories;
 	}
 
 }

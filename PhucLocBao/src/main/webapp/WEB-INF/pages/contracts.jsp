@@ -1,1 +1,0 @@
-<h2>Contracts page</h2>

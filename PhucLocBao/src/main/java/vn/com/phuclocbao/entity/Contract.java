@@ -1,11 +1,17 @@
 package vn.com.phuclocbao.entity;
 
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
 import vn.com.phuclocbao.entity.base.IBaseEntity;
 
 /**
  */
 @javax.persistence.Entity
 @javax.persistence.Table(name="tblContract")
+@NamedQueries({
+	@NamedQuery(name = "Contract_getContractByStatusAndCompany", query = "SELECT contract FROM Contract contract, CompanyEntity company WHERE contract.state LIKE :contractState AND company.id = :companyId")
+})
 public class Contract implements IBaseEntity
 {
   /** SerialVersionUID */
@@ -17,7 +23,52 @@ public class Contract implements IBaseEntity
   @javax.persistence.Id
   @javax.persistence.GeneratedValue()
   private java.lang.Integer id;
-  
+  @javax.persistence.ManyToOne(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER)
+  private vn.com.phuclocbao.entity.CompanyEntity company;
+  @javax.persistence.Column(nullable=false)
+  private java.lang.Double totalAmount;
+  @javax.persistence.Column(nullable=false)
+  private java.lang.Double feeADay;
+  @javax.persistence.Column(nullable=false)
+  private java.util.Date startDate;
+  @javax.persistence.Column(nullable=false)
+  private java.util.Date expireDate;
+  @javax.persistence.Column(nullable=false)
+  private java.lang.Integer periodOfPayment;
+  @javax.persistence.Column(length=1)
+  private String notifyBeforePeriod;
+  @javax.persistence.Column(length=20)
+  private String state;
+  @javax.persistence.Column(length=1024)
+  private java.lang.String note;
+  @javax.persistence.Column(nullable=false)
+  private java.lang.String contractType;
+  @javax.persistence.OneToOne(cascade={javax.persistence.CascadeType.ALL}, fetch=javax.persistence.FetchType.EAGER, optional=false, mappedBy="contract", orphanRemoval=true)
+  private vn.com.phuclocbao.entity.Customer customer;
+  @javax.persistence.OneToOne(cascade={javax.persistence.CascadeType.ALL}, fetch=javax.persistence.FetchType.EAGER, mappedBy="contract", orphanRemoval=true)
+  private vn.com.phuclocbao.entity.TransportOwner owner;
+  @javax.persistence.OneToMany(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE, javax.persistence.CascadeType.REMOVE}, fetch=javax.persistence.FetchType.EAGER, mappedBy="contract", orphanRemoval=false)
+  private java.util.Set<vn.com.phuclocbao.entity.PaymentSchedule> paymentSchedules;
+  @javax.persistence.OneToMany(cascade={javax.persistence.CascadeType.ALL}, fetch=javax.persistence.FetchType.EAGER, mappedBy="contract", orphanRemoval=false)
+  private java.util.Set<vn.com.phuclocbao.entity.ContractHistory> histories;
+
+  /**
+   * Gets the field histories.
+   * @return the value of the field histories; may be null.
+   */
+  public java.util.Set<vn.com.phuclocbao.entity.ContractHistory> getHistories()
+  {
+    return histories;
+  }
+
+  /**
+   * Sets the field histories.
+   * @param _histories the new value of the field histories.
+   */
+  public void setHistories(java.util.Set<vn.com.phuclocbao.entity.ContractHistory> _histories)
+  {
+    histories = _histories;
+  }
   /**
    * Gets the field id.
    * @return the value of the field id; may be null.
@@ -36,8 +87,7 @@ public class Contract implements IBaseEntity
     id = _id;
   }
 
-  @javax.persistence.ManyToOne(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER)
-  private vn.com.phuclocbao.entity.CompanyEntity company;
+  
 
   /**
    * Gets the field company.
@@ -57,8 +107,7 @@ public class Contract implements IBaseEntity
     company = _company;
   }
 
-  @javax.persistence.Column(nullable=false)
-  private java.lang.Double totalAmount;
+  
 
   /**
    * Gets the field totalAmount.
@@ -78,8 +127,7 @@ public class Contract implements IBaseEntity
     totalAmount = _totalAmount;
   }
 
-  @javax.persistence.Column(nullable=false)
-  private java.lang.Double feeADay;
+ 
 
   /**
    * Gets the field feeADay.
@@ -99,8 +147,7 @@ public class Contract implements IBaseEntity
     feeADay = _feeADay;
   }
 
-  @javax.persistence.Column(nullable=false)
-  private java.util.Date startDate;
+  
 
   /**
    * Gets the field startDate.
@@ -120,9 +167,7 @@ public class Contract implements IBaseEntity
     startDate = _startDate;
   }
 
-  @javax.persistence.Column(nullable=false)
-  private java.util.Date expireDate;
-
+  
   /**
    * Gets the field expireDate.
    * @return the value of the field expireDate; may be null.
@@ -141,8 +186,7 @@ public class Contract implements IBaseEntity
     expireDate = _expireDate;
   }
 
-  @javax.persistence.Column(nullable=false)
-  private java.lang.Integer periodOfPayment;
+  
 
   /**
    * Gets the field periodOfPayment.
@@ -161,8 +205,7 @@ public class Contract implements IBaseEntity
   {
     periodOfPayment = _periodOfPayment;
   }
-  @javax.persistence.Column(length=1)
-  private String notifyBeforePeriod;
+  
 
   /**
    * Gets the field notifyBeforePeriod.
@@ -182,8 +225,7 @@ public class Contract implements IBaseEntity
     notifyBeforePeriod = _notifyBeforePeriod;
   }
   
-  @javax.persistence.Column(length=20)
-  private String state;
+ 
   
 
   public String getState() {
@@ -194,8 +236,7 @@ public class Contract implements IBaseEntity
 	this.state = state;
   }
 
-@javax.persistence.Column(length=1024)
-  private java.lang.String note;
+
 
   /**
    * Gets the field note.
@@ -215,9 +256,7 @@ public class Contract implements IBaseEntity
     note = _note;
   }
 
-  @javax.persistence.Column(nullable=false)
-  private java.lang.String contractType;
-
+  
   /**
    * Gets the field contractType.
    * @return the value of the field contractType; may be null.
@@ -236,8 +275,7 @@ public class Contract implements IBaseEntity
     contractType = _contractType;
   }
 
-  @javax.persistence.OneToOne(cascade={javax.persistence.CascadeType.ALL}, fetch=javax.persistence.FetchType.EAGER, optional=false, mappedBy="contract", orphanRemoval=true)
-  private vn.com.phuclocbao.entity.Customer customer;
+  
 
   /**
    * Gets the field customer.
@@ -257,9 +295,7 @@ public class Contract implements IBaseEntity
     customer = _customer;
   }
 
-  @javax.persistence.OneToOne(cascade={javax.persistence.CascadeType.ALL}, fetch=javax.persistence.FetchType.EAGER, mappedBy="contract", orphanRemoval=true)
-  private vn.com.phuclocbao.entity.TransportOwner owner;
-
+  
   /**
    * Gets the field owner.
    * @return the value of the field owner; may be null.
@@ -277,9 +313,6 @@ public class Contract implements IBaseEntity
   {
     owner = _owner;
   }
-
-  @javax.persistence.OneToMany(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE, javax.persistence.CascadeType.REMOVE}, fetch=javax.persistence.FetchType.EAGER, mappedBy="contract", orphanRemoval=false)
-  private java.util.Set<vn.com.phuclocbao.entity.PaymentSchedule> paymentSchedules;
 
   /**
    * Gets the field paymentSchedules.

@@ -3,7 +3,12 @@ package vn.com.phuclocbao.enums;
 public enum MenuDefinition {
 	HOME("home"),
 	NEW_CONTRACT("newContract"),
-	CONTRACT("contracts"),
+	MANAGE_CONTRACT("mngContracts"),
+	OLD_CONTRACT("oldContracts"),
+	DAILY_WORK("dailyWorks"),
+	NOTIFICATION("notification"),
+	HISTORY("history"),
+	BAD_CONTRACT("badContract")
 	;
 	private MenuDefinition(String name){
 		this.name = name;
