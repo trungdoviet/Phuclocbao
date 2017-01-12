@@ -10,6 +10,17 @@ public class PLBSession {
 	private UserAccountDto userAccount;
 	private MenuBean menuBean;
 	private ContractResponseBody contractResponseBody;
+	private Integer companyId;
+	
+	public Integer getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
+	public static String getSessionAttributeKey() {
+		return SESSION_ATTRIBUTE_KEY;
+	}
 	public PLBSession(){
 		menuBean = new MenuBean();
 	}

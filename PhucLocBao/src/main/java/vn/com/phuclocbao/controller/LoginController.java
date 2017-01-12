@@ -74,6 +74,7 @@ public class LoginController {
 								request.setAttribute("loggedInUser", userAccount.getFullname());
 								plbSession = new PLBSession();
 								plbSession.setUserAccount(userAccount);
+								plbSession.setCompanyId(userAccount.getCompanyEntity().getId());
 								request.getSession().setAttribute(PLBSession.SESSION_ATTRIBUTE_KEY, plbSession);
 								System.out.println("User Login Successful with username:" + userAccount.getFullname());
 								model = new ModelAndView("redirect:/home");

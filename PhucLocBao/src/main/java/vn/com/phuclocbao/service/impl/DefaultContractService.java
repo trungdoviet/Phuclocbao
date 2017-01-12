@@ -28,6 +28,7 @@ import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.view.ContractView;
+import vn.com.phuclocbao.viewbean.ManageContractBean;
 @Service
 public class DefaultContractService extends BaseService implements ContractService {
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DefaultContractService.class);
@@ -121,11 +122,22 @@ public class DefaultContractService extends BaseService implements ContractServi
 			public List<ContractDto> execute() throws BusinessException, ClassNotFoundException, IOException {
 				List<Contract> contracts = contractDao.getContractByStatusAndCompanyId(state, companyId);
 				if(CollectionUtils.isNotEmpty(contracts)) {
-					//return ContractConverter.getInstance().toDto(entity, dest, ignoredProperties)
+					return ContractConverter.getInstance().toDtosWithCustomer(contracts);
 				}
 				return null;
 			}
 		});
+	}
+	public ManageContractBean buildManageContractBean(List<ContractDto> dtos){
+		ManageContractBean mcb = new ManageContractBean();
+		if(CollectionUtils.isNotEmpty(dtos)){
+			mcb.setContracts(dtos);
+			mcb.setInProgressContract(dtos.size());
+			mcb.setTotalContract(dtos.size());
+			mcb.setTotalFeeADay(dtos.stream().map(item ->item.getFeeADay()).reduce(0D, Double::sum));
+			mcb.setTotalPayoffAmmount(dtos.stream().map(item -> item.getTotalAmount()).reduce(0D, (x,y) -> x + y));
+		}
+		return mcb;
 	}
 	
 

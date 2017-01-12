@@ -549,3 +549,18 @@ function hideAlert(id){
          });   
      
 }
+
+function mc_formatNumber(){
+	var numberConf = {
+	        aSep: '.',
+	        aDec: ',', 
+	        pSign: 's',
+	        aSign: ' VNĐ',
+	        vMin: 0, 
+	        vMax: 99999999999
+	};
+	var totalFeeADay = $("#mcTotalFeeADaySpan").text();
+	$("#mcTotalFeeADaySpan").text($.fn.autoFormat(totalFeeADay, numberConf));
+	var totalUnpaidCost = $("#mcTotalUnpaidCostSpan").text();
+	$("#mcTotalUnpaidCostSpan").text($.fn.autoFormat(totalUnpaidCost, numberConf));	
+}

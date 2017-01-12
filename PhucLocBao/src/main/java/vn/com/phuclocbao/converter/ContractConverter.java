@@ -4,10 +4,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 
 import vn.com.phuclocbao.dto.ContractDto;
+import vn.com.phuclocbao.dto.CustomerDto;
 import vn.com.phuclocbao.entity.Contract;
 import vn.com.phuclocbao.entity.Customer;
 import vn.com.phuclocbao.entity.PaymentSchedule;
@@ -17,6 +19,7 @@ import vn.com.phuclocbao.enums.ContractType;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.util.DateTimeUtil;
+import vn.com.phuclocbao.util.LambdaExceptionUtil;
 import vn.com.phuclocbao.view.ContractView;
 import vn.com.phuclocbao.view.CustomerView;
 import vn.com.phuclocbao.view.PropertyDetail;
@@ -68,6 +71,20 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 		entity.setOwner(TransportOwnerConverter.getInstance().toEntity(dto.getOwner(), entity.getOwner(),"id"));
 		entity.setPaymentSchedules(PaymentScheduleConverter.getInstance().toEntities(dto.getPaymentSchedules(),"id"));
 		return entity;
+	}
+	
+	public ContractDto toDtoWithCustomer(Contract entity, ContractDto dest) throws BusinessException{
+		dest = this.toDto(entity, dest);
+		dest.setCustomer(CustomerConverter.getInstance().toDto(entity.getCustomer(), new CustomerDto()));
+		return dest;
+	}
+	
+	public List<ContractDto> toDtosWithCustomer(List<Contract> contracts){
+		List<ContractDto> dtos = new ArrayList<>();
+		if(CollectionUtils.isNotEmpty(contracts)){
+			dtos = contracts.stream().map(LambdaExceptionUtil.rethrowFunction(item -> this.toDtoWithCustomer(item, new ContractDto()))).collect(Collectors.toList());
+		}
+		return dtos;
 	}
 	
 	public ContractView toContractView(Contract contract){

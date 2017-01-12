@@ -76,7 +76,7 @@ public class ContractController {
 		} else {
 			PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 			contractBean.setCurrentCompany(plbSession.getUserAccount().getCompanyEntity());
-			contractBean.getContractDto().getCompany().setId(contractBean.getCurrentCompany().getId());
+			contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
 			try {
 				String paymentInfo =  contractBean.getPaidInfo();
 				logger.info("payment schedule:" + contractBean.getPaidInfo());
@@ -108,7 +108,7 @@ public class ContractController {
 			contractBean = new ContractBean();
 		}
 		contractBean.setCurrentCompany(plbSession.getUserAccount().getCompanyEntity());
-		contractBean.getContractDto().getCompany().setId(contractBean.getCurrentCompany().getId());
+		contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
 		contractBean.setCities(VietnamCityService.loadCities());
 		if(contractBean.getContractDto().getPeriodOfPayment() == null || contractBean.getContractDto().getPeriodOfPayment()  <= 0){
 			contractBean.getContractDto().setPeriodOfPayment(NavigationController.DEFAULT_PERIOD_OF_PAYMENT);
