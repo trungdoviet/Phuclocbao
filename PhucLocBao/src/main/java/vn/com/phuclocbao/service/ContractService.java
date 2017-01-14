@@ -13,4 +13,5 @@ public interface ContractService {
 	public ContractView findContractById(Integer id) throws BusinessException;
 	public List<ContractDto> findContractsByStateAndId(ContractStatusType state, Integer companyId) throws BusinessException;
 	public ManageContractBean buildManageContractBean(List<ContractDto> dtos);
+	public ContractDto findContractDtoById(Integer id, Integer companyId) throws BusinessException;
 }

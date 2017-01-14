@@ -2,6 +2,7 @@ package vn.com.phuclocbao.bean;
 
 import org.springframework.stereotype.Component;
 
+import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.UserAccountDto;
 
 @Component
@@ -10,14 +11,12 @@ public class PLBSession {
 	private UserAccountDto userAccount;
 	private MenuBean menuBean;
 	private ContractResponseBody contractResponseBody;
-	private Integer companyId;
+	private CompanyDto currentCompany;
 	
 	public Integer getCompanyId() {
-		return companyId;
+		return currentCompany.getId();
 	}
-	public void setCompanyId(Integer companyId) {
-		this.companyId = companyId;
-	}
+	
 	public static String getSessionAttributeKey() {
 		return SESSION_ATTRIBUTE_KEY;
 	}
@@ -44,6 +43,12 @@ public class PLBSession {
 	}
 	public void setContractResponseBody(ContractResponseBody contractResponseBody) {
 		this.contractResponseBody = contractResponseBody;
+	}
+	public CompanyDto getCurrentCompany() {
+		return currentCompany;
+	}
+	public void setCurrentCompany(CompanyDto currentCompany) {
+		this.currentCompany = currentCompany;
 	}
 	
 }

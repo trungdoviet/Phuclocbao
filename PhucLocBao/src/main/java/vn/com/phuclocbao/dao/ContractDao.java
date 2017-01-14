@@ -11,4 +11,5 @@ public interface ContractDao {
 	public Contract merge( Contract entity) throws BusinessException;
 	public Contract findById(Integer id) throws BusinessException;
 	public List<Contract> getContractByStatusAndCompanyId(ContractStatusType state, Integer id) throws BusinessException;
+	public Contract findById(Integer id, Integer companyId) throws BusinessException;
 }

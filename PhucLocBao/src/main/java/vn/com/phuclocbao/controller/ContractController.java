@@ -12,19 +12,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import vn.com.phuclocbao.bean.ContractResponseBody;
 import vn.com.phuclocbao.bean.CustomerContract;
 import vn.com.phuclocbao.bean.PLBSession;
+import vn.com.phuclocbao.dto.ContractDto;
+import vn.com.phuclocbao.dto.CustomerDto;
 import vn.com.phuclocbao.enums.AlertType;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.ContractService;
@@ -33,6 +38,7 @@ import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.MessageBundleUtil;
 import vn.com.phuclocbao.util.PaymentScheduleParser;
+import vn.com.phuclocbao.util.PlbUtil;
 import vn.com.phuclocbao.validator.NewContractValidator;
 import vn.com.phuclocbao.viewbean.ContractBean;
 
@@ -46,6 +52,7 @@ public class ContractController {
 
 	private static final String MSG_CREATE_CONTRACT_FAILED = "msg.createContractFailed";
 
+	private static final String MSG_CAN_NOT_FIND_CONTRACT = "msg.contractNotFound";
 	@Autowired
 	@Qualifier(value="contractService")
 	ContractService contractService;
@@ -75,7 +82,7 @@ public class ContractController {
 			contractBean = populateFormData(request, contractBean, model);
 		} else {
 			PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
-			contractBean.setCurrentCompany(plbSession.getUserAccount().getCompanyEntity());
+			contractBean.setCurrentCompany(plbSession.getCurrentCompany());
 			contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
 			try {
 				String paymentInfo =  contractBean.getPaidInfo();
@@ -107,7 +114,7 @@ public class ContractController {
 		if(contractBean == null){
 			contractBean = new ContractBean();
 		}
-		contractBean.setCurrentCompany(plbSession.getUserAccount().getCompanyEntity());
+		contractBean.setCurrentCompany(plbSession.getCurrentCompany());
 		contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
 		contractBean.setCities(VietnamCityService.loadCities());
 		if(contractBean.getContractDto().getPeriodOfPayment() == null || contractBean.getContractDto().getPeriodOfPayment()  <= 0){
@@ -139,4 +146,43 @@ public class ContractController {
 		return model;
 	}
 	
+	@RequestMapping(value = { "/mngContract/cancel"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView cancelUpdateInprogressContract(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = new ModelAndView("redirect:/mngContracts");
+		return model;
+	}
+	
+	// show update form
+	@RequestMapping(value = "/contracts/{id}/paid", method = RequestMethod.GET)
+	public ModelAndView showUpdateUserForm(HttpServletRequest request, @PathVariable("id") int id, Model model, ContractBean contractBean) {
+		ModelAndView modelView = new ModelAndView("contract");
+		PLBSession plbSession = PlbUtil.getPlbSession(request);
+		logger.info("open Form : {}" + id);
+		try {
+			if(contractBean == null){
+				contractBean = new ContractBean();
+			}
+			ContractDto dto = contractService.findContractDtoById(id, plbSession.getCompanyId());
+			contractBean.setCities(VietnamCityService.loadCities());
+			contractBean.setCurrentCompany(plbSession.getCurrentCompany());
+			contractBean.setPaidInfo(PaymentScheduleParser.parsePaymentInfoString(dto.getPaymentSchedules()));
+			contractBean.setContractDto(dto);
+			
+			List<CustomerDto> dtos = customerService.getCustomersByIdNo(dto.getCustomer().getIdNo());
+			ContractResponseBody result = customerService.buildContractResponse(dtos);
+			if(result != null){
+				List<CustomerContract> searchedCustomers = result.getCustomerContracts();
+				CustomerContract selectedContract = findCustomerContractbyIdNo(contractBean.getContractDto().getCustomer().getIdNo(), searchedCustomers);
+				contractBean.setSearchedCustomerContract(selectedContract);
+			}
+			model.addAttribute("contractBean", contractBean);
+		} catch (BusinessException e) {
+			model.addAttribute(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(MSG_CAN_NOT_FIND_CONTRACT));
+			model.addAttribute(ConstantVariable.ATTR_FLASH_MSG_CSS, AlertType.DANGER.getName());
+			logger.error(e);
+			e.printStackTrace();
+		}
+		return modelView;
+
+	}
 }

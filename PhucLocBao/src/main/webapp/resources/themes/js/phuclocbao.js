@@ -551,7 +551,7 @@ function hideAlert(id){
 }
 
 function mc_formatNumber(){
-	var numberConf = {
+	/*var numberConf = {
 	        aSep: '.',
 	        aDec: ',', 
 	        pSign: 's',
@@ -562,5 +562,8 @@ function mc_formatNumber(){
 	var totalFeeADay = $("#mcTotalFeeADaySpan").text();
 	$("#mcTotalFeeADaySpan").text($.fn.autoFormat(totalFeeADay, numberConf));
 	var totalUnpaidCost = $("#mcTotalUnpaidCostSpan").text();
-	$("#mcTotalUnpaidCostSpan").text($.fn.autoFormat(totalUnpaidCost, numberConf));	
+	$("#mcTotalUnpaidCostSpan").text($.fn.autoFormat(totalUnpaidCost, numberConf));	*/
+}
+function mc_contractDetail(id){
+	console.log(id);
 }

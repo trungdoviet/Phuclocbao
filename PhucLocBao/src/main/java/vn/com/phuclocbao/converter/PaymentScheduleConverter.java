@@ -1,4 +1,5 @@
 package vn.com.phuclocbao.converter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +36,29 @@ public class PaymentScheduleConverter extends BaseConverter<PaymentScheduleDto, 
 		dest.setExpectedPayDate(dto.getExpectedPayDate());
 		return dest;
 	}
+	
+	
 
+	@Override
+	public PaymentScheduleDto toDtoExtraProps(PaymentSchedule entity, PaymentScheduleDto dest)
+			throws BusinessException {
+		dest.setPayDate(entity.getPayDate());
+		dest.setExpectedPayDate(entity.getExpectedPayDate());
+		dest.setNotifiedDate(entity.getNotifiedDate());
+		return dest;
+	}
+
+	public List<PaymentScheduleDto> toDtos(Set<PaymentSchedule> paymentSchedules, String... ignoredProperties) throws BusinessException{
+		List<PaymentScheduleDto> dtos = new ArrayList<>();
+		if(CollectionUtils.isNotEmpty(paymentSchedules)){
+			paymentSchedules.forEach(LambdaExceptionUtil.rethrowConsumer(item -> {
+				PaymentScheduleDto dto = this.toDto(item, new PaymentScheduleDto(), ignoredProperties);
+				dtos.add(dto);
+			}));
+		}
+		return dtos;
+	}
+	
 	public Set<PaymentSchedule> toEntities(List<PaymentScheduleDto> paymentSchedules, String... ignoredProperties) throws BusinessException{
 		Set<PaymentSchedule> entities = new HashSet<>();
 		if(CollectionUtils.isNotEmpty(paymentSchedules)){

@@ -6,4 +6,7 @@ public class ConstantVariable {
 	public static final String NO_OPTION = "N";
 	public static final String ATTR_FLASH_MSG = "msg";
 	public static final String ATTR_FLASH_MSG_CSS = "css";
+	public static final String VALUE_NIL = "nil";
+	public static final String COLON = ":";
+	public static final String COMMA = ",";
 }

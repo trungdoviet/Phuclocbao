@@ -41,7 +41,7 @@ public class ContractAjaxController {
 	
 	@JsonView(Views.Public.class)
 	@ResponseBody
-	@RequestMapping(value = "/search/getContract", method=RequestMethod.POST)
+	@RequestMapping(value = {"/search/getContract"}, method=RequestMethod.POST)
 	public ContractResponseBody getSearchResultViaAjax(HttpServletRequest request, @RequestBody CustomerSearchCriteria search) {
 		
 		ContractResponseBody result = new ContractResponseBody();
@@ -65,7 +65,7 @@ public class ContractAjaxController {
 	
 	@JsonView(Views.Contract.class)
 	@ResponseBody
-	@RequestMapping(value = "/search/getContractDetail", method=RequestMethod.POST)
+	@RequestMapping(value = {"/search/getContractDetail", "/contracts/{id}/search/getContractDetail"}, method=RequestMethod.POST)
 	public ContractDetailResponseBody getContractDetail(HttpServletRequest request, @RequestBody ContractSearchCriteria search) {
 		
 		ContractDetailResponseBody result = new ContractDetailResponseBody();

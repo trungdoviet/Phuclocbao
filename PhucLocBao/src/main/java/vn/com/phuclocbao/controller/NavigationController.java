@@ -78,15 +78,13 @@ public class NavigationController {
 		if(contractBean == null){
 			contractBean = new ContractBean();
 		}
-		contractBean.setCurrentCompany(plbSession.getUserAccount().getCompanyEntity());
+		contractBean.setCurrentCompany(plbSession.getCurrentCompany());
 		contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
 		Date today = DateTimeUtil.getCurrentDate();
 		contractBean.getContractDto().setStartDate(today);
 		contractBean.getContractDto().setExpireDate(DateTimeUtil.addMoreDate(today, 30));
 		contractBean.getContractDto().setPeriodOfPayment(DEFAULT_PERIOD_OF_PAYMENT);
-		DateFormat dateFormat = new SimpleDateFormat(ConstantVariable.DATE_FORMAT);
 		contractBean.setSearchedCustomerContract(null);
-		System.out.println(dateFormat.format(today));
 		contractBean.setCities(VietnamCityService.loadCities());
 		System.out.println("==Current company:" + plbSession.getUserAccount().getCompanyEntity());
 		model.addObject("contractBean", contractBean);

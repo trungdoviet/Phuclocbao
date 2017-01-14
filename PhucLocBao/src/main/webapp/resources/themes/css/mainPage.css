@@ -10,6 +10,12 @@
 .width-100p{
 	width: 100%;
 }
+/*table*/
+.phuclocbao .fixed-table-container thead th {
+	background: #30a5ff;
+    border-color: #ddd;
+    color: #ffffff;
+}
 /*contract*/
 .plb-contract div.list-group-item{
 	width:7%;

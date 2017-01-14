@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -136,9 +137,26 @@ public class DefaultContractService extends BaseService implements ContractServi
 			mcb.setTotalContract(dtos.size());
 			mcb.setTotalFeeADay(dtos.stream().map(item ->item.getFeeADay()).reduce(0D, Double::sum));
 			mcb.setTotalPayoffAmmount(dtos.stream().map(item -> item.getTotalAmount()).reduce(0D, (x,y) -> x + y));
+			logger.info("total:" + mcb.getTotalPayoffAmmount() + "-feeADay:" + mcb.getTotalFeeADay());
 		}
 		return mcb;
 	}
-	
+	@Override
+	public ContractDto findContractDtoById(Integer id, Integer companyId) throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<ContractDto>() {
 
+			@Override
+			public ContractDto execute() throws BusinessException, ClassNotFoundException, IOException {
+				try {
+					Contract contract = contractDao.findById(id, companyId);
+					return ContractConverter.getInstance().toContract(new ContractDto(), contract);
+					
+				} catch (NoResultException nre){
+					logger.error("Contract not found: id:" + id +" - companyid:" + id);
+					throw new BusinessException(PLBErrorCode.OBJECT_NOT_FOUND.name());
+				}
+			}
+		
+		});
+	}
 }

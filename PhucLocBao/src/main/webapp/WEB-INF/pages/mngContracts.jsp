@@ -1,7 +1,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="includes/jstl.jsp"%>
-<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main phuclocbao">			
 	<div class="row">
 		<ol class="breadcrumb">
 			<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
@@ -16,7 +17,7 @@
 			<strong>${msg}</strong>
 		</div>
 	</c:if>
-	<form:form role="form" id="mngContractForm" method="post" action="availableContracts" modelAttribute="contractBean">
+	<%-- <form:form role="form" id="mngContractForm" method="post" action="availableContracts" modelAttribute="contractBean"> --%>
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="panel panel-default">
@@ -35,11 +36,23 @@
 						<div class="col-md-6">
 							<div class="row">
 								<div class="col-md-8 text-right"><strong class="bottom-line">Tổng phí hợp đồng/ngày:</strong></div>
-								<div id="mcTotalFeeADay" class="col-md-4 text-right"><strong><span id="mcTotalFeeADaySpan">${mngContract.totalFeeADay}</span></strong></div>
+								<div id="mcTotalFeeADay" class="col-md-4 text-right"><strong>
+									<span id="mcTotalFeeADaySpan">
+										<fmt:formatNumber  currencySymbol=" "  value="${mngContract.totalFeeADay}" type="currency" maxFractionDigits="0" var="mcTotalFeeADaySpan"/>
+											${fn:replace(mcTotalFeeADaySpan, ",", ".")}
+											VNĐ
+									</span></strong>
+								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-8 text-right"><strong class="bottom-line">Tổng số tiền hợp đồng chưa thanh lý:</strong></div>
-								<div id="mcTotalUnpaidCost" class="col-md-4 text-right"><strong><span id="mcTotalUnpaidCostSpan">${mngContract.totalPayoffAmmount}</span></strong></div>
+								<div id="mcTotalUnpaidCost" class="col-md-4 text-right"><strong>
+									<span id="mcTotalUnpaidCostSpan">
+										<fmt:formatNumber  currencySymbol=" "  value="${mngContract.totalPayoffAmmount}" type="currency" maxFractionDigits="0" var="mcTotalUnpaidCost"/>
+											${fn:replace(mcTotalUnpaidCost, ",", ".")}
+											VNĐ
+									</span></strong>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -67,13 +80,28 @@
 						    <tbody>
 						    	<c:forEach var="contract" items="${mngContract.contracts}">
 							    	<tr>
-							    		<td><a href="#">${contract.customer.name}&nbsp;${contract.customer.birthYear}</a></td>
+							    		<td>
+							    			<a href="#" onclick="openContractDetail(${contract.id})">${contract.customer.name}&nbsp;${contract.customer.birthYear}</a></td>
 										<td>Cho thuê xe</td>
-										<td class="text-right"><fmt:formatNumber currencySymbol=" "  value="${contract.totalAmount}" type="currency" maxFractionDigits="0"/>&nbsp;VNĐ</td>
-										<td class="text-right"><fmt:formatNumber currencySymbol=" "  value="${contract.feeADay}" type="currency" maxFractionDigits="0"/>&nbsp;VNĐ</td>
+										<td class="text-right">
+											<fmt:formatNumber  currencySymbol=" "  value="${contract.totalAmount}" type="currency" maxFractionDigits="0" var="totalAmount"/>
+											${fn:replace(totalAmount, ",", ".")}
+											VNĐ
+										</td>
+										
+										<td class="text-right">
+											<fmt:formatNumber currencySymbol=" "  value="${contract.feeADay}" type="currency" maxFractionDigits="0" var="feeADay"/>
+											${fn:replace(feeADay, ",", ".")}
+											VNĐ
+										</td>
 										<td class="text-center"><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.startDate}" /></td>
 										<td class="text-center"><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.expireDate}" /></td>
-										<td>Col 7</td>
+										<td>
+											<spring:url value="/contracts/${contract.id}/paid" var="paidUrl" /> 
+											<spring:url value="/contracts/${contract.id}/payoff" var="payOffUrl" />
+											<button class="btn btn-primary" onclick="location.href='${paidUrl}'">Trả phí</button>
+											<button class="btn btn-danger" onclick="location.href='${payOffUrl}'">Thanh lý</button>
+										</td>
 							    	</tr>
 						    	</c:forEach>
 						    </tbody>
@@ -82,7 +110,8 @@
 				</div>
 			</div>
 		</div>
-	</form:form>
+		<jsp:include page="includes/contractDetailDialog.jsp"></jsp:include>
+	<%-- </form:form> --%>
 <script type="text/javascript">
 $( document ).ready(function() {
 	hideAlert("mngAlert");

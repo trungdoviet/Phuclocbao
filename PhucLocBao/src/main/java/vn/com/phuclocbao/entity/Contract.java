@@ -10,7 +10,8 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
 @javax.persistence.Entity
 @javax.persistence.Table(name="tblContract")
 @NamedQueries({
-	@NamedQuery(name = "Contract_getContractByStatusAndCompany", query = "SELECT contract FROM Contract contract, CompanyEntity company WHERE contract.state LIKE :contractState AND company.id = :companyId")
+	@NamedQuery(name = "Contract_getContractByStatusAndCompany", query = "SELECT contract FROM Contract contract, CompanyEntity company WHERE contract.state LIKE :contractState AND company.id = :companyId"),
+	@NamedQuery(name = "Contract_getContractByIdAndCompany", query = "SELECT contract FROM Contract contract WHERE contract.id = :contractId AND contract.company.id = :companyId")
 })
 public class Contract implements IBaseEntity
 {

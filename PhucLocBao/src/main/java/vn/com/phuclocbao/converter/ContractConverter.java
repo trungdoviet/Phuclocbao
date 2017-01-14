@@ -10,6 +10,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.CustomerDto;
+import vn.com.phuclocbao.dto.TransportOwnerDto;
 import vn.com.phuclocbao.entity.Contract;
 import vn.com.phuclocbao.entity.Customer;
 import vn.com.phuclocbao.entity.PaymentSchedule;
@@ -71,6 +72,17 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 		entity.setOwner(TransportOwnerConverter.getInstance().toEntity(dto.getOwner(), entity.getOwner(),"id"));
 		entity.setPaymentSchedules(PaymentScheduleConverter.getInstance().toEntities(dto.getPaymentSchedules(),"id"));
 		return entity;
+	}
+	
+	public ContractDto toContract(ContractDto dto, Contract entity) throws BusinessException {
+		dto = this.toDto(entity, dto);
+		dto.setCustomer(new CustomerDto());
+		dto.setOwner(new TransportOwnerDto());
+		dto.setPaymentSchedules(new ArrayList<>());
+		dto.setCustomer(CustomerConverter.getInstance().toDto(entity.getCustomer(), new CustomerDto()));
+		dto.setOwner(TransportOwnerConverter.getInstance().toDto(entity.getOwner(), new TransportOwnerDto()));
+		dto.setPaymentSchedules(PaymentScheduleConverter.getInstance().toDtos(entity.getPaymentSchedules()));
+		return dto;
 	}
 	
 	public ContractDto toDtoWithCustomer(Contract entity, ContractDto dest) throws BusinessException{

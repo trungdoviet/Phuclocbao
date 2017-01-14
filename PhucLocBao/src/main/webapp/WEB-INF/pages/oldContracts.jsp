@@ -1,1 +1,1 @@
-<h2>Old Contracts page</h2>
+<h2> Contracts page</h2>
