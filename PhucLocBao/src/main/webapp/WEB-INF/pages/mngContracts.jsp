@@ -97,8 +97,8 @@
 										<td class="text-center"><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.startDate}" /></td>
 										<td class="text-center"><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.expireDate}" /></td>
 										<td>
-											<spring:url value="/contracts/${contract.id}/paid" var="paidUrl" /> 
-											<spring:url value="/contracts/${contract.id}/payoff" var="payOffUrl" />
+											<spring:url value="/contract/${contract.id}/paid" var="paidUrl" /> 
+											<spring:url value="/contract/${contract.id}/payoff" var="payOffUrl" />
 											<button class="btn btn-primary" onclick="location.href='${paidUrl}'">Trả phí</button>
 											<button class="btn btn-danger" onclick="location.href='${payOffUrl}'">Thanh lý</button>
 										</td>

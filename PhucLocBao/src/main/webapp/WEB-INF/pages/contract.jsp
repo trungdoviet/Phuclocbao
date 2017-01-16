@@ -16,7 +16,7 @@
 		<strong>${msg}</strong>
 	</div>
 </c:if>
-<form:form role="form" id="contractForm" method="post" action="contract" modelAttribute="contractBean">
+<form:form role="form" id="contractForm" method="post" action="saveContract" modelAttribute="contractBean">
 	<jsp:include page="includes/contractContentPage.jsp"></jsp:include>
 	<div class="row">
 		<div class="col-lg-12">
@@ -43,6 +43,7 @@ $( document ).ready(function() {
 	initNewContractPage();
 	showhideAvailableContractPanel();
 	hideAlert("contractAlert");
+	initContractPageButtons();
 });
 </script>
 </div>

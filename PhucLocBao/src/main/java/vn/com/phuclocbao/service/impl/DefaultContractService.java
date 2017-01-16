@@ -159,4 +159,26 @@ public class DefaultContractService extends BaseService implements ContractServi
 		
 		});
 	}
+	@Transactional
+	@Override
+	public ContractDto updateContractInPaidTime(ContractDto dto) throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<ContractDto>() {
+
+			@Override
+			public ContractDto execute() throws BusinessException, ClassNotFoundException, IOException {
+				try {
+					Contract contract = contractDao.findById(dto.getId(), dto.getCompany().getId());
+					
+					 ContractConverter.getInstance().updateContractInPaidTime(dto, contract);
+					 
+					 return ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
+					
+				} catch (Exception nre){
+					logger.error("Can not update contract: id:" + dto.getId() +" - companyid:" + dto.getCompany().getId());
+					throw new BusinessException(PLBErrorCode.CAN_NOT_UPDATE_DATA.name());
+				}
+			}
+		
+		});
+	}
 }

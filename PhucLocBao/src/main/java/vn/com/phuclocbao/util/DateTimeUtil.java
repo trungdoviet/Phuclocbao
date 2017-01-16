@@ -38,7 +38,7 @@ public class DateTimeUtil {
 	}
 	public static int calculateLocalDates(LocalDate birthDate, LocalDate currentDate) {
         if ((birthDate != null) && (currentDate != null)) {
-            return Period.between(birthDate, currentDate).getYears();
+            return Period.between(birthDate, currentDate).getDays();
         } else {
             return 0;
         }

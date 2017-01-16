@@ -43,7 +43,7 @@
 								<div class="col-md-4 text-right"><strong class="bottom-line">Loại hình:</strong></div><div id="cdContractType" class="col-md-8 text-left"></div>
 							</div>
 							<div class="row">
-								<div class="col-md-4 text-right"><strong class="bottom-line">Số tiền:</strong></div><strong></strong><div id="cdTotalAmount" class="col-md-8 text-right"></div>
+								<div class="col-md-4 text-right"><strong class="bottom-line">Số tiền:</strong></div><strong></strong><div id="cdTotalAmount" class="col-md-8 text-right" style="font-weight:bold"></div>
 							</div>
 							<div class="row">
 								<div class="col-md-4 text-right"><strong class="bottom-line">Ngày thuê:</strong></div><div id="cdStartDate" class="col-md-8 text-left"></div>

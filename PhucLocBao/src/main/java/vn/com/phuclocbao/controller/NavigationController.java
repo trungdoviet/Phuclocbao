@@ -20,6 +20,7 @@ import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.enums.MenuDefinition;
+import vn.com.phuclocbao.enums.ProcessStaging;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.service.VietnamCityService;
@@ -78,6 +79,7 @@ public class NavigationController {
 		if(contractBean == null){
 			contractBean = new ContractBean();
 		}
+		contractBean.setProcessStaging(ProcessStaging.NEW.getName());
 		contractBean.setCurrentCompany(plbSession.getCurrentCompany());
 		contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
 		Date today = DateTimeUtil.getCurrentDate();

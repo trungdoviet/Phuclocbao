@@ -4,12 +4,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.CustomerDto;
+import vn.com.phuclocbao.dto.PaymentScheduleDto;
 import vn.com.phuclocbao.dto.TransportOwnerDto;
 import vn.com.phuclocbao.entity.Contract;
 import vn.com.phuclocbao.entity.Customer;
@@ -83,6 +85,16 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 		dto.setOwner(TransportOwnerConverter.getInstance().toDto(entity.getOwner(), new TransportOwnerDto()));
 		dto.setPaymentSchedules(PaymentScheduleConverter.getInstance().toDtos(entity.getPaymentSchedules()));
 		return dto;
+	}
+	
+	public Contract updateContractInPaidTime(ContractDto dto, Contract entity) throws BusinessException {
+		entity.getCustomer().setPhone(dto.getCustomer().getPhone());
+		entity.setNote(dto.getNote());
+		entity.getOwner().setDetail(dto.getOwner().getDetail());
+		List<PaymentScheduleDto> paymentDtos = dto.getPaymentSchedules();
+		Set<PaymentSchedule> payments = entity.getPaymentSchedules();
+		entity.setPaymentSchedules(PaymentScheduleConverter.getInstance().updatePaymentSchedules(paymentDtos, payments));
+		return entity;
 	}
 	
 	public ContractDto toDtoWithCustomer(Contract entity, ContractDto dest) throws BusinessException{

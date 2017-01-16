@@ -6,9 +6,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import vn.com.phuclocbao.bean.CityDto;
 import vn.com.phuclocbao.bean.CustomerContract;
+import vn.com.phuclocbao.bean.PropertyMetadata;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.CustomerDto;
+import vn.com.phuclocbao.service.PropertyMetadataCheckingService;
 
 public class ContractBean{
 	private ContractDto contractDto;
@@ -16,7 +18,24 @@ public class ContractBean{
 	private List<CityDto> cities;
 	private String paidInfo;
 	private CustomerContract searchedCustomerContract;
+	private String processStaging;
 	
+	
+	public boolean isReadOnly(String propKey){
+		if(StringUtils.isNotEmpty(processStaging)){
+			return PropertyMetadataCheckingService.getByStateAndKey(propKey, processStaging).isReadonly();
+		}
+		return true;
+	}
+	public PropertyMetadata getMeta(String propKey){
+		return PropertyMetadataCheckingService.getByStateAndKey(propKey, processStaging);
+	}
+	public String getProcessStaging() {
+		return processStaging;
+	}
+	public void setProcessStaging(String processStaging) {
+		this.processStaging = processStaging;
+	}
 	public CompanyDto getCurrentCompany() {
 		return currentCompany;
 	}

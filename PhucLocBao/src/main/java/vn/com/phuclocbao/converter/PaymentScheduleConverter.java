@@ -1,7 +1,9 @@
 package vn.com.phuclocbao.converter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -70,7 +72,26 @@ public class PaymentScheduleConverter extends BaseConverter<PaymentScheduleDto, 
 		return entities;
 	}
 
+	public Set<PaymentSchedule> updatePaymentSchedules(List<PaymentScheduleDto> dtos, Set<PaymentSchedule> entities){
+		if(CollectionUtils.isNotEmpty(entities) && CollectionUtils.isNotEmpty(dtos)){
+			entities.forEach(item ->{
+				PaymentScheduleDto dto = findPaymentSchedulebyExpectedDate(dtos, item.getExpectedPayDate());
+				if(dto != null){
+					item.setPayDate(dto.getPayDate());
+					item.setFinish(dto.getFinish());
+				}
+			});
+		}
+		return entities;
+	}
 	
+	private PaymentScheduleDto findPaymentSchedulebyExpectedDate(List<PaymentScheduleDto> dtos, Date expectedDate){
+		Optional<PaymentScheduleDto> result = dtos.stream().filter(item -> item.getExpectedPayDate().compareTo(expectedDate) == 0).findFirst();
+		if(result.isPresent()){
+			return result.get();
+		}
+		return null;
+	}
 	
 	
 }

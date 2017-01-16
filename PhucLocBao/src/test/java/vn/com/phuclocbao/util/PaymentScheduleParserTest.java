@@ -16,13 +16,14 @@ import org.junit.Test;
 
 import vn.com.phuclocbao.dto.PaymentScheduleDto;
 import vn.com.phuclocbao.exception.BusinessException;
+import vn.com.phuclocbao.service.PropertyMetadataCheckingService;
 
 public class PaymentScheduleParserTest {
 	@Test
 	public void shouldParsePaymentScheduleFromString() throws BusinessException, ParseException {
 		String paymentInfo = "16/01/2017:N:nil,26/01/2017:Y:25/01/2017,05/02/2017:N:nil,";
 		List<PaymentScheduleDto> result = PaymentScheduleParser.parsePaymentSchedule(paymentInfo);
-		
+		PropertyMetadataCheckingService.getPropertiesByStaging();
 		assertThat(result, is(not(nullValue())));
 		assertThat(result.size(), is(equalTo(3)));
 		List<PaymentScheduleDto> orderList = result.stream().sorted((o1,o2) -> {

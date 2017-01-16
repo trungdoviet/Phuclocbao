@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,6 +32,7 @@ import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.CustomerDto;
 import vn.com.phuclocbao.enums.AlertType;
+import vn.com.phuclocbao.enums.ProcessStaging;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.service.CustomerService;
@@ -40,6 +42,7 @@ import vn.com.phuclocbao.util.MessageBundleUtil;
 import vn.com.phuclocbao.util.PaymentScheduleParser;
 import vn.com.phuclocbao.util.PlbUtil;
 import vn.com.phuclocbao.validator.NewContractValidator;
+import vn.com.phuclocbao.validator.OldContractValidator;
 import vn.com.phuclocbao.viewbean.ContractBean;
 
 
@@ -48,6 +51,10 @@ import vn.com.phuclocbao.viewbean.ContractBean;
 @RequestMapping("/")
 public class ContractController {
 	
+	private static final String MSG_CONTRACT_UPDATE_SUCCESS = "msg.contractUpdateSuccess";
+
+	private static final String MSG_CONTRACT_UPDATE_FAILED = "msg.contractUpdateFailed";
+
 	private static final String MSG_CREATE_CONTRACT_SUCCESS = "msg.createContractSuccess";
 
 	private static final String MSG_CREATE_CONTRACT_FAILED = "msg.createContractFailed";
@@ -63,19 +70,30 @@ public class ContractController {
 	@Autowired
 	@Qualifier("newContractValidator")
 	NewContractValidator validator;
+	
+	@Autowired
+	@Qualifier("oldContractValidator")
+	OldContractValidator oldValidator;
+	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		System.out.println("=======Binding validator");
 		 binder.registerCustomEditor(Date.class,     
-                 new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10));   
-		 binder.setValidator(validator);
+                 new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10));
+		/* ContractBean contractBean = (ContractBean) binder.getTarget();
+		 if(StringUtils.isEmpty(contractBean.getProcessStaging()) || contractBean.getProcessStaging().equalsIgnoreCase(ProcessStaging.NEW.getName())){
+			 binder.setValidator(validator);
+		 } else {
+			 binder.setValidator(oldValidator);
+		 }*/
 	}
 	private static org.apache.log4j.Logger logger = Logger.getLogger(ContractController.class);
 	@RequestMapping(value = { "/newContractAction"}, params="save", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView createContract(HttpServletRequest request, HttpServletResponse response, 
 			@ModelAttribute("contractBean") @Validated ContractBean contractBean, 
 			BindingResult result, SessionStatus status, final RedirectAttributes redirectAttributes) {
-		
+		validator.validate(contractBean, result);
+		contractBean.setProcessStaging(ProcessStaging.NEW.getName());
 		ModelAndView model = null;
 		if (result.hasErrors()) {
 			model = new ModelAndView("newContract");
@@ -153,28 +171,12 @@ public class ContractController {
 	}
 	
 	// show update form
-	@RequestMapping(value = "/contracts/{id}/paid", method = RequestMethod.GET)
+	@RequestMapping(value = "/contract/{id}/paid", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView showUpdateUserForm(HttpServletRequest request, @PathVariable("id") int id, Model model, ContractBean contractBean) {
 		ModelAndView modelView = new ModelAndView("contract");
-		PLBSession plbSession = PlbUtil.getPlbSession(request);
 		logger.info("open Form : {}" + id);
 		try {
-			if(contractBean == null){
-				contractBean = new ContractBean();
-			}
-			ContractDto dto = contractService.findContractDtoById(id, plbSession.getCompanyId());
-			contractBean.setCities(VietnamCityService.loadCities());
-			contractBean.setCurrentCompany(plbSession.getCurrentCompany());
-			contractBean.setPaidInfo(PaymentScheduleParser.parsePaymentInfoString(dto.getPaymentSchedules()));
-			contractBean.setContractDto(dto);
-			
-			List<CustomerDto> dtos = customerService.getCustomersByIdNo(dto.getCustomer().getIdNo());
-			ContractResponseBody result = customerService.buildContractResponse(dtos);
-			if(result != null){
-				List<CustomerContract> searchedCustomers = result.getCustomerContracts();
-				CustomerContract selectedContract = findCustomerContractbyIdNo(contractBean.getContractDto().getCustomer().getIdNo(), searchedCustomers);
-				contractBean.setSearchedCustomerContract(selectedContract);
-			}
+			populateContractForm(request, id, contractBean);
 			model.addAttribute("contractBean", contractBean);
 		} catch (BusinessException e) {
 			model.addAttribute(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(MSG_CAN_NOT_FIND_CONTRACT));
@@ -184,5 +186,69 @@ public class ContractController {
 		}
 		return modelView;
 
+	}
+	@RequestMapping(value = { "/contract/{id}/saveContract"}, params="save", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView saveContract(HttpServletRequest request,  @PathVariable("id") int id, HttpServletResponse response, 
+			@ModelAttribute("contractBean") @Validated ContractBean contractBean, 
+			BindingResult result, SessionStatus status, final RedirectAttributes redirectAttributes) {
+		oldValidator.validate(contractBean, result);
+		ModelAndView model = null;
+		if (result.hasErrors()) {
+			logger.info("=============3434:" + id);
+			model = new ModelAndView("contract");
+			try{
+				populateContractForm(request, id, contractBean);
+			} catch (BusinessException e) {
+				model.addObject(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(MSG_CAN_NOT_FIND_CONTRACT));
+				model.addObject(ConstantVariable.ATTR_FLASH_MSG_CSS, AlertType.DANGER.getName());
+				logger.error(e);
+				e.printStackTrace();
+			}
+		} else {
+			logger.info("phone==" + contractBean.getContractDto().getCustomer().getPhone());
+			model = new ModelAndView("redirect:/mngContracts");
+			PLBSession plbSession = PlbUtil.getPlbSession(request);
+			contractBean.setProcessStaging(ProcessStaging.PAID.getName());
+			contractBean.getContractDto().setId(id);
+			contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
+			contractBean.getContractDto().setPaymentSchedules(PaymentScheduleParser.parsePaymentSchedule(contractBean.getPaidInfo()));
+			try {
+				ContractDto updatedContract = contractService.updateContractInPaidTime(contractBean.getContractDto());
+				if(updatedContract != null){
+					redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(MSG_CONTRACT_UPDATE_SUCCESS));
+					redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG_CSS, AlertType.SUCCESS.getName());
+				}
+			} catch (BusinessException e) {
+				redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(MSG_CONTRACT_UPDATE_FAILED));
+				redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG_CSS, AlertType.DANGER.getName());
+				e.printStackTrace();
+				logger.error(e);
+			}
+		}
+		return model;
+	}
+
+	private void populateContractForm(HttpServletRequest request, int id, ContractBean contractBean)
+			throws BusinessException {
+		PLBSession plbSession = PlbUtil.getPlbSession(request);
+		if(contractBean == null){
+			contractBean = new ContractBean();
+		}
+		contractBean.setProcessStaging(ProcessStaging.PAID.getName());
+		ContractDto dto = contractService.findContractDtoById(id, plbSession.getCompanyId());
+		contractBean.setCities(VietnamCityService.loadCities());
+		contractBean.setCurrentCompany(plbSession.getCurrentCompany());
+		if(StringUtils.isEmpty(contractBean.getPaidInfo())){
+			contractBean.setPaidInfo(PaymentScheduleParser.parsePaymentInfoString(dto.getPaymentSchedules()));
+		}
+		contractBean.setContractDto(dto);
+		
+		List<CustomerDto> dtos = customerService.getCustomersByIdNo(dto.getCustomer().getIdNo());
+		ContractResponseBody responseContract = customerService.buildContractResponse(dtos);
+		if(responseContract != null){
+			List<CustomerContract> searchedCustomers = responseContract.getCustomerContracts();
+			CustomerContract selectedContract = findCustomerContractbyIdNo(contractBean.getContractDto().getCustomer().getIdNo(), searchedCustomers);
+			contractBean.setSearchedCustomerContract(selectedContract);
+		}
 	}
 }

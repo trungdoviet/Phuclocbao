@@ -287,6 +287,18 @@ function initNewContractPageButtons(){
 	});
 }
 
+function initContractPageButtons(){
+	$( "#btnSaveContract" ).on( "click", function() {
+		 var totalAmount = $("#totalAmount").autoNumeric("get");
+		 $("#totalAmount").val(totalAmount);
+		 
+		 var feeAday =  $("#feeADay").autoNumeric("get");
+		 $("#feeADay").val(feeAday);
+		 
+		 collectPaymentSchedule();
+	});
+}
+
 function openContractDetail(contractId){
 	if(contractId == ""){
 		return false;
