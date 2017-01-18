@@ -32,7 +32,77 @@ public class ContractDto implements IBaseDTO {
 	private java.util.List<PaymentScheduleDto> paymentSchedules;
 	private java.lang.String note;
 	private String state;
+	private java.util.Date payoffDate;
+	private java.lang.Double companyDebt;
+	private java.lang.Double customerDebt;
+	private java.util.List<ContractHistoryDto> histories;
+	
+	public java.util.List<ContractHistoryDto> getHistories() {
+		return histories;
+	}
 
+	public void setHistories(java.util.List<ContractHistoryDto> histories) {
+		this.histories = histories;
+	}
+
+	/**
+	 * Gets the field payoffDate.
+	 * 
+	 * @return the value of the field payoffDate; may be null.
+	 */
+	public java.util.Date getPayoffDate() {
+		return payoffDate;
+	}
+
+	/**
+	 * Sets the field payoffDate.
+	 * 
+	 * @param _payoffDate
+	 *            the new value of the field payoffDate.
+	 */
+	public void setPayoffDate(java.util.Date _payoffDate) {
+		payoffDate = _payoffDate;
+	}
+
+
+	/**
+	 * Gets the field companyDebt.
+	 * 
+	 * @return the value of the field companyDebt; may be null.
+	 */
+	public java.lang.Double getCompanyDebt() {
+		return companyDebt;
+	}
+
+	/**
+	 * Sets the field companyDebt.
+	 * 
+	 * @param _companyDebt
+	 *            the new value of the field companyDebt.
+	 */
+	public void setCompanyDebt(java.lang.Double _companyDebt) {
+		companyDebt = _companyDebt;
+	}
+
+
+	/**
+	 * Gets the field customerDebt.
+	 * 
+	 * @return the value of the field customerDebt; may be null.
+	 */
+	public java.lang.Double getCustomerDebt() {
+		return customerDebt;
+	}
+
+	/**
+	 * Sets the field customerDebt.
+	 * 
+	 * @param _customerDebt
+	 *            the new value of the field customerDebt.
+	 */
+	public void setCustomerDebt(java.lang.Double _customerDebt) {
+		customerDebt = _customerDebt;
+	}
 	public String getState() {
 		return state;
 	}

@@ -3,6 +3,7 @@ package vn.com.phuclocbao.service.impl;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -123,7 +124,8 @@ public class DefaultContractService extends BaseService implements ContractServi
 			public List<ContractDto> execute() throws BusinessException, ClassNotFoundException, IOException {
 				List<Contract> contracts = contractDao.getContractByStatusAndCompanyId(state, companyId);
 				if(CollectionUtils.isNotEmpty(contracts)) {
-					return ContractConverter.getInstance().toDtosWithCustomer(contracts);
+					List<ContractDto> result = ContractConverter.getInstance().toDtosWithCustomer(contracts);
+					return result.stream().sorted((o1,o2) -> o2.getStartDate().compareTo(o1.getStartDate())).collect(Collectors.toList());
 				}
 				return null;
 			}

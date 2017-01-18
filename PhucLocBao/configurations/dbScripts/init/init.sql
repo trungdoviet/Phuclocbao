@@ -53,6 +53,9 @@ use phuclocbao;
         periodOfPayment integer not null,
         startDate datetime not null,
         totalAmount double precision not null,
+        companyDebt double precision,
+        customerDebt double precision,
+        payoffDate datetime,
         company_id integer,
         primary key (id)
     );

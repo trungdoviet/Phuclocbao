@@ -52,6 +52,9 @@
 .funkyradio .paymsgchk{
 	color:green;
 }
+.funkyradio .paymsguchk{
+	color: #ec294b;
+}
 
 .funkyradio div {
   clear: both;

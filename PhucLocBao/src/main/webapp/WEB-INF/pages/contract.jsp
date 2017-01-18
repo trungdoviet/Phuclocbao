@@ -22,10 +22,19 @@
 		<div class="col-lg-12">
 			<div class="pull-right">
 				<spring:url value="/mngContract/cancel" var="cancelUrl" />
-				<button id="btnSaveContract" type="submit" class="btn btn-primary" name="save">
-					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-					Lưu hợp đồng
-				</button>
+				<c:if test="${contractBean.processStaging == 'paid' }">
+					<button  id="btnSaveContract" type="submit" class="btn btn-primary" name="save">
+						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+						Lưu hợp đồng
+					</button>
+				</c:if>
+				
+				<c:if test="${contractBean.processStaging == 'payoff' }">
+					<button  id="btnSaveContract" type="submit" class="btn btn-primary" name="payoff">
+						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+						Lưu hợp đồng
+					</button>
+				</c:if>
 				<button type="button" class="btn btn-slave" name="cancel" onclick="location.href='${cancelUrl}'">
 					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 					Thoát

@@ -222,9 +222,52 @@
 						<div id="paymentPeriodPanel" class="funkyradio"></div>
 
 						<form:hidden path="paidInfo" id="payDateHidden" />
+						<form:hidden path="processStaging" id="processStagingHidden" />
 					</div>
 				</div>
 			</div>
+			<c:if test="${contractBean.processStaging == 'payoff' }">
+				<div class="panel-body">
+					<div class="col-md-6">
+						<spring:bind path="contractDto.customerDebt">
+							<div class="form-group ${status.error ? 'has-error' : ''}">
+								<label>Số tiền Khách hàng thiếu Công ty:</label>(<a title="Thêm" onclick="ctr_openCustomerDebtDialog()" href="#"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span></a>)
+								<form:input id="customerDebt" class="form-control pull-left"
+									readonly="${contractBean.isReadOnly('contractDto.customerDebt')}"
+									style="text-align: right;" placeholder="VNĐ" name="customerDebt"
+									path="contractDto.customerDebt" />
+								<form:errors path="contractDto.customerDebt" cssClass="error" />
+							</div>
+						</spring:bind>
+						<spring:bind path="contractDto.companyDebt">
+							<div class="form-group ${status.error ? 'has-error' : ''}">
+								<label>Số tiền Công ty thiếu Khách hàng:</label>(<a title="Thêm" onclick="ctr_openCompanyDebtDialog()" href="#"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span></a>)
+								<form:input id="companyDebt" class="form-control"
+								readonly="${contractBean.isReadOnly('contractDto.companyDebt')}"
+									style="text-align: right;" placeholder="VNĐ" name="companyDebt"
+									path="contractDto.companyDebt" />
+								<form:errors path="contractDto.companyDebt" cssClass="error" />
+							</div>
+						</spring:bind>
+					</div>
+					<div class="col-md-6">
+						<spring:bind path="contractDto.payoffDate">
+							<div class="form-group ${status.error ? 'has-error' : ''}">
+								<label>Ngày thanh lý:</label>
+								<form:input id="payoffDate" class="form-control"
+								readonly="${contractBean.isReadOnly('contractDto.payoffDate')}"
+									placeholder="Ngày" name="payoffDate"  
+									path="contractDto.payoffDate" />
+								<form:errors path="contractDto.payoffDate" cssClass="error" />
+							</div>
+						</spring:bind>
+						<div class="form-group">
+								<label>Số tiền Khách phải trả:</label>
+								<div id="totalMoneyPayBack" class=" text-center" style="font-weight:bold">200.000VNĐ</div>
+							</div>
+					</div>
+				</div>
+			</c:if>
 		</div>
 	</div>
 	<!-- /.col-->
@@ -298,7 +341,7 @@
 					<spring:bind path="contractDto.owner.detail">
 						<div class="form-group ${status.error ? 'has-error' : ''}">
 							<label>Chi tiết:</label>
-							<form:textarea class="form-control" placeholder="thông tin thêm"
+							<form:textarea  class="form-control" placeholder="thông tin thêm"
 							readonly="${contractBean.isReadOnly('contractDto.owner.detail')}"
 								rows="6" name="ownerDetail" path="contractDto.owner.detail" />
 							<form:errors path="contractDto.owner.detail" cssClass="error" />

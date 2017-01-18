@@ -47,13 +47,14 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 
 	@Override
 	public String[] getIgnoredProperties() {
-		return new String[]{"paymentSchedules", "customer", "owner", "company", "startDate", "expireDate","histories"};
+		return new String[]{"paymentSchedules", "customer", "owner", "company", "startDate", "expireDate","payoffDate","histories"};
 	}
 
 	@Override
 	public ContractDto toDtoExtraProps(Contract entity, ContractDto dest) throws BusinessException {
 		dest.setStartDate(entity.getStartDate());
 		dest.setExpireDate(entity.getExpireDate());
+		dest.setPayoffDate(entity.getPayoffDate());
 		return dest;
 	}
 	
@@ -61,6 +62,7 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 	public Contract toEntityExtraProps(ContractDto dto, Contract dest) throws BusinessException {
 		dest.setStartDate(dto.getStartDate());
 		dest.setExpireDate(dto.getExpireDate());
+		dest.setPayoffDate(dto.getPayoffDate());
 		return dest;
 	}
 

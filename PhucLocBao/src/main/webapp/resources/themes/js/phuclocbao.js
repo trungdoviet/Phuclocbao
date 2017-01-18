@@ -78,6 +78,35 @@ function initInput(){
 		    autoclose:true,
 		    language: 'vi'
 		});
+		
+		var processStage = $("#processStagingHidden").val();
+		if(processStage == "payoff"){
+			var payoffDate = $( "#payoffDate" );
+			if(payoffDate != undefined) {
+				payoffDate.datepicker({
+							    format: 'dd/mm/yyyy',
+							    todayHighlight: true,
+							    autoclose:true,
+							    language: 'vi'
+							});
+			}
+		 $("#customerDebt").autoNumeric("init", {
+		        aSep: '.',
+		        aDec: ',', 
+		        pSign: 's',
+		        aSign: ' VNĐ',
+		        vMin: 0, 
+		        vMax: 9999999999
+		    });
+		 $("#companyDebt").autoNumeric("init", {
+		        aSep: '.',
+		        aDec: ',', 
+		        pSign: 's',
+		        aSign: ' VNĐ',
+		        vMin: 0, 
+		        vMax: 9999999999
+		    });
+		}
 		$("#startDate").inputmask("99/99/9999",{ "oncomplete": function(){ console.log('inputmask complete'); } });
 		$("#customerIdNo").autocomplete({
 			source: function( request, response ) {
@@ -210,7 +239,7 @@ function populatePaymentSchedules(){
 		for (i = 0; i < length; i++) {
 			content +="<div class='funkyradio-success'>";
 			content +="<input type='checkbox' name='checkbox"+(i+1)+"'" + "id='checkbox"+(i+1)+"' "+ "data-toggle='modal' data-target='#paymentModal' "+ "data-expectedPayDate='"+periodOfPayments[i].expectedPayDate +"' "+ "data-payDate='"+periodOfPayments[i].payDate +"' "+getStateByCode(periodOfPayments[i].state)+" " +getDisabledStateByCode(periodOfPayments[i].state)+"/>";
-			content +="<label for='checkbox"+(i+1)+"'" + ">Trả phí ngày " + "<b>"+ periodOfPayments[i].expectedPayDate +"</b>" + "<span class='paymsgchk' id='paymsg-checkbox"+(i+1)+"'>"+ getPaymentStringByDate(periodOfPayments[i].payDate) +"</span>" +"</label>";
+			content +="<label for='checkbox"+(i+1)+"'" + ">Trả phí ngày " + "<b>"+ periodOfPayments[i].expectedPayDate +"</b>" + "<span class='"+getPaymentStyleClassByDate(periodOfPayments[i].payDate)+"' id='paymsg-checkbox"+(i+1)+"'>"+ getPaymentStringByDate(periodOfPayments[i].payDate) +"</span>" +"</label>";
 			content +="</div>";
 		}
 		$("#paymentPeriodPanel").html(content);
@@ -226,15 +255,31 @@ function getStateByCode(code){
 }
 
 function getDisabledStateByCode(code){
-	if(code == StateEnum.CHECKED){
+	var processStage = $("#processStagingHidden").val();
+	if(code == StateEnum.CHECKED || processStage == "payoff"){
 		return "disabled";
 	}
 	return "";
 }
 
 function getPaymentStringByDate(payDate){
+	var processStage = $("#processStagingHidden").val();
+	
 	if(payDate != "" && payDate != "nil"){
 		return "- Đã thanh toán vào ngày " + payDate;
+	} else if (processStage == "payoff"){
+		return " - Chưa thanh toán";
+	}
+	return "";
+}
+
+function getPaymentStyleClassByDate(payDate){
+	var processStage = $("#processStagingHidden").val();
+	
+	if(payDate != "" && payDate != "nil"){
+		return "paymsgchk";
+	} else if (processStage == "payoff"){
+		return "paymsguchk";
 	}
 	return "";
 }
@@ -294,6 +339,15 @@ function initContractPageButtons(){
 		 
 		 var feeAday =  $("#feeADay").autoNumeric("get");
 		 $("#feeADay").val(feeAday);
+		 
+		 var processStage = $("#processStagingHidden").val();
+		if(processStage == "payoff"){
+			var companyDebt = $("#companyDebt").autoNumeric("get");
+			$("#companyDebt").val(companyDebt);
+			var companyDebt = $("#customerDebt").autoNumeric("get");
+			$("#customerDebt").val(companyDebt);
+		}
+		 
 		 
 		 collectPaymentSchedule();
 	});
@@ -562,20 +616,47 @@ function hideAlert(id){
      
 }
 
-function mc_formatNumber(){
-	/*var numberConf = {
+
+function mc_contractDetail(id){
+	console.log(id);
+}
+
+function ctr_openCustomerDebtDialog(){
+	 $("#customerDebtInput").autoNumeric("init", {
 	        aSep: '.',
 	        aDec: ',', 
 	        pSign: 's',
 	        aSign: ' VNĐ',
 	        vMin: 0, 
-	        vMax: 99999999999
-	};
-	var totalFeeADay = $("#mcTotalFeeADaySpan").text();
-	$("#mcTotalFeeADaySpan").text($.fn.autoFormat(totalFeeADay, numberConf));
-	var totalUnpaidCost = $("#mcTotalUnpaidCostSpan").text();
-	$("#mcTotalUnpaidCostSpan").text($.fn.autoFormat(totalUnpaidCost, numberConf));	*/
+	        vMax: 9999999999
+	    });
+	 $("#addCustomerDebtOk").on( "click", function() {
+			var customerDebt = parseFloat($("#customerDebtInput").autoNumeric("get"));
+			if(customerDebt > 0) {
+				var currentDebt = parseFloat($("#customerDebt").autoNumeric("get"));
+				 $("#customerDebt").autoNumeric('set', customerDebt + currentDebt);
+			}
+			$('#addCustomerDebt').modal('hide');
+		});
+	$("#addCustomerDebt").modal("show");
 }
-function mc_contractDetail(id){
-	console.log(id);
+
+function ctr_openCompanyDebtDialog(){
+	 $("#addCompanyDebtInput").autoNumeric("init", {
+	        aSep: '.',
+	        aDec: ',', 
+	        pSign: 's',
+	        aSign: ' VNĐ',
+	        vMin: 0, 
+	        vMax: 9999999999
+	    });
+	 $("#addCompanyDebtOk").on( "click", function() {
+			var companyDebt = parseFloat($("#addCompanyDebtInput").autoNumeric("get"));
+			if(companyDebt > 0) {
+				var currentDebt = parseFloat($("#companyDebt").autoNumeric("get"));
+				 $("#companyDebt").autoNumeric('set', companyDebt + currentDebt);
+			}
+			$('#addCompanyDebt').modal('hide');
+		});
+	$("#addCompanyDebt").modal("show");
 }
