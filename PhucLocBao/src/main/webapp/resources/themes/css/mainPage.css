@@ -298,3 +298,14 @@
     }
 }
 */
+/* body.modal-open {
+    overflow: visible;
+} */
+/* Contract page */
+.refunding-panel{
+	font-weight:bold;
+	color: #30a5ff;
+}
+.refunding-number{
+	font-size: 27px;
+}

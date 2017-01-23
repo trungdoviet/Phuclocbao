@@ -1,5 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="jstl.jsp"%>
 <div class="row">
 	<div class="col-lg-12">
@@ -159,7 +160,7 @@
 							<label>Số tiền:</label>
 							<form:input id="totalAmount" class="form-control"
 								readonly="${contractBean.isReadOnly('contractDto.totalAmount')}"
-								style="text-align: right;" placeholder="VNĐ" name="totalAmount"
+								style="text-align: right;" placeholder="VNĐ" name="totalAmount" 
 								path="contractDto.totalAmount" />
 							<form:errors path="contractDto.totalAmount" cssClass="error" />
 						</div>
@@ -188,7 +189,7 @@
 					<spring:bind path="contractDto.startDate">
 						<div class="form-group ${status.error ? 'has-error' : ''}">
 							<label>Ngày thuê:</label>
-							<form:input id="startDate" class="form-control readonlyDate"
+							<form:input id="startDate" class="form-control ${contractBean.processStaging == 'new' ? 'readonlyDate' : '' }"
 								disabled="${contractBean.getMeta('contractDto.startDate').isDisabled()}"
 								readonly="true" placeholder="Ngày/Tháng/Năm" name="startDate"
 								path="contractDto.startDate" />
@@ -198,7 +199,7 @@
 					<spring:bind path="contractDto.expireDate">
 						<div class="form-group ${status.error ? 'has-error' : ''}">
 							<label>Ngày hết hạn:</label>
-							<form:input id="expireDate" class="form-control readonlyDate"
+							<form:input id="expireDate" class="form-control ${contractBean.processStaging == 'new' ? 'readonlyDate' : '' } "
 							disabled="${contractBean.getMeta('contractDto.expireDate').isDisabled()}"
 								readonly="true" placeholder="Ngày/Tháng/Năm" name="expireDate"
 								path="contractDto.expireDate" />
@@ -216,14 +217,27 @@
 							<form:errors path="contractDto.periodOfPayment" cssClass="error" />
 						</div>
 					</spring:bind>
-
-					<div class="form-group">
-						<label>Lịch trả phí:</label>
-						<div id="paymentPeriodPanel" class="funkyradio"></div>
-
-						<form:hidden path="paidInfo" id="payDateHidden" />
-						<form:hidden path="processStaging" id="processStagingHidden" />
-					</div>
+					<c:if test="${contractBean.processStaging != 'update' }">
+						<div class="form-group">
+							<label>Lịch trả phí:</label>
+							<div id="paymentPeriodPanel" class="funkyradio"></div>
+	
+							<form:hidden path="paidInfo" id="payDateHidden" />
+						</div>
+					</c:if>
+					<c:if test="${contractBean.processStaging == 'update' }">
+					<spring:bind path="contractDto.payoffDate">
+							<div class="form-group ${status.error ? 'has-error' : ''}">
+								<label>Ngày thanh lý:</label>
+								<form:input id="payoffDate" class="form-control"
+								readonly="${contractBean.isReadOnly('contractDto.payoffDate')}"
+									placeholder="Ngày" name="payoffDate"  
+									path="contractDto.payoffDate" />
+								<form:errors path="contractDto.payoffDate" cssClass="error" />
+							</div>
+						</spring:bind>
+					</c:if>
+					<form:hidden path="processStaging" id="processStagingHidden" />
 				</div>
 			</div>
 			<c:if test="${contractBean.processStaging == 'payoff' }">
@@ -261,10 +275,18 @@
 								<form:errors path="contractDto.payoffDate" cssClass="error" />
 							</div>
 						</spring:bind>
-						<div class="form-group">
-								<label>Số tiền Khách phải trả:</label>
-								<div id="totalMoneyPayBack" class=" text-center" style="font-weight:bold">200.000VNĐ</div>
+						<div class="form-group"> 
+							<label id="refundToCustomer">Số tiền thừa phí:</label>
+							<div id="totalMoneyPayBack" class=" text-center refunding-panel"  >
+								<span id="totalMoneyRefundingAmount" class="refunding-number" refunding="${contractBean.totalRefunding}">
+								<fmt:formatNumber  currencySymbol=" "  value="${contractBean.totalRefunding}" type="currency" maxFractionDigits="0" var="totalRefunding"/>
+									${fn:replace(totalRefunding, ",", ".")}
+									</span>
+									VNĐ
 							</div>
+							<div>Công thức: <code>(${contractBean.subtractionDays} ngày <c:if test="${contractBean.totalRefunding < 0 }">chưa đóng</c:if>
+							<c:if test="${contractBean.totalRefunding > 0 }">đã đóng </c:if> x Phí 1 ngày) - Khách nợ + Cty nợ </code></div>
+						</div>
 					</div>
 				</div>
 			</c:if>

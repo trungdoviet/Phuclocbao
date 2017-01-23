@@ -17,6 +17,14 @@ public class DateTimeUtil {
 		return cal.getTime();
 	}
 	
+	public static Date getCurrentDateWithoutTime(){
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
 	public static Date addMoreDate(Date startDate, int date){
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startDate);

@@ -1,7 +1,8 @@
 package vn.com.phuclocbao.dto;
 
+import java.text.DecimalFormat;
+
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.NumberFormat;
 
 import vn.com.phuclocbao.dto.base.IBaseDTO;
 
@@ -36,7 +37,13 @@ public class ContractDto implements IBaseDTO {
 	private java.lang.Double companyDebt;
 	private java.lang.Double customerDebt;
 	private java.util.List<ContractHistoryDto> histories;
+	private transient Long totalContractDays;
 	
+	public String returnTotalAmountAsPlainString(){
+		  DecimalFormat df = new DecimalFormat("#");
+	        df.setMaximumFractionDigits(12);
+	        return df.format(this.totalAmount);
+	}
 	public java.util.List<ContractHistoryDto> getHistories() {
 		return histories;
 	}
@@ -312,5 +319,13 @@ public class ContractDto implements IBaseDTO {
 
 	public void setPaymentSchedules(java.util.List<PaymentScheduleDto> paymentSchedules) {
 		this.paymentSchedules = paymentSchedules;
+	}
+
+	public Long getTotalContractDays() {
+		return totalContractDays;
+	}
+
+	public void setTotalContractDays(Long totalContractDays) {
+		this.totalContractDays = totalContractDays;
 	}
 }

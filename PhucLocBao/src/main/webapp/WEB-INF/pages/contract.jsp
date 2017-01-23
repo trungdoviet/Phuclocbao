@@ -30,7 +30,19 @@
 				</c:if>
 				
 				<c:if test="${contractBean.processStaging == 'payoff' }">
-					<button  id="btnSaveContract" type="submit" class="btn btn-primary" name="payoff">
+					<button  id="btnPayoffContract" type="submit" class="btn btn-danger" name="payoff">
+						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+						Thanh lý hợp đồng
+					</button>
+					<button  id="btnSaveAsDraftContract" type="submit" class="btn btn-primary" name="savedraft">
+						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+						Lưu hợp đồng
+					</button>
+					
+				</c:if>
+				<c:if test="${contractBean.processStaging == 'update' }">
+				<spring:url value="/oldContract/cancel" var="cancelUrl" />
+					<button  id="btnSaveOldContract" type="submit" class="btn btn-primary" name="update">
 						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 						Lưu hợp đồng
 					</button>
@@ -53,6 +65,7 @@ $( document ).ready(function() {
 	showhideAvailableContractPanel();
 	hideAlert("contractAlert");
 	initContractPageButtons();
+	ctr_calTotalRefunding();
 });
 </script>
 </div>

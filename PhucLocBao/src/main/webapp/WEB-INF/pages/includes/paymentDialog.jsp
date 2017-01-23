@@ -39,7 +39,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" id="addCustomerDebtClose">Thoát</button>
-        <button type="button" class="btn btn-primary" id="addCustomerDebtOk">Đồng ý</button>
+        <button type="button" class="btn btn-primary" id="addCustomerDebtOk">Khách nợ</button>
+        <button type="button" class="btn btn-primary" id="subtractCustomerDebtOk">Khách trả nợ</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -65,7 +66,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" id="addCompanyDebtClose">Thoát</button>
-        <button type="button" class="btn btn-primary" id="addCompanyDebtOk">Đồng ý</button>
+        <button type="button" class="btn btn-primary" id="addCompanyDebtOk">Công ty nợ</button>
+        <button type="button" class="btn btn-primary" id="subtractCompanyDebtOk">Công ty trả nợ</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

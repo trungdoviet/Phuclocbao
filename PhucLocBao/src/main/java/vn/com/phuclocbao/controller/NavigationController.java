@@ -65,10 +65,20 @@ public class NavigationController {
 	}
 	
 	@RequestMapping(value = { "/oldContracts"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public String openOldContract(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+	public ModelAndView openOldContract(HttpServletRequest request, HttpServletResponse response) {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.OLD_CONTRACT);
-		return "oldContracts";
+		ModelAndView model = new ModelAndView("oldContracts");
+		try {
+			List<ContractDto> contracts = contractService.findContractsByStateAndId(ContractStatusType.FINISH, plbSession.getCompanyId());
+			ManageContractBean mcb = contractService.buildManageOldContractBean(contracts);
+			logger.info("Contract Found:" + mcb.getTotalContract());
+			model.addObject("oldContract", mcb);
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+		}
+		return model;
 	}
 	
 	@RequestMapping(value = { "/newContract"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")

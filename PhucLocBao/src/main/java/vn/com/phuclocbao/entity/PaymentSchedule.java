@@ -24,7 +24,8 @@ public class PaymentSchedule implements IBaseEntity
   private Date payDate;
   private Date notifiedDate;
   private Date expectedPayDate;
-  
+  @javax.persistence.Column(length=1)
+  private String finish;
   
   public Date getExpectedPayDate() {
 	return expectedPayDate;
@@ -71,8 +72,7 @@ public void setNotifiedDate(Date notifiedDate) {
 	this.notifiedDate = notifiedDate;
 }
 
-@javax.persistence.Column(length=1)
-  private String finish;
+
 
   /**
    * Gets the field finish.

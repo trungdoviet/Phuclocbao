@@ -110,6 +110,8 @@ use phuclocbao;
         note varchar(255),
         payoff double precision,
         rentingAmount double precision,
+        historyType varchar(255) not null,
+        detail varchar(1000),
         contract_id integer,
         primary key (id)
     );
@@ -172,7 +174,8 @@ use phuclocbao;
         
 INSERT INTO `phuclocbao`.`tblcompanytype` (`name`) VALUES ('Trụ sở chính');
 INSERT INTO `phuclocbao`.`tblcompanytype` (`name`) VALUES ('Chi nhánh');
-INSERT INTO `phuclocbao`.`tblcompany` (`address`,`description`,`name`, `companytype`, `phoneNumber`) VALUES ('B64, Bạch Đằng, Tân Bình, TP.HCM','Thế chấp xe tại tphcm','Phúc Lộc Bảo','1' '0965506248');
+INSERT INTO `phuclocbao`.`tblcompany` (`address`, `city`, `description`, `name`, `phoneNumber`, `companytype`) VALUES ('B64, Bạch Đằng, Tân Bình, TP.HCM', 'TP Hồ Chí Minh', 'Thế chấp xe tại tphcm', 'Phúc Lộc Bảo', '0965506248', '1');
 
 INSERT INTO `phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao', '123456', 'phuclocbao', '1');
+INSERT INTO `phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao 2', '123456', 'phuclocbao1', '1');
 

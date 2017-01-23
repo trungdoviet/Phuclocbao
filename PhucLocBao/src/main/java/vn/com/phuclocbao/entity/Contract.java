@@ -54,6 +54,7 @@ public class Contract implements IBaseEntity {
 	private java.util.Date payoffDate;
 	private java.lang.Double companyDebt;
 	private java.lang.Double customerDebt;
+	  
 
 	/**
 	 * Gets the field payoffDate.
@@ -388,4 +389,5 @@ public class Contract implements IBaseEntity {
 		paymentSchedules = _paymentSchedules;
 	}
 
+	
 }

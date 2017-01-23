@@ -37,6 +37,8 @@ function showhideAvailableContractPanel(){
 	}
 }
 function initInput(){
+	 var unExponentialAmount = parseFloat($("#totalAmount").attr("value"));
+	 $("#totalAmount").attr("value", unExponentialAmount);
 	 $("#totalAmount").autoNumeric("init", {
 	        aSep: '.',
 	        aDec: ',', 
@@ -95,7 +97,7 @@ function initInput(){
 		        aDec: ',', 
 		        pSign: 's',
 		        aSign: ' VNĐ',
-		        vMin: 0, 
+		        vMin: -9999999999, 
 		        vMax: 9999999999
 		    });
 		 $("#companyDebt").autoNumeric("init", {
@@ -103,7 +105,7 @@ function initInput(){
 		        aDec: ',', 
 		        pSign: 's',
 		        aSign: ' VNĐ',
-		        vMin: 0, 
+		        vMin: -9999999999, 
 		        vMax: 9999999999
 		    });
 		}
@@ -226,6 +228,8 @@ function initInputEvent(){
     });
 }
 function populatePaymentSchedules(){
+	var processStage = $("#processStagingHidden").val();
+	if(processStage == "update") return;
 	var savedPaymentValue = $("#payDateHidden").val();
 	var periodOfPayments = [];
 	if(savedPaymentValue != "" && savedPaymentValue != undefined){
@@ -321,6 +325,7 @@ function createPaymentSchedule(expectedDateString, dateString,stateString){
 }
 
 function initNewContractPageButtons(){
+	$( "#btnNewContract" ).off( "click");
 	$( "#btnNewContract" ).on( "click", function() {
 		 var totalAmount = $("#totalAmount").autoNumeric("get");
 		 $("#totalAmount").val(totalAmount);
@@ -333,24 +338,44 @@ function initNewContractPageButtons(){
 }
 
 function initContractPageButtons(){
+	$( "#btnSaveContract" ).off( "click");
 	$( "#btnSaveContract" ).on( "click", function() {
 		 var totalAmount = $("#totalAmount").autoNumeric("get");
 		 $("#totalAmount").val(totalAmount);
 		 
 		 var feeAday =  $("#feeADay").autoNumeric("get");
 		 $("#feeADay").val(feeAday);
-		 
-		 var processStage = $("#processStagingHidden").val();
-		if(processStage == "payoff"){
-			var companyDebt = $("#companyDebt").autoNumeric("get");
-			$("#companyDebt").val(companyDebt);
-			var companyDebt = $("#customerDebt").autoNumeric("get");
-			$("#customerDebt").val(companyDebt);
-		}
-		 
-		 
 		 collectPaymentSchedule();
 	});
+	var processStage = $("#processStagingHidden").val();
+	if(processStage == "payoff"){
+		$( "#btnPayoffContract" ).off( "click");
+		$( "#btnPayoffContract" ).on( "click", function() {
+			ctr_updateNumber();
+		});
+		$( "#btnSaveAsDraftContract" ).off( "click");
+		$( "#btnSaveAsDraftContract" ).on( "click", function() {
+			ctr_updateNumber();
+		});
+		
+		
+	} else if (processStage == "update"){
+		$( "#btnSaveOldContract" ).off( "click");
+		$( "#btnSaveOldContract" ).on( "click", function() {
+			ctr_updateNumber();
+		});
+	}
+}
+function ctr_updateNumber(){
+	 var totalAmount = $("#totalAmount").autoNumeric("get");
+	 $("#totalAmount").val(totalAmount);
+	 
+	 var feeAday =  $("#feeADay").autoNumeric("get");
+	 $("#feeADay").val(feeAday);
+	 var companyDebt = $("#companyDebt").autoNumeric("get");
+	$("#companyDebt").val(companyDebt);
+	var companyDebt = $("#customerDebt").autoNumeric("get");
+	$("#customerDebt").val(companyDebt);
 }
 
 function openContractDetail(contractId){
@@ -500,7 +525,7 @@ function initPaymentPopup(){
 			$("#totalPaidAmount").text("Không xác định");
 		}
 	 });
-	
+	$("#paymentOk").off( "click");
 	$("#paymentOk").on( "click", function() {
 		var payDateId = $("#paymentDateIndentity").val();
 		if(payDateId != "") {
@@ -519,6 +544,7 @@ function initPaymentPopup(){
 		}
 		$('#paymentModal').modal('hide');
 	});
+	$("#paymentClose").off( "click");
 	$("#paymentClose").on( "click", function() {
 		 $("#paymentDateIndentity").val("");
 	});
@@ -630,15 +656,30 @@ function ctr_openCustomerDebtDialog(){
 	        vMin: 0, 
 	        vMax: 9999999999
 	    });
+	 $("#customerDebtInput").autoNumeric("set", 0);
+	 $("#addCustomerDebtOk").off( "click");
 	 $("#addCustomerDebtOk").on( "click", function() {
 			var customerDebt = parseFloat($("#customerDebtInput").autoNumeric("get"));
-			if(customerDebt > 0) {
-				var currentDebt = parseFloat($("#customerDebt").autoNumeric("get"));
-				 $("#customerDebt").autoNumeric('set', customerDebt + currentDebt);
-			}
-			$('#addCustomerDebt').modal('hide');
+			ctr_calCustomerDebt(customerDebt, true);
+			
+		});
+	 $("#subtractCustomerDebtOk").off("click");
+	 $("#subtractCustomerDebtOk").on( "click", function() {
+			var customerDebt = parseFloat($("#customerDebtInput").autoNumeric("get"));
+			ctr_calCustomerDebt(customerDebt, false);
 		});
 	$("#addCustomerDebt").modal("show");
+}
+
+function ctr_formatNumeric(value){
+	var numberConf = {
+	        aSep: '.',
+	        aDec: ',', 
+	        vMin: -99999999999, 
+	        vMax: 99999999999
+	};
+	return $.fn.autoFormat(value,numberConf); 
+	
 }
 
 function ctr_openCompanyDebtDialog(){
@@ -650,13 +691,56 @@ function ctr_openCompanyDebtDialog(){
 	        vMin: 0, 
 	        vMax: 9999999999
 	    });
+	 $("#addCompanyDebtInput").autoNumeric("set", 0);
+	 $("#addCompanyDebtOk").off( "click");
+	 $("#subtractCompanyDebtOk").off("click");
 	 $("#addCompanyDebtOk").on( "click", function() {
 			var companyDebt = parseFloat($("#addCompanyDebtInput").autoNumeric("get"));
-			if(companyDebt > 0) {
-				var currentDebt = parseFloat($("#companyDebt").autoNumeric("get"));
-				 $("#companyDebt").autoNumeric('set', companyDebt + currentDebt);
-			}
+			ctr_calcCompanyDebt(companyDebt, true);
+			$('#addCompanyDebt').modal('hide');
+		});
+	 $("#subtractCompanyDebtOk").on( "click", function() {
+			var companyDebt = -parseFloat($("#addCompanyDebtInput").autoNumeric("get"));
+			ctr_calcCompanyDebt(companyDebt, false);
 			$('#addCompanyDebt').modal('hide');
 		});
 	$("#addCompanyDebt").modal("show");
+}
+function ctr_calTotalRefunding(){
+	var processStage = $("#processStagingHidden").val();
+	if(processStage == "payoff"){
+		var customerDebt = parseFloat($("#customerDebt").autoNumeric("get"));
+		var companyDebt =  parseFloat($("#companyDebt").autoNumeric("get"));
+		 var totalRefunding = parseFloat($("#totalMoneyRefundingAmount").attr('refunding'));
+		 totalRefunding = totalRefunding - customerDebt + companyDebt;
+		 $("#totalMoneyRefundingAmount").text(ctr_formatNumeric(totalRefunding));
+	}
+}
+function ctr_calCustomerDebt(customerDebt, isIncrease){
+	if(customerDebt != 0) {
+		var currentDebt = parseFloat($("#customerDebt").autoNumeric("get"));
+		if(isIncrease){
+			currentDebt = currentDebt + customerDebt;
+		} else {
+			currentDebt = currentDebt - customerDebt;
+		}
+		$("#customerDebt").autoNumeric('set', currentDebt);
+		ctr_calTotalRefunding();
+	}
+	$('#addCustomerDebt').modal('hide');
+	return;
+}
+
+function ctr_calcCompanyDebt(companyDebt, isIncrease){
+	if(companyDebt != 0) {
+		var currentDebt = parseFloat($("#companyDebt").autoNumeric("get"));
+		if(isIncrease){
+			currentDebt = currentDebt + companyDebt;
+		} else {
+			currentDebt = currentDebt + companyDebt;
+		}
+		$("#companyDebt").autoNumeric('set', currentDebt);
+		ctr_calTotalRefunding();
+	}
+	return;
 }

@@ -19,7 +19,8 @@ public class ContractBean{
 	private String paidInfo;
 	private CustomerContract searchedCustomerContract;
 	private String processStaging;
-	
+	private Double totalRefunding;
+	private String subtractionDays;
 	
 	public boolean isReadOnly(String propKey){
 		if(StringUtils.isNotEmpty(processStaging)){
@@ -72,6 +73,18 @@ public class ContractBean{
 	}
 	public void setSearchedCustomerContract(CustomerContract searchedCustomerContract) {
 		this.searchedCustomerContract = searchedCustomerContract;
+	}
+	public Double getTotalRefunding() {
+		return totalRefunding;
+	}
+	public void setTotalRefunding(Double totalRefunding) {
+		this.totalRefunding = totalRefunding;
+	}
+	public String getSubtractionDays() {
+		return subtractionDays;
+	}
+	public void setSubtractionDays(String subtractionDays) {
+		this.subtractionDays = subtractionDays;
 	}
 	
 }

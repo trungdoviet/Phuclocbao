@@ -13,6 +13,10 @@ public interface ContractService {
 	public ContractView findContractById(Integer id) throws BusinessException;
 	public List<ContractDto> findContractsByStateAndId(ContractStatusType state, Integer companyId) throws BusinessException;
 	public ManageContractBean buildManageContractBean(List<ContractDto> dtos);
+	public ManageContractBean buildManageOldContractBean(List<ContractDto> dtos);
 	public ContractDto findContractDtoById(Integer id, Integer companyId) throws BusinessException;
 	public ContractDto updateContractInPaidTime(ContractDto dto) throws BusinessException;
+	public ContractDto updateContractInPayOffTime(ContractDto dto) throws BusinessException;
+	public ContractDto updateAsDraftContractInPayOffTime(ContractDto dto) throws BusinessException;
+	public ContractDto updateOldContract(ContractDto dto) throws BusinessException;
 }

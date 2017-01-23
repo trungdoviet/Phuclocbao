@@ -4,6 +4,7 @@ public enum ProcessStaging {
 	NEW("new"),
 	PAYOFF("payoff"),
 	PAID("paid"),
+	UPDATE("update"),
 	;
 	private ProcessStaging(String name){
 		this.name = name;

@@ -47,7 +47,7 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 
 	@Override
 	public String[] getIgnoredProperties() {
-		return new String[]{"paymentSchedules", "customer", "owner", "company", "startDate", "expireDate","payoffDate","histories"};
+		return new String[]{"paymentSchedules", "customer", "owner", "company", "startDate", "expireDate","payoffDate","histories", "totalContractDays"};
 	}
 
 	@Override
@@ -90,12 +90,39 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 	}
 	
 	public Contract updateContractInPaidTime(ContractDto dto, Contract entity) throws BusinessException {
+		updateContract(dto, entity);
+		return entity;
+	}
+
+	private void updateContract(ContractDto dto, Contract entity) {
 		entity.getCustomer().setPhone(dto.getCustomer().getPhone());
 		entity.setNote(dto.getNote());
 		entity.getOwner().setDetail(dto.getOwner().getDetail());
 		List<PaymentScheduleDto> paymentDtos = dto.getPaymentSchedules();
 		Set<PaymentSchedule> payments = entity.getPaymentSchedules();
 		entity.setPaymentSchedules(PaymentScheduleConverter.getInstance().updatePaymentSchedules(paymentDtos, payments));
+	}
+	public Contract updateAsDraftContractInPayOffTime(ContractDto dto, Contract entity) throws BusinessException {
+		updateContract(dto, entity);
+		entity.setPayoffDate(dto.getPayoffDate());
+		entity.setCustomerDebt(dto.getCustomerDebt());
+		entity.setCompanyDebt(dto.getCompanyDebt());
+		return entity;
+	}
+	
+	public Contract updateOldContract(ContractDto dto, Contract entity) throws BusinessException {
+		entity.getCustomer().setPhone(dto.getCustomer().getPhone());
+		entity.setNote(dto.getNote());
+		entity.getOwner().setDetail(dto.getOwner().getDetail());
+		return entity;
+	}
+	
+	public Contract updateContractInPayOffTime(ContractDto dto, Contract entity) throws BusinessException {
+		updateContract(dto, entity);
+		entity.setState(ContractStatusType.FINISH.getName());
+		entity.setPayoffDate(dto.getPayoffDate());
+		entity.setCustomerDebt(dto.getCustomerDebt());
+		entity.setCompanyDebt(dto.getCompanyDebt());
 		return entity;
 	}
 	

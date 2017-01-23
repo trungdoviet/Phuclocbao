@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -57,6 +58,7 @@ public class PaymentScheduleConverter extends BaseConverter<PaymentScheduleDto, 
 				PaymentScheduleDto dto = this.toDto(item, new PaymentScheduleDto(), ignoredProperties);
 				dtos.add(dto);
 			}));
+			return dtos.stream().sorted((x,y) -> x.getExpectedPayDate().compareTo(y.getExpectedPayDate())).collect(Collectors.toList());
 		}
 		return dtos;
 	}

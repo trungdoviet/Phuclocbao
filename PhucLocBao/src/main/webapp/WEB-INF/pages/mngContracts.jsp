@@ -99,8 +99,8 @@
 										<td>
 											<spring:url value="/contract/${contract.id}/paid" var="paidUrl" /> 
 											<spring:url value="/contract/${contract.id}/payoff" var="payOffUrl" />
-											<button class="btn btn-primary" onclick="location.href='${paidUrl}'">Trả phí</button>
-											<button class="btn btn-danger" onclick="location.href='${payOffUrl}'">Thanh lý</button>
+											<button class="btn btn-primary btn-xs" onclick="location.href='${paidUrl}'">Trả phí</button>
+											<button class="btn btn-danger btn-xs" onclick="location.href='${payOffUrl}'">Thanh lý</button>
 										</td>
 							    	</tr>
 						    	</c:forEach>
@@ -115,7 +115,6 @@
 <script type="text/javascript">
 $( document ).ready(function() {
 	hideAlert("mngAlert");
-	mc_formatNumber();
 });
 </script>
 </div>

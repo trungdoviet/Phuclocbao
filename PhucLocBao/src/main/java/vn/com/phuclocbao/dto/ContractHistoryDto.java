@@ -11,7 +11,28 @@ public class ContractHistoryDto implements IBaseDTO {
 	private java.lang.Double payoff;
 	private java.util.Date logDate;
 	private ContractDto contract;
+	private java.lang.String detail;
+	private java.lang.String historyType;
+	
+	
+	/**
+	 * Gets the field detail.
+	 * 
+	 * @return the value of the field detail; may be null.
+	 */
+	public java.lang.String getDetail() {
+		return detail;
+	}
 
+	/**
+	 * Sets the field detail.
+	 * 
+	 * @param _detail
+	 *            the new value of the field detail.
+	 */
+	public void setDetail(java.lang.String _detail) {
+		detail = _detail;
+	}
 	/**
 	 * Gets the field id.
 	 * 
@@ -134,5 +155,13 @@ public class ContractHistoryDto implements IBaseDTO {
 
 	public void setContract(ContractDto contract) {
 		this.contract = contract;
+	}
+
+	public java.lang.String getHistoryType() {
+		return historyType;
+	}
+
+	public void setHistoryType(java.lang.String historyType) {
+		this.historyType = historyType;
 	}
 }
