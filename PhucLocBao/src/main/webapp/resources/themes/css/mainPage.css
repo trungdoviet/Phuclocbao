@@ -309,3 +309,18 @@
 .refunding-number{
 	font-size: 27px;
 }
+.as-block{
+	display:block;
+}
+.stay-left{
+	margin-left:5px;
+}
+.state_good{
+	color: green;
+}
+.state_warning{
+	color:orange;
+}
+.state_alert{
+	color:red;
+}

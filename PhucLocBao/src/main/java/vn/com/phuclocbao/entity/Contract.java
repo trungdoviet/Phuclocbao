@@ -11,7 +11,9 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
 @javax.persistence.Table(name = "tblContract")
 @NamedQueries({
 		@NamedQuery(name = "Contract_getContractByStatusAndCompany", query = "SELECT contract FROM Contract contract, CompanyEntity company WHERE contract.state LIKE :contractState AND company.id = :companyId"),
-		@NamedQuery(name = "Contract_getContractByIdAndCompany", query = "SELECT contract FROM Contract contract WHERE contract.id = :contractId AND contract.company.id = :companyId") })
+		@NamedQuery(name = "Contract_getContractByIdAndCompany", query = "SELECT contract FROM Contract contract WHERE contract.id = :contractId AND contract.company.id = :companyId"),
+		@NamedQuery(name = "Contract_getContractByDateAndcompanyId", query = "SELECT DISTINCT contract FROM Contract contract LEFT OUTER JOIN contract.paymentSchedules ps WHERE contract.company.id = :companyId and contract.state= :contractState AND ((ps.notifiedDate <= :inputDate AND ps.finish='N') OR contract.expireDate <= :inputDate)")
+})
 public class Contract implements IBaseEntity {
 	/** SerialVersionUID */
 	private static final long serialVersionUID = -4415214540458437510L;

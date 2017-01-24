@@ -1,5 +1,6 @@
 package vn.com.phuclocbao.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import vn.com.phuclocbao.entity.Contract;
@@ -11,5 +12,6 @@ public interface ContractDao {
 	public Contract merge( Contract entity) throws BusinessException;
 	public Contract findById(Integer id) throws BusinessException;
 	public List<Contract> getContractByStatusAndCompanyId(ContractStatusType state, Integer id) throws BusinessException;
+	public List<Contract> getNotifiedContractBySpecificDateAndCompanyId(Date targetDate, Integer companyId) throws BusinessException;
 	public Contract findById(Integer id, Integer companyId) throws BusinessException;
 }

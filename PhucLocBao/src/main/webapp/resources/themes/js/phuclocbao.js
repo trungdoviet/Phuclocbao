@@ -744,3 +744,12 @@ function ctr_calcCompanyDebt(companyDebt, isIncrease){
 	}
 	return;
 }
+function nc_initNotificationPage(){
+	 initDateLocally();
+	$( "#selectedDate" ).datepicker({
+	    format: 'dd/mm/yyyy',
+	    todayHighlight: true,
+	    autoclose:true,
+	    language: 'vi'
+	});
+}

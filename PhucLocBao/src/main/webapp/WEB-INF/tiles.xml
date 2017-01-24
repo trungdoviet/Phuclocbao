@@ -43,6 +43,25 @@
        <put-attribute name="title" value="Hợp đồng cũ - Phúc Lộc Bảo" />  
        <put-attribute name="body" value="/WEB-INF/pages/oldContracts.jsp" />  
    </definition> 
+   
+    <!--Notification Page -->
+   <definition name="notificationContract" extends="base-definition">  
+       <put-attribute name="title" value="Thông báo - Phúc Lộc Bảo" />  
+       <put-attribute name="body" value="/WEB-INF/pages/notification.jsp" />  
+   </definition>
+   
+    <!--Daily Work Page -->
+   <definition name="dailyWorks" extends="base-definition">  
+       <put-attribute name="title" value="Chi tiết hằng ngày - Phúc Lộc Bảo" />  
+       <put-attribute name="body" value="/WEB-INF/pages/dailyWork.jsp" />  
+   </definition>
+   
+   <!--History Page -->
+   <definition name="history" extends="base-definition">  
+       <put-attribute name="title" value="Nhật ký hoạt động - Phúc Lộc Bảo" />  
+       <put-attribute name="body" value="/WEB-INF/pages/history.jsp" />  
+   </definition>  
+    
    <!-- login definition --> 
  <definition name="index" 
        template="/WEB-INF/pages/layouts/loginPage.jsp">  

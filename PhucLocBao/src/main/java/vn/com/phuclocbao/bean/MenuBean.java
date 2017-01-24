@@ -17,6 +17,9 @@ public class MenuBean {
 		items.put(MenuDefinition.NEW_CONTRACT.getName(), new MenuItem());
 		items.put(MenuDefinition.MANAGE_CONTRACT.getName(), new MenuItem());
 		items.put(MenuDefinition.OLD_CONTRACT.getName(), new MenuItem());
+		items.put(MenuDefinition.NOTIFICATION.getName(), new MenuItem());
+		items.put(MenuDefinition.DAILY_WORK.getName(), new MenuItem());
+		items.put(MenuDefinition.HISTORY.getName(), new MenuItem());
 		makeActive(MenuDefinition.HOME);
 	}
 	

@@ -2,8 +2,6 @@ package vn.com.phuclocbao.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +33,7 @@ import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.CustomerDto;
 import vn.com.phuclocbao.dto.PaymentScheduleDto;
 import vn.com.phuclocbao.enums.AlertType;
+import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.enums.ProcessStaging;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.ContractService;
@@ -48,6 +47,7 @@ import vn.com.phuclocbao.util.PlbUtil;
 import vn.com.phuclocbao.validator.NewContractValidator;
 import vn.com.phuclocbao.validator.OldContractValidator;
 import vn.com.phuclocbao.viewbean.ContractBean;
+import vn.com.phuclocbao.viewbean.NotificationPage;
 
 
 
@@ -64,6 +64,7 @@ public class ContractController {
 	private static final String MSG_CREATE_CONTRACT_FAILED = "msg.createContractFailed";
 
 	private static final String MSG_CAN_NOT_FIND_CONTRACT = "msg.contractNotFound";
+	private static final String MSG_ERROR_WHEN_OPEN = "msg.errorWhenOpen";
 	@Autowired
 	@Qualifier(value="contractService")
 	ContractService contractService;
@@ -405,7 +406,7 @@ public class ContractController {
 
 	private Double calculateRefundWhenPayoff( ContractBean contractBean, ContractDto dto) {
 		Double totalRefunding = 0D;
-		PaymentScheduleDto latestPaid = getLatestPaid(dto.getPaymentSchedules());
+		PaymentScheduleDto latestPaid = PlbUtil.getLatestPaid(dto.getPaymentSchedules());
 		Date targetDate = null;
 		Date today = DateTimeUtil.getCurrentDateWithoutTime();
 		if(latestPaid != null){
@@ -419,15 +420,35 @@ public class ContractController {
 		contractBean.setTotalRefunding(totalRefunding);
 		return totalRefunding;
 	}
-	private PaymentScheduleDto getLatestPaid(List<PaymentScheduleDto> sortedPayments){
-		if(CollectionUtils.isNotEmpty(sortedPayments)){
-			List<PaymentScheduleDto> reverseOrderItems = sortedPayments.stream().sorted((x,y) -> y.getExpectedPayDate().compareTo(x.getExpectedPayDate())).collect(Collectors.toList());
-			Optional<PaymentScheduleDto> result = reverseOrderItems.stream().filter(item -> item.getPayDate() != null && item.getFinish().equalsIgnoreCase(ConstantVariable.YES_OPTION)).findFirst();
-			if(result.isPresent()){
-				return result.get();
-			}
-		}
-		return null;
-	}
 	
+	
+	@RequestMapping(value = { "/notification"}, params="search", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView searchNotification(HttpServletRequest request, HttpServletResponse response, 
+			@ModelAttribute("notificationPage") NotificationPage ncPage, 
+			BindingResult result, SessionStatus status) {
+		
+		ModelAndView model = new ModelAndView("notificationContract");
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		plbSession.getMenuBean().makeActive(MenuDefinition.NOTIFICATION);
+		if(ncPage == null){
+			ncPage = new NotificationPage();
+		}
+		ncPage.setCurrentCompany(plbSession.getCurrentCompany());
+		try {
+			List<ContractDto> contracts = contractService.getNotifiedContractBySpecificDateAndCompanyId(ncPage.getSelectedDate(), plbSession.getCompanyId());
+			if(CollectionUtils.isNotEmpty(contracts)){
+				ncPage.setContracts(contractService.convertToNotificationBeans(ncPage.getSelectedDate(), contracts));
+			}
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
+		}
+		model.addObject("notificationPage", ncPage);
+		return model;
+	}
+	private void showErrorAlert(ModelAndView model, String message) {
+		model.addObject(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(message));
+		model.addObject(ConstantVariable.ATTR_FLASH_MSG_CSS, AlertType.DANGER.getName());
+	}
 }

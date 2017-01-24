@@ -30,11 +30,14 @@ import vn.com.phuclocbao.view.PropertyDetail;
 public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 
 	private static ContractConverter instance;
-	private static final String PAYMENT_SCHEDULE_TEMPLATE = "<span id='exPayDate'> Ngày: <strong>{0}</strong></span><span class='glyphicon glyphicon-ok color-check-day' aria-hidden='true'></span> Đã thanh toán ({1}) - Trước {2} ngày";
+	private static final String PAYMENT_SCHEDULE_TEMPLATE = "<span id='exPayDate'> Ngày: <strong>{0}</strong></span><span class='glyphicon glyphicon-ok color-check-day' aria-hidden='true'></span> Đã thanh toán ({1}) - {2} {3} ngày";
 	private static final String PAYMENT_SCHEDULE_TEMPLATE_NOT_DONE_YET = "<span id='exPayDate'> Ngày: <strong>{0}</strong></span>";
+	private static final String PARAM_EARLIER = "Sớm";
+	private static final String PARAM_LATE = "Trễ";
 	private static final String PARAM_EXPECTED_PAY_DATE = "{0}";
 	private static final String PARAM_PAY_DATE = "{1}";
-	private static final String PARAM_PRIOR_TO_DATE = "{2}";
+	private static final String PARAM_POS_DATE = "{2}";
+	private static final String PARAM_PRIOR_TO_DATE = "{3}";
 	
 	private ContractConverter() {}
 	
@@ -132,6 +135,21 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 		return dest;
 	}
 	
+	private ContractDto toDtoWithCustomerAndPayments(Contract entity, ContractDto dest) throws BusinessException{
+		dest = this.toDto(entity, dest);
+		dest.setCustomer(CustomerConverter.getInstance().toDto(entity.getCustomer(), new CustomerDto()));
+		dest.setPaymentSchedules(PaymentScheduleConverter.getInstance().toDtos(entity.getPaymentSchedules()));
+		return dest;
+	}
+	
+	public List<ContractDto> toDtosWithCustomerAndPayments(List<Contract> contracts){
+		List<ContractDto> dtos = new ArrayList<>();
+		if(CollectionUtils.isNotEmpty(contracts)){
+			dtos = contracts.stream().map(LambdaExceptionUtil.rethrowFunction(item -> this.toDtoWithCustomerAndPayments(item, new ContractDto()))).collect(Collectors.toList());
+		}
+		return dtos;
+	}
+	
 	public List<ContractDto> toDtosWithCustomer(List<Contract> contracts){
 		List<ContractDto> dtos = new ArrayList<>();
 		if(CollectionUtils.isNotEmpty(contracts)){
@@ -176,9 +194,17 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 			});
 			for (PaymentSchedule item : paymentSchedules) {
 				if(item.getPayDate() != null) {
+					long days = DateTimeUtil.calculateDayBetween(item.getPayDate(), item.getExpectedPayDate());
+					String posInTime = "";
+					if(days >= 0) {
+						posInTime = PARAM_EARLIER;
+					} else {
+						posInTime = PARAM_LATE;
+					}
 					result.add(PAYMENT_SCHEDULE_TEMPLATE.replace(PARAM_EXPECTED_PAY_DATE, DateTimeUtil.date2String(item.getExpectedPayDate()))
 														.replace(PARAM_PAY_DATE, DateTimeUtil.date2String(item.getPayDate()))
-														.replace(PARAM_PRIOR_TO_DATE, String.valueOf(DateTimeUtil.calculateDayBetween(item.getExpectedPayDate(), item.getPayDate()))));
+														.replace(PARAM_POS_DATE, posInTime)
+														.replace(PARAM_PRIOR_TO_DATE, String.valueOf(days)));
 				} else {
 					result.add(PAYMENT_SCHEDULE_TEMPLATE_NOT_DONE_YET.replace(PARAM_EXPECTED_PAY_DATE, DateTimeUtil.date2String(item.getExpectedPayDate())));
 				}

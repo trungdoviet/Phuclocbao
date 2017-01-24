@@ -1,5 +1,6 @@
 package vn.com.phuclocbao.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -37,6 +38,15 @@ public class DefaultContractDao extends BaseDaoJpaImpl<Contract, Integer> implem
 		query.setParameter("contractId",id);
 		query.setParameter("companyId", companyId);
 		return query.getSingleResult();
+	}
+	@Override
+	public List<Contract> getNotifiedContractBySpecificDateAndCompanyId(Date targetDate, Integer companyId)
+			throws BusinessException {
+		TypedQuery<Contract> query = getEm().createNamedQuery("Contract_getContractByDateAndcompanyId", Contract.class);
+		query.setParameter("companyId", companyId);
+		query.setParameter("inputDate", targetDate);
+		query.setParameter("contractState", ContractStatusType.IN_PROGRESS.getName());
+		return query.getResultList();
 	}
 
 }

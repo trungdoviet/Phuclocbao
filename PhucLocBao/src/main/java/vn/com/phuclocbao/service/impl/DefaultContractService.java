@@ -1,6 +1,7 @@
 package vn.com.phuclocbao.service.impl;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -21,10 +22,13 @@ import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.dao.ContractDao;
 import vn.com.phuclocbao.dao.PersistenceExecutable;
 import vn.com.phuclocbao.dto.ContractDto;
+import vn.com.phuclocbao.dto.PaymentScheduleDto;
 import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.entity.Contract;
 import vn.com.phuclocbao.enums.ContractHistoryType;
+import vn.com.phuclocbao.enums.ContractSeverity;
 import vn.com.phuclocbao.enums.ContractStatusType;
+import vn.com.phuclocbao.enums.ProcessStaging;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.BaseService;
@@ -32,8 +36,10 @@ import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.ContractHistoryUtil;
 import vn.com.phuclocbao.util.DateTimeUtil;
+import vn.com.phuclocbao.util.PlbUtil;
 import vn.com.phuclocbao.view.ContractView;
 import vn.com.phuclocbao.viewbean.ManageContractBean;
+import vn.com.phuclocbao.viewbean.NotificationContractBean;
 @Service
 public class DefaultContractService extends BaseService implements ContractService {
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DefaultContractService.class);
@@ -286,5 +292,42 @@ public class DefaultContractService extends BaseService implements ContractServi
 				}
 			}
 		});
+	}
+	@Override
+	public List<ContractDto> getNotifiedContractBySpecificDateAndCompanyId(Date targetDate, Integer companyId)
+			throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<List<ContractDto>>() {
+			@Override
+			public List<ContractDto> execute() throws BusinessException, ClassNotFoundException, IOException {
+				List<Contract> contracts = contractDao.getNotifiedContractBySpecificDateAndCompanyId(targetDate, companyId);
+				if(CollectionUtils.isNotEmpty(contracts)) {
+					List<ContractDto> result = ContractConverter.getInstance().toDtosWithCustomerAndPayments(contracts);
+					return result;
+				}
+				return null;
+			}
+		});
+	}
+	@Override
+	public List<NotificationContractBean> convertToNotificationBeans(Date selectedDate, List<ContractDto> contracts)
+			throws BusinessException {
+		List<NotificationContractBean> ncBeans = contracts.stream().map(item -> {
+			NotificationContractBean bean = new NotificationContractBean();
+			bean.setContract(item);
+			PaymentScheduleDto latestPaid = PlbUtil.getLatestPaid(item.getPaymentSchedules());
+			if(latestPaid != null && DateTimeUtil.daysBetweenDates(item.getExpireDate(), selectedDate) != 0){
+				bean.setStage(ProcessStaging.PAID.getName());
+				bean.setAmountDays(DateTimeUtil.daysBetweenDates(latestPaid.getExpectedPayDate(), selectedDate));
+				bean.setPaidDate(latestPaid.getExpectedPayDate());
+			} else {
+				bean.setStage(ProcessStaging.PAYOFF.getName());
+				bean.setAmountDays(DateTimeUtil.daysBetweenDates(item.getExpireDate(), selectedDate));
+				bean.setPaidDate(item.getExpireDate());
+			}
+			bean.setSeverity(ContractSeverity.getSeverityByAmountDays(bean.getAmountDays()).getName());
+			return bean;
+		}).sorted((o1,o2) -> o1.getPaidDate().compareTo(o2.getPaidDate()))
+		.collect(Collectors.toList());
+		return ncBeans;
 	}
 }
