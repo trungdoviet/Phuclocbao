@@ -25,6 +25,8 @@ import vn.com.phuclocbao.viewbean.LoginBean;
 
 @Controller
 public class LoginController {
+		private static final String ERROR_USER_LOGIN_FAILED = "error.userLoginFailed";
+		private static final String MSG_WELCOME_LOGIN = "msg.welcomeLogin";
 		private static org.apache.log4j.Logger logger = Logger.getLogger(LoginController.class);
 		@Autowired
 		private LoginDelegator loginDelegate;
@@ -78,12 +80,12 @@ public class LoginController {
 								request.getSession().setAttribute(PLBSession.SESSION_ATTRIBUTE_KEY, plbSession);
 								System.out.println("User Login Successful with username:" + userAccount.getFullname());
 								model = new ModelAndView("redirect:/home");
-								redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage("msg.welcomeLogin") + userAccount.getFullname());
+								redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(MSG_WELCOME_LOGIN) + userAccount.getFullname());
 								redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG_CSS, AlertType.SUCCESS.getName());
 						}
 						else {
 								model = new ModelAndView("index");
-								request.setAttribute("message", MessageBundleUtil.getMessage("error.userLoginFailed"));
+								request.setAttribute("message", MessageBundleUtil.getMessage(ERROR_USER_LOGIN_FAILED));
 						}
 
 				}catch(Exception e) {

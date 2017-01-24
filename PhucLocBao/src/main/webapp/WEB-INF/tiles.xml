@@ -62,6 +62,12 @@
        <put-attribute name="body" value="/WEB-INF/pages/history.jsp" />  
    </definition>  
     
+    <!-- Company Financial -->
+     <definition name="companyFinancial" extends="base-definition">  
+       <put-attribute name="title" value="Tài chính công ty - Phúc Lộc Bảo" />  
+       <put-attribute name="body" value="/WEB-INF/pages/companyFinancial.jsp" />  
+   </definition>  
+   
    <!-- login definition --> 
  <definition name="index" 
        template="/WEB-INF/pages/layouts/loginPage.jsp">  

@@ -22,11 +22,11 @@ function initDateLocally(){
 		};
 }
 function initNewContractPage(){
+	initDateLocally();
 	initInput();
 	initNewContractPageButtons();
 	 populatePaymentSchedules();
 	 initPaymentPopup();
-	 //initContractPopup();
 	 initInputEvent();
 }
 function showhideAvailableContractPanel(){

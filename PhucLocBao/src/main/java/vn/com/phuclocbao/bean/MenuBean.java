@@ -2,6 +2,7 @@ package vn.com.phuclocbao.bean;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -13,16 +14,27 @@ public class MenuBean {
 	private Map<String, MenuItem> items;
 	public MenuBean(){
 		items = new HashMap<>();
-		items.put(MenuDefinition.HOME.getName(), new MenuItem());
-		items.put(MenuDefinition.NEW_CONTRACT.getName(), new MenuItem());
-		items.put(MenuDefinition.MANAGE_CONTRACT.getName(), new MenuItem());
-		items.put(MenuDefinition.OLD_CONTRACT.getName(), new MenuItem());
-		items.put(MenuDefinition.NOTIFICATION.getName(), new MenuItem());
-		items.put(MenuDefinition.DAILY_WORK.getName(), new MenuItem());
-		items.put(MenuDefinition.HISTORY.getName(), new MenuItem());
+		items.put(MenuDefinition.HOME.getName(), new MenuItem(MenuDefinition.HOME));
+		items.put(MenuDefinition.NEW_CONTRACT.getName(), new MenuItem(MenuDefinition.NEW_CONTRACT));
+		items.put(MenuDefinition.MANAGE_CONTRACT.getName(), new MenuItem(MenuDefinition.MANAGE_CONTRACT));
+		items.put(MenuDefinition.OLD_CONTRACT.getName(), new MenuItem(MenuDefinition.OLD_CONTRACT));
+		items.put(MenuDefinition.NOTIFICATION.getName(), new MenuItem(MenuDefinition.NOTIFICATION));
+		items.put(MenuDefinition.DAILY_WORK.getName(), new MenuItem(MenuDefinition.DAILY_WORK));
+		items.put(MenuDefinition.HISTORY.getName(), new MenuItem(MenuDefinition.HISTORY));
 		makeActive(MenuDefinition.HOME);
 	}
 	
+	public MenuDefinition getDefActiveMenu(){
+		Optional<MenuDefinition> def = items.entrySet()
+											.stream()
+											.filter(item -> item.getValue().getState() == MenuState.ACTIVE)
+											.map(item-> item.getValue().getIdentity())
+											.findFirst();
+		if(def.isPresent()){
+			return def.get();
+		}
+		return null;
+	}
 	public void makeActive(MenuDefinition menu){
 		makeActive(menu.getName());
 	}

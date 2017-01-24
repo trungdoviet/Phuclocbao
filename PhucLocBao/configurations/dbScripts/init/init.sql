@@ -31,7 +31,7 @@ use phuclocbao;
         phoneNumber varchar(100),
         revenueBeforeStartDate double precision,
         startDate datetime,
-        totalFund varchar(255),
+        totalFund double precision,
         companytype integer,
         primary key (id)
     );
@@ -123,6 +123,7 @@ use phuclocbao;
         companyName varchar(255),
         detail varchar(1000),
         happenTime datetime,
+        companyId integer,
         primary key (id)
     );
 

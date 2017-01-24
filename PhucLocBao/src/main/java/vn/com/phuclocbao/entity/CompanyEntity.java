@@ -33,7 +33,7 @@ public class CompanyEntity implements IBaseEntity
 	  private java.lang.String phoneNumber;
 	  private java.lang.String motobikeRentingFund;
 	  private java.lang.String fax;
-	  private java.lang.String totalFund;
+	  private java.lang.Double totalFund;
 	  private java.lang.Double revenueBeforeStartDate;
 	  private java.lang.Double costBeforeStartDate;
 	  @javax.persistence.OneToMany(fetch=javax.persistence.FetchType.EAGER, mappedBy="company", orphanRemoval=false)
@@ -239,7 +239,7 @@ public class CompanyEntity implements IBaseEntity
 	   * Gets the field totalFund.
 	   * @return the value of the field totalFund; may be null.
 	   */
-	  public java.lang.String getTotalFund()
+	  public java.lang.Double getTotalFund()
 	  {
 	    return totalFund;
 	  }
@@ -248,7 +248,7 @@ public class CompanyEntity implements IBaseEntity
 	   * Sets the field totalFund.
 	   * @param _totalFund the new value of the field totalFund.
 	   */
-	  public void setTotalFund(java.lang.String _totalFund)
+	  public void setTotalFund(java.lang.Double _totalFund)
 	  {
 	    totalFund = _totalFund;
 	  }

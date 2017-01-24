@@ -26,9 +26,4 @@ public class CompanyConverter extends BaseConverter<CompanyDto, CompanyEntity>{
 		dest.setStartDate(entity.getStartDate());
 		return dest;
 	}
-
-
-	
-	
-	
 }

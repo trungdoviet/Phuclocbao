@@ -27,8 +27,18 @@ public class UserHistory implements IBaseEntity
   private java.util.Date happenTime;
   @javax.persistence.Column(length=1000)
   private java.lang.String detail;
+  private java.lang.Integer companyId;
 
-  /**
+  
+  public java.lang.Integer getCompanyId() {
+	return companyId;
+}
+
+public void setCompanyId(java.lang.Integer companyId) {
+	this.companyId = companyId;
+}
+
+/**
    * Gets the field id.
    * @return the value of the field id; may be null.
    */

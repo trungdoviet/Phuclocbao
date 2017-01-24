@@ -199,6 +199,7 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 					if(days >= 0) {
 						posInTime = PARAM_EARLIER;
 					} else {
+						days *= -1;
 						posInTime = PARAM_LATE;
 					}
 					result.add(PAYMENT_SCHEDULE_TEMPLATE.replace(PARAM_EXPECTED_PAY_DATE, DateTimeUtil.date2String(item.getExpectedPayDate()))

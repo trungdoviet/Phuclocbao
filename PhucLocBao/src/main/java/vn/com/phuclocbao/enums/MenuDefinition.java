@@ -6,7 +6,7 @@ public enum MenuDefinition {
 	MANAGE_CONTRACT("mngContracts"),
 	OLD_CONTRACT("oldContracts"),
 	DAILY_WORK("dailyWorks"),
-	NOTIFICATION("notification"),
+	NOTIFICATION("notificationContract"),
 	HISTORY("history"),
 	BAD_CONTRACT("badContract")
 	;
@@ -19,6 +19,9 @@ public enum MenuDefinition {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getRedirectCommand(){
+		return "redirect:/"+this.name;
 	}
 
 }

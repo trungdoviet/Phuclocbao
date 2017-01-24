@@ -167,7 +167,8 @@ public class ContractController {
 	
 	@RequestMapping(value = { "/mngContract/cancel"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView cancelUpdateInprogressContract(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("redirect:/mngContracts");
+		PLBSession plbSession = PlbUtil.getPlbSession(request);
+		ModelAndView model = new ModelAndView(plbSession.getMenuBean().getDefActiveMenu().getRedirectCommand());
 		return model;
 	}
 	@RequestMapping(value = { "/oldContract/cancel"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
@@ -240,8 +241,9 @@ public class ContractController {
 			model = reloadUpdateContractPage(request, id, contractBean,ProcessStaging.PAID);
 		} else {
 			logger.info("phone==" + contractBean.getContractDto().getCustomer().getPhone());
-			model = new ModelAndView("redirect:/mngContracts");
+			
 			PLBSession plbSession = PlbUtil.getPlbSession(request);
+			model = new ModelAndView(plbSession.getMenuBean().getDefActiveMenu().getRedirectCommand());
 			contractBean.setProcessStaging(ProcessStaging.PAID.getName());
 			contractBean.getContractDto().setId(id);
 			contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
@@ -266,13 +268,12 @@ public class ContractController {
 			BindingResult result, SessionStatus status, final RedirectAttributes redirectAttributes) {
 		oldValidator.validate(contractBean, result);
 		ModelAndView model = null;
-		logger.info("=============3434:" + id + "-Stage:" + contractBean.getProcessStaging());
 		if (result.hasErrors()) {
 			model = reloadUpdateContractPage(request, id, contractBean,ProcessStaging.PAYOFF);
 		} else {
 			logger.info("phone==" + contractBean.getContractDto().getCustomer().getPhone());
-			model = new ModelAndView("redirect:/mngContracts");
 			PLBSession plbSession = PlbUtil.getPlbSession(request);
+			model = new ModelAndView(plbSession.getMenuBean().getDefActiveMenu().getRedirectCommand());
 			contractBean.setProcessStaging(ProcessStaging.PAYOFF.getName());
 			contractBean.getContractDto().setId(id);
 			contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
@@ -297,13 +298,12 @@ public class ContractController {
 			BindingResult result, SessionStatus status, final RedirectAttributes redirectAttributes) {
 		oldValidator.validate(contractBean, result);
 		ModelAndView model = null;
-		logger.info("=============3434:" + id + "-Stage:" + contractBean.getProcessStaging());
 		if (result.hasErrors()) {
 			model = reloadUpdateContractPage(request, id, contractBean, ProcessStaging.PAYOFF);
 		} else {
 			logger.info("phone==" + contractBean.getContractDto().getCustomer().getPhone());
-			model = new ModelAndView("redirect:/mngContracts");
 			PLBSession plbSession = PlbUtil.getPlbSession(request);
+			model = new ModelAndView(plbSession.getMenuBean().getDefActiveMenu().getRedirectCommand());
 			contractBean.setProcessStaging(ProcessStaging.PAYOFF.getName());
 			contractBean.getContractDto().setId(id);
 			contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());

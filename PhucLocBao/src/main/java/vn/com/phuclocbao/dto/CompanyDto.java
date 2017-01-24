@@ -1,5 +1,6 @@
 package vn.com.phuclocbao.dto;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import vn.com.phuclocbao.dto.base.IBaseDTO;
@@ -28,8 +29,35 @@ public class CompanyDto implements IBaseDTO {
 	private java.lang.Double costBeforeStartDate;
 	private java.lang.String investBeforeStartDate;
 	private java.util.List<ContractDto> contracts;
-	private java.util.List<ContractHistoryDto> histories;
+	private java.lang.Double totalFund;
 
+	/**
+	 * Gets the field totalFund.
+	 * 
+	 * @return the value of the field totalFund; may be null.
+	 */
+	public java.lang.Double getTotalFund() {
+		return totalFund;
+	}
+	
+	public String returnTotalFundAsPlainString(){
+		if(totalFund == null){
+			totalFund = 0D;
+		}
+		  DecimalFormat df = new DecimalFormat("#");
+	      df.setMaximumFractionDigits(15);
+	      return df.format(this.totalFund);
+	}
+
+	/**
+	 * Sets the field totalFund.
+	 * 
+	 * @param _totalFund
+	 *            the new value of the field totalFund.
+	 */
+	public void setTotalFund(java.lang.Double _totalFund) {
+		totalFund = _totalFund;
+	}
 	/**
 	 * Gets the field id.
 	 * 
@@ -201,26 +229,7 @@ public class CompanyDto implements IBaseDTO {
 		originalFund = _originalFund;
 	}
 
-	private java.lang.String totalFund;
-
-	/**
-	 * Gets the field totalFund.
-	 * 
-	 * @return the value of the field totalFund; may be null.
-	 */
-	public java.lang.String getTotalFund() {
-		return totalFund;
-	}
-
-	/**
-	 * Sets the field totalFund.
-	 * 
-	 * @param _totalFund
-	 *            the new value of the field totalFund.
-	 */
-	public void setTotalFund(java.lang.String _totalFund) {
-		totalFund = _totalFund;
-	}
+	
 
 	/**
 	 * Gets the field motobikeRentingFund.
@@ -332,13 +341,4 @@ public class CompanyDto implements IBaseDTO {
 	public void setContracts(java.util.List<ContractDto> contracts) {
 		this.contracts = contracts;
 	}
-
-	public java.util.List<ContractHistoryDto> getHistories() {
-		return histories;
-	}
-
-	public void setHistories(java.util.List<ContractHistoryDto> histories) {
-		this.histories = histories;
-	}
-
 }
