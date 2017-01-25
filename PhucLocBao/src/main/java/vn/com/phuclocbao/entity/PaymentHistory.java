@@ -6,8 +6,8 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
  */
 @SuppressWarnings("all")
 @javax.persistence.Entity
-@javax.persistence.Table(name = "tblContractHistory")
-public class ContractHistory implements IBaseEntity {
+@javax.persistence.Table(name = "tblPaymentHistory")
+public class PaymentHistory implements IBaseEntity {
 	/** SerialVersionUID */
 	private static final long serialVersionUID = 4092344397315630099L;
 
@@ -25,8 +25,17 @@ public class ContractHistory implements IBaseEntity {
 	private java.lang.String historyType;
 	@javax.persistence.Column(length = 1000)
 	private java.lang.String detail;
-	@javax.persistence.ManyToOne(cascade = {}, fetch = javax.persistence.FetchType.EAGER)
-	private vn.com.phuclocbao.entity.Contract contract;
+	private Integer companyId;
+	
+	
+	public Integer getCompanyId() {
+		
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
 
 	
 	public java.lang.String getHistoryType() {
@@ -153,24 +162,6 @@ public class ContractHistory implements IBaseEntity {
 		note = _note;
 	}
 
-	/**
-	 * Gets the field contract.
-	 * 
-	 * @return the value of the field contract; may be null.
-	 */
-	public vn.com.phuclocbao.entity.Contract getContract() {
-		return contract;
-	}
-
-	/**
-	 * Sets the field contract.
-	 * 
-	 * @param _contract
-	 *            the new value of the field contract.
-	 */
-	public void setContract(vn.com.phuclocbao.entity.Contract _contract) {
-		contract = _contract;
-	}
 
 	/**
 	 * Gets the field detail.

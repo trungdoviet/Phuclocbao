@@ -1,6 +1,6 @@
 package vn.com.phuclocbao.enums;
 
-public enum ContractHistoryType {
+public enum PaymentHistoryType {
 	INVEST_FUNDING("INVEST_FUNDING","Nhập vốn"),
 	RENTING_NEW_MOTOBIKE("RENTING_NEW_MOTOBIKE","Cho thuê xe"),
 	RENTING_COST("RENTING_COST","Phí thuê xe"),
@@ -12,7 +12,7 @@ public enum ContractHistoryType {
 	OTHER("OTHER","Chi khác...")
 	;
 	private String type;
-	private ContractHistoryType(String type, String name){
+	private PaymentHistoryType(String type, String name){
 		this.name = name;
 		this.type = type;
 	}

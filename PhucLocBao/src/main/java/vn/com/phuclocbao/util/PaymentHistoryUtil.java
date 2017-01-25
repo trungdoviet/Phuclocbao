@@ -1,16 +1,14 @@
 package vn.com.phuclocbao.util;
 
 import java.text.MessageFormat;
-import java.util.HashSet;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import vn.com.phuclocbao.entity.Contract;
-import vn.com.phuclocbao.entity.ContractHistory;
-import vn.com.phuclocbao.enums.ContractHistoryType;
+import vn.com.phuclocbao.entity.PaymentHistory;
+import vn.com.phuclocbao.enums.PaymentHistoryType;
 
-public class ContractHistoryUtil {
+public class PaymentHistoryUtil {
 	private static final String MSG_PAYOFF_CONTRACT = "Thanh lý hợp đồng số: HDCT{0}-{1} .Khách {2} {3}. Ngày thanh lý: {4}";
 	private static final String MSG_RENTING_NEW_CONTRACT = "Đăng ký hợp đồng mới ngày {1} .Khách hàng: {2} {3}";
 	private static final String MSG_CUSTOMER_DEBT = "Khách nợ phí hợp đồng số: HDCT{0} - {1} .Khách hàng: {2} {3}";
@@ -19,10 +17,10 @@ public class ContractHistoryUtil {
 	private static final String MSG_COMPANY_PAY_DEBT = "Công ty trả nợ phí hợp đồng số: HDCT{0} - {1} .Khách hàng: {2} {3}";
 	private static final String MSG_RENTING_COST = "Trả phí định kỳ hợp đồng số: HDCT{0} - {1} .Khách hàng: {2} {3}";
 	
-	public static Contract createNewHistory(Contract contract, ContractHistoryType type, Double fee, String customMessage){
-		ContractHistory history = new ContractHistory();
+	public static PaymentHistory createNewHistory(Contract contract, Integer companyId, PaymentHistoryType type, Double fee, String customMessage){
+		PaymentHistory history = new PaymentHistory();
 		history.setLogDate(DateTimeUtil.getCurrentDate());
-		history.setContract(contract);
+		history.setCompanyId(companyId);
 		history.setHistoryType(type.getType());
 		String startDate = StringUtils.EMPTY;
 		String payoffDate = StringUtils.EMPTY;
@@ -57,6 +55,7 @@ public class ContractHistoryUtil {
 			history.setDetail(msg);
 			break;
 		case INVEST_FUNDING:
+			history.setFee(fee);
 			break;
 		case OTHER:
 			history.setFee(fee);
@@ -89,12 +88,6 @@ public class ContractHistoryUtil {
 		
 		
 		}
-		if(StringUtils.isNotEmpty(history.getDetail())){
-			if(CollectionUtils.isEmpty(contract.getHistories())){
-				contract.setHistories(new HashSet<>());
-			}
-			contract.getHistories().add(history);
-		}
-		return contract;
+		return history;
 	}
 }

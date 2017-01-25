@@ -2,7 +2,7 @@ package vn.com.phuclocbao.dto;
 
 import vn.com.phuclocbao.dto.base.IBaseDTO;
 
-public class ContractHistoryDto implements IBaseDTO {
+public class PaymentHistoryDto implements IBaseDTO {
 
 	private static final long serialVersionUID = 8922646573215438964L;
 	private java.lang.Integer id;
@@ -10,11 +10,19 @@ public class ContractHistoryDto implements IBaseDTO {
 	private java.lang.Double rentingAmount;
 	private java.lang.Double payoff;
 	private java.util.Date logDate;
-	private ContractDto contract;
 	private java.lang.String detail;
 	private java.lang.String historyType;
+	private Integer companyId;
 	
 	
+	public Integer getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
+
 	/**
 	 * Gets the field detail.
 	 * 
@@ -147,14 +155,6 @@ public class ContractHistoryDto implements IBaseDTO {
 	 */
 	public void setNote(java.lang.String _note) {
 		note = _note;
-	}
-
-	public ContractDto getContract() {
-		return contract;
-	}
-
-	public void setContract(ContractDto contract) {
-		this.contract = contract;
 	}
 
 	public java.lang.String getHistoryType() {

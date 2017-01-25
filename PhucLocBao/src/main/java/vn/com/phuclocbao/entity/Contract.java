@@ -51,8 +51,6 @@ public class Contract implements IBaseEntity {
 	private vn.com.phuclocbao.entity.TransportOwner owner;
 	@javax.persistence.OneToMany(cascade = { javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE,javax.persistence.CascadeType.REMOVE }, fetch = javax.persistence.FetchType.EAGER, mappedBy = "contract", orphanRemoval = false)
 	private java.util.Set<vn.com.phuclocbao.entity.PaymentSchedule> paymentSchedules;
-	@javax.persistence.OneToMany(cascade = {javax.persistence.CascadeType.ALL }, fetch = javax.persistence.FetchType.EAGER, mappedBy = "contract", orphanRemoval = false)
-	private java.util.Set<vn.com.phuclocbao.entity.ContractHistory> histories;
 	private java.util.Date payoffDate;
 	private java.lang.Double companyDebt;
 	private java.lang.Double customerDebt;
@@ -115,25 +113,6 @@ public class Contract implements IBaseEntity {
 	 */
 	public void setCustomerDebt(java.lang.Double _customerDebt) {
 		customerDebt = _customerDebt;
-	}
-
-	/**
-	 * Gets the field histories.
-	 * 
-	 * @return the value of the field histories; may be null.
-	 */
-	public java.util.Set<vn.com.phuclocbao.entity.ContractHistory> getHistories() {
-		return histories;
-	}
-
-	/**
-	 * Sets the field histories.
-	 * 
-	 * @param _histories
-	 *            the new value of the field histories.
-	 */
-	public void setHistories(java.util.Set<vn.com.phuclocbao.entity.ContractHistory> _histories) {
-		histories = _histories;
 	}
 
 	/**

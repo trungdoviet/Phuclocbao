@@ -104,7 +104,7 @@ use phuclocbao;
         isAdmin varchar(1),
         primary key (id)
     );
-    create table tblContractHistory (
+    create table tblPaymentHistory (
         id integer not null auto_increment,
         fee double precision,
         logDate datetime,
@@ -113,7 +113,7 @@ use phuclocbao;
         rentingAmount double precision,
         historyType varchar(255) not null,
         detail varchar(1000),
-        contract_id integer,
+        companyId integer,
         primary key (id)
     );
 
@@ -128,12 +128,6 @@ use phuclocbao;
         primary key (id)
     );
 
-    alter table tblContractHistory 
-        add index FK_94esdgauny8ocnrmwmj4uo34a (contract_id), 
-        add constraint FK_94esdgauny8ocnrmwmj4uo34a 
-        foreign key (contract_id) 
-        references tblContract (id);
-    
 
     alter table tblCustomer 
         add constraint UK_3o2aqpijjd7i6f5galmbyc8d8 unique (contract_id);

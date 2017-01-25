@@ -36,7 +36,7 @@ public class ContractDto implements IBaseDTO {
 	private java.util.Date payoffDate;
 	private java.lang.Double companyDebt;
 	private java.lang.Double customerDebt;
-	private java.util.List<ContractHistoryDto> histories;
+	private java.util.List<PaymentHistoryDto> histories;
 	private transient Long totalContractDays;
 	
 	public String returnTotalAmountAsPlainString(){
@@ -44,11 +44,11 @@ public class ContractDto implements IBaseDTO {
 	        df.setMaximumFractionDigits(12);
 	        return df.format(this.totalAmount);
 	}
-	public java.util.List<ContractHistoryDto> getHistories() {
+	public java.util.List<PaymentHistoryDto> getHistories() {
 		return histories;
 	}
 
-	public void setHistories(java.util.List<ContractHistoryDto> histories) {
+	public void setHistories(java.util.List<PaymentHistoryDto> histories) {
 		this.histories = histories;
 	}
 

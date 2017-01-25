@@ -1,7 +1,7 @@
 package vn.com.phuclocbao.converter;
-import vn.com.phuclocbao.dto.ContractHistoryDto;
+import vn.com.phuclocbao.dto.PaymentHistoryDto;
 import vn.com.phuclocbao.dto.UserHistoryDto;
-import vn.com.phuclocbao.entity.ContractHistory;
+import vn.com.phuclocbao.entity.PaymentHistory;
 import vn.com.phuclocbao.entity.UserHistory;
 import vn.com.phuclocbao.exception.BusinessException;
 

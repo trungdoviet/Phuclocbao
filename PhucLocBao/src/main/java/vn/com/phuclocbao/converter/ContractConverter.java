@@ -50,7 +50,7 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 
 	@Override
 	public String[] getIgnoredProperties() {
-		return new String[]{"paymentSchedules", "customer", "owner", "company", "startDate", "expireDate","payoffDate","histories", "totalContractDays"};
+		return new String[]{"paymentSchedules", "customer", "owner", "company", "startDate", "expireDate","payoffDate", "totalContractDays"};
 	}
 
 	@Override

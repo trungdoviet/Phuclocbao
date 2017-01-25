@@ -1,6 +1,7 @@
 package vn.com.phuclocbao.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -20,12 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.com.phuclocbao.converter.ContractConverter;
 import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.dao.ContractDao;
+import vn.com.phuclocbao.dao.PaymentHistoryDao;
 import vn.com.phuclocbao.dao.PersistenceExecutable;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.PaymentScheduleDto;
 import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.entity.Contract;
-import vn.com.phuclocbao.enums.ContractHistoryType;
+import vn.com.phuclocbao.entity.PaymentHistory;
+import vn.com.phuclocbao.enums.PaymentHistoryType;
 import vn.com.phuclocbao.enums.ContractSeverity;
 import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.enums.ProcessStaging;
@@ -34,7 +37,7 @@ import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.BaseService;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.util.ConstantVariable;
-import vn.com.phuclocbao.util.ContractHistoryUtil;
+import vn.com.phuclocbao.util.PaymentHistoryUtil;
 import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.util.PlbUtil;
 import vn.com.phuclocbao.view.ContractView;
@@ -48,6 +51,8 @@ public class DefaultContractService extends BaseService implements ContractServi
 	@Autowired
 	private ContractDao contractDao;
 	
+	@Autowired
+	private PaymentHistoryDao paymentHistoryDao;
 	
 	@Transactional
 	@Override
@@ -66,12 +71,13 @@ public class DefaultContractService extends BaseService implements ContractServi
 				}
 				contract = ContractConverter.getInstance().toNewContract(contractDto, contract);
 				mapReference(contract, company);
-				ContractHistoryUtil.createNewHistory(contract, ContractHistoryType.RENTING_NEW_MOTOBIKE, 0D, StringUtils.EMPTY);
+				 PaymentHistory paidHistory = PaymentHistoryUtil.createNewHistory(contract,contractDto.getCompany().getId(), PaymentHistoryType.RENTING_NEW_MOTOBIKE, 0D, StringUtils.EMPTY);
 				Contract persistedObject = contractDao.merge(contract);
 				if(persistedObject != null){
 					Double totalFunding = company.getTotalFund() - contract.getTotalAmount();
 					company.setTotalFund(totalFunding);
 					companyDao.merge(company);
+					paymentHistoryDao.persist(paidHistory);
 				}
 				return Long.valueOf(persistedObject.getId());
 			}
@@ -125,6 +131,13 @@ public class DefaultContractService extends BaseService implements ContractServi
 	}
 	public void setContractDao(ContractDao contractDao) {
 		this.contractDao = contractDao;
+	}
+	
+	public PaymentHistoryDao getPaymentHistoryDao() {
+		return paymentHistoryDao;
+	}
+	public void setPaymentHistoryDao(PaymentHistoryDao paymentHistoryDao) {
+		this.paymentHistoryDao = paymentHistoryDao;
 	}
 	@Override
 	public ContractView findContractById(Integer id) throws BusinessException {
@@ -210,7 +223,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 					 long numberOfNewPaidTime  = dto.getPaymentSchedules().stream().filter(item-> item.getFinish().equalsIgnoreCase(ConstantVariable.YES_OPTION)).count();
 					 totalPaidCost = (numberOfNewPaidTime - numberOfOldPaidTime) * contract.getPeriodOfPayment() * contract.getFeeADay();
 					 ContractConverter.getInstance().updateContractInPaidTime(dto, contract);
-					 ContractHistoryUtil.createNewHistory(contract, ContractHistoryType.RENTING_COST, totalPaidCost, StringUtils.EMPTY);
+					 PaymentHistory paidHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.RENTING_COST, totalPaidCost, StringUtils.EMPTY);
 					 ContractDto updatedContract= ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
 					 if(updatedContract != null){
 						 CompanyEntity company = companyDao.findById(dto.getCompany().getId());
@@ -222,6 +235,8 @@ public class DefaultContractService extends BaseService implements ContractServi
 							logger.error("Can not update contract to company because company not found: " + dto.getId());
 							throw new BusinessException(PLBErrorCode.CAN_NOT_UPDATE_DATA.name());
 						}
+						 
+						paymentHistoryDao.persist(paidHistory);
 					 }
 					 return updatedContract;
 					
@@ -244,7 +259,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 					Contract contract = contractDao.findById(dto.getId(), dto.getCompany().getId());
 					
 					 ContractConverter.getInstance().updateContractInPayOffTime(dto, contract);
-					 ContractHistoryUtil.createNewHistory(contract, ContractHistoryType.PAYOFF, 0D, StringUtils.EMPTY);
+					 PaymentHistory paidHistory = PaymentHistoryUtil.createNewHistory(contract,dto.getCompany().getId(), PaymentHistoryType.PAYOFF, 0D, StringUtils.EMPTY);
 					 ContractDto updatedContract = ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
 					 if(updatedContract != null){
 						 CompanyEntity company = companyDao.findById(dto.getCompany().getId());
@@ -256,6 +271,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 							logger.error("Can not update contract to company because company not found: " + dto.getId());
 							throw new BusinessException(PLBErrorCode.CAN_NOT_UPDATE_DATA.name());
 						}
+						paymentHistoryDao.persist(paidHistory);
 					 }
 					 return updatedContract;
 					
@@ -279,19 +295,28 @@ public class DefaultContractService extends BaseService implements ContractServi
 					Double customerDebt = dto.getCustomerDebt() - contract.getCustomerDebt();
 					Double companyDebt = dto.getCompanyDebt() - contract.getCompanyDebt();
 					ContractConverter.getInstance().updateAsDraftContractInPayOffTime(dto, contract);
+					List<PaymentHistory> paymentHistories = new ArrayList<>();
 					if(isIncreasingDebt(customerDebt)){
-						ContractHistoryUtil.createNewHistory(contract, ContractHistoryType.CUSTOMER_DEBT, customerDebt, StringUtils.EMPTY);
+						PaymentHistory customerDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.CUSTOMER_DEBT, customerDebt, StringUtils.EMPTY);
+						paymentHistories.add(customerDebtHistory);
 					} else if(isDecreasingDebt(customerDebt)){
-						ContractHistoryUtil.createNewHistory(contract, ContractHistoryType.CUSTOMER_PAY_DEBT, customerDebt, StringUtils.EMPTY);
+						PaymentHistory customerDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.CUSTOMER_PAY_DEBT, customerDebt, StringUtils.EMPTY);
+						paymentHistories.add(customerDebtHistory);
 					}
 					
 					if(isIncreasingDebt(companyDebt)){
-						ContractHistoryUtil.createNewHistory(contract, ContractHistoryType.COMPANY_DEBT, companyDebt, StringUtils.EMPTY);
+						PaymentHistory companyDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.COMPANY_DEBT, companyDebt, StringUtils.EMPTY);
+						paymentHistories.add(companyDebtHistory);
 					} else if(isDecreasingDebt(companyDebt)){
-						ContractHistoryUtil.createNewHistory(contract, ContractHistoryType.COMPANY_PAY_DEBT, companyDebt, StringUtils.EMPTY);
+						PaymentHistory companyDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.COMPANY_PAY_DEBT, companyDebt, StringUtils.EMPTY);
+						paymentHistories.add(companyDebtHistory);
 					}
 					
-					 return ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
+					 ContractDto updatedContract = ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
+					 if(updatedContract != null && CollectionUtils.isNotEmpty(paymentHistories)){
+						 paymentHistoryDao.persistList(paymentHistories);
+					 }
+					 return updatedContract;
 					
 				} catch (Exception nre){
 					logger.error("Can not payoff contract: id:" + dto.getId() +" - companyid:" + dto.getCompany().getId());

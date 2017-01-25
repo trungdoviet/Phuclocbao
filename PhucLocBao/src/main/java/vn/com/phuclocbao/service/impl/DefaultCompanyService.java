@@ -12,24 +12,38 @@ import org.springframework.transaction.annotation.Transactional;
 
 import vn.com.phuclocbao.converter.CompanyConverter;
 import vn.com.phuclocbao.dao.CompanyDao;
+import vn.com.phuclocbao.dao.PaymentHistoryDao;
 import vn.com.phuclocbao.dao.PersistenceExecutable;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.entity.CompanyEntity;
+import vn.com.phuclocbao.enums.PaymentHistoryType;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.BaseService;
 import vn.com.phuclocbao.service.CompanyService;
+import vn.com.phuclocbao.util.PaymentHistoryUtil;
 @Service
 public class DefaultCompanyService extends BaseService implements CompanyService {
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DefaultCompanyService.class);
 	@Autowired
 	private CompanyDao companyDao;
+	@Autowired
+	private PaymentHistoryDao paymentHistoryDao;
 	@PersistenceContext
 	private EntityManager manager;
 	@Override
 	public EntityManager getEm() {
 		return manager;
 	}
+	
+	public PaymentHistoryDao getPaymentHistoryDao() {
+		return paymentHistoryDao;
+	}
+
+	public void setPaymentHistoryDao(PaymentHistoryDao paymentHistoryDao) {
+		this.paymentHistoryDao = paymentHistoryDao;
+	}
+
 	@Transactional
 	@Override
 	public CompanyDto mergeFinancial(CompanyDto dto) throws BusinessException {
@@ -42,8 +56,13 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 					throw new BusinessException(PLBErrorCode.OBJECT_NOT_FOUND.name());
 					
 				}
+				Double investFunding = dto.getTotalFund();
 				CompanyEntity updatedCompany = CompanyConverter.getInstance().updateEntity(entity, dto);
-				return CompanyConverter.getInstance().toDto(companyDao.merge(updatedCompany), new CompanyDto());
+				CompanyDto updatedCompanyDto = CompanyConverter.getInstance().toDto(companyDao.merge(updatedCompany), new CompanyDto());
+				if(updatedCompany != null){
+					paymentHistoryDao.persist(PaymentHistoryUtil.createNewHistory(null, dto.getId(), PaymentHistoryType.INVEST_FUNDING, investFunding, null));
+				}
+				return updatedCompanyDto;
 			}
 		 });
 	}

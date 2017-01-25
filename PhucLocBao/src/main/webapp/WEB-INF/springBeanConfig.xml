@@ -30,6 +30,7 @@
 	<bean id="contractService" class="vn.com.phuclocbao.service.impl.DefaultContractService">
 		<property name="companyDao" ref="companyDao"></property>
 		<property name="contractDao" ref="contractDao"></property>
+		<property name="paymentHistoryDao" ref="paymentHistoryDao"></property>
 	</bean>
 	<bean id="customerService" class="vn.com.phuclocbao.service.impl.DefaultCustomerService">
 		<property name="customerDao" ref="customerDao"></property>
@@ -42,6 +43,8 @@
 	<bean name="contractDao" class="vn.com.phuclocbao.dao.impl.DefaultContractDao">
 	</bean>
 	<bean name="customerDao" class="vn.com.phuclocbao.dao.impl.DefaultCustomerDao">
+	</bean>
+	<bean name="paymentHistoryDao" class="vn.com.phuclocbao.dao.impl.DefaultPaymentHistoryDao">
 	</bean>
 	  <bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
