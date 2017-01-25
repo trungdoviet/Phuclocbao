@@ -165,6 +165,10 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 		view.setContractType(ContractType.getValueByName(contract.getContractType()).getDesc());
 		view.setExpireDate(DateTimeUtil.date2String(contract.getExpireDate()));
 		view.setStartDate(DateTimeUtil.date2String(contract.getStartDate()));
+		if(contract.getState().equalsIgnoreCase(ContractStatusType.FINISH.getName())){
+			view.setPayOffDate(DateTimeUtil.date2String(contract.getPayoffDate()));
+		}
+		view.setState(contract.getState());
 		view.setPaymentScheduleDetails(buildPaymentScheduleString(new ArrayList<>(contract.getPaymentSchedules())));
 		view.setTotalAmount(contract.getTotalAmount());
 		CustomerView customer = new CustomerView();

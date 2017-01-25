@@ -24,7 +24,11 @@ public class ContractView {
 	@JsonView(Views.Contract.class)
 	private String expireDate;
 	@JsonView(Views.Contract.class)
+	private String payOffDate;
+	@JsonView(Views.Contract.class)
 	private PropertyDetail propertyDetail;
+	@JsonView(Views.Contract.class)
+	private String state;
 	
 	public String getPhone() {
 		return phone;
@@ -81,5 +85,16 @@ public class ContractView {
 	public void setExpireDate(String expireDate) {
 		this.expireDate = expireDate;
 	}
-	
+	public String getPayOffDate() {
+		return payOffDate;
+	}
+	public void setPayOffDate(String payOffDate) {
+		this.payOffDate = payOffDate;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
 }

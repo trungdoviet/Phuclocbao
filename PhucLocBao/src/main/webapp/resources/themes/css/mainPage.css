@@ -339,3 +339,10 @@
 .big-money-size{
 	 font-size: 20px;
 }
+.hide-me{
+	display:none;
+}
+.label-contract-margin{
+	margin-top: 6px;
+    margin-left: 3px;
+}

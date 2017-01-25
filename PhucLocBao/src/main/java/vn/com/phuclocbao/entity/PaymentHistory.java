@@ -1,5 +1,8 @@
 package vn.com.phuclocbao.entity;
 
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
 import vn.com.phuclocbao.entity.base.IBaseEntity;
 
 /**
@@ -7,6 +10,9 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
 @SuppressWarnings("all")
 @javax.persistence.Entity
 @javax.persistence.Table(name = "tblPaymentHistory")
+@NamedQueries({
+	@NamedQuery(name = "paymentHistory_getHistoriesInDateRange", query = "SELECT ph FROM PaymentHistory ph WHERE ph.companyId = :companyId AND ph.logDate >= :startDate AND ph.logDate <= :endDate")
+})
 public class PaymentHistory implements IBaseEntity {
 	/** SerialVersionUID */
 	private static final long serialVersionUID = 4092344397315630099L;
@@ -26,8 +32,17 @@ public class PaymentHistory implements IBaseEntity {
 	@javax.persistence.Column(length = 1000)
 	private java.lang.String detail;
 	private Integer companyId;
+	private Integer contractId;
 	
 	
+	public Integer getContractId() {
+		return contractId;
+	}
+
+	public void setContractId(Integer contractId) {
+		this.contractId = contractId;
+	}
+
 	public Integer getCompanyId() {
 		
 		return companyId;

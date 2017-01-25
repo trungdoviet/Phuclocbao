@@ -77,6 +77,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 					Double totalFunding = company.getTotalFund() - contract.getTotalAmount();
 					company.setTotalFund(totalFunding);
 					companyDao.merge(company);
+					paidHistory.setContractId(persistedObject.getId());
 					paymentHistoryDao.persist(paidHistory);
 				}
 				return Long.valueOf(persistedObject.getId());

@@ -113,6 +113,7 @@ use phuclocbao;
         rentingAmount double precision,
         historyType varchar(255) not null,
         detail varchar(1000),
+        contractId integer,
         companyId integer,
         primary key (id)
     );

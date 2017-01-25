@@ -74,7 +74,6 @@ public class ContractAjaxController {
 			try {
 				ContractView contractView = contractService.findContractById(Integer.parseInt(search.getContractId()));
 				result.setContract(contractView);
-				logger.info("Search size:"+contractView);
 			} catch (BusinessException e) {
 				logger.error(e);
 				e.printStackTrace();

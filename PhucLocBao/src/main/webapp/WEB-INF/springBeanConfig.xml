@@ -35,7 +35,8 @@
 	<bean id="customerService" class="vn.com.phuclocbao.service.impl.DefaultCustomerService">
 		<property name="customerDao" ref="customerDao"></property>
 	</bean>
-
+	<bean id="paymentHistoryService" class="vn.com.phuclocbao.service.impl.DefaultPaymentHistoryService">
+	</bean>
 	<bean name="userDao" class="vn.com.phuclocbao.dao.impl.DefaultUserDao">
 	</bean>
 	<bean name="companyDao" class="vn.com.phuclocbao.dao.impl.DefaultCompanyDao">

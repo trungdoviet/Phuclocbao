@@ -1,5 +1,8 @@
 package vn.com.phuclocbao.enums;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum PaymentHistoryType {
 	INVEST_FUNDING("INVEST_FUNDING","Nhập vốn"),
 	RENTING_NEW_MOTOBIKE("RENTING_NEW_MOTOBIKE","Cho thuê xe"),
@@ -28,6 +31,14 @@ public enum PaymentHistoryType {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public static PaymentHistoryType getByType(String type){
+		Optional<PaymentHistoryType> result = Arrays.stream(PaymentHistoryType.values())
+				.filter(item -> item.getType().equalsIgnoreCase(type)).findFirst();
+		if(result.isPresent()){
+			return result.get();
+		}
+		return PaymentHistoryType.OTHER;
 	}
 
 }

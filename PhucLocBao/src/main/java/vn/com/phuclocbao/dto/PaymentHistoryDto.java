@@ -1,6 +1,7 @@
 package vn.com.phuclocbao.dto;
 
 import vn.com.phuclocbao.dto.base.IBaseDTO;
+import vn.com.phuclocbao.enums.PaymentHistoryType;
 
 public class PaymentHistoryDto implements IBaseDTO {
 
@@ -13,6 +14,18 @@ public class PaymentHistoryDto implements IBaseDTO {
 	private java.lang.String detail;
 	private java.lang.String historyType;
 	private Integer companyId;
+	private Integer contractId;
+	
+	public String getHistoryName(){
+		return PaymentHistoryType.getByType(historyType).getName();
+	}
+	public Integer getContractId() {
+		return contractId;
+	}
+
+	public void setContractId(Integer contractId) {
+		this.contractId = contractId;
+	}
 	
 	
 	public Integer getCompanyId() {

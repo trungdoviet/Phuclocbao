@@ -3,7 +3,12 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Thông tin hợp đồng</h4>
+       	<div style="height:24px">
+		     <div class="pull-left"><h4 class="modal-title">Thông tin hợp đồng</h4></div>
+		     <div class="pull-left label-contract-margin"><span id="labelInprogress"  class="label label-primary hide-me">Còn hiệu lực</span></div>
+			<div class="pull-left label-contract-margin"><span id="labelFinish" class="label label-success hide-me">Đã thanh lý</span></div>
+			<div class="pull-left label-contract-margin"><span id="labelBad" class="label label-danger hide-me">Xấu</span></div>
+		</div>
       </div>
       <div class="modal-body">
         
@@ -53,6 +58,9 @@
 							</div>
 							<div class="row">
 								<div class="col-md-4 text-right"><strong class="bottom-line">Ngày hết hạn:</strong></div><div id="cdExpireDate" class="col-md-8 text-left"></div>
+							</div>
+							<div id="payoffDatePanel" class="row" style="display:none">
+								<div class="col-md-4 text-right"><strong class="bottom-line">Ngày thanh lý:</strong></div><div id="cdPayoffDate" class="col-md-8 text-left"></div>
 							</div>
 						</div>
 						<h5 class="text-center"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><strong class="bottom-line">Thông tin tài sản</strong></h5>

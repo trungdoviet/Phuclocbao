@@ -429,6 +429,25 @@ function populateContractDetail(data){
 		$("#cdExpireDate").text(contract.expireDate);
 		$("#cdStartDate").text(contract.startDate);
 		$("#cdTotalAmount").text($.fn.autoFormat(contract.totalAmount,numberConf));
+		if(contract.state == 'FINISH'){
+			$("#cdPayoffDate").text(contract.payOffDate);
+			$("#payoffDatePanel").show();
+		} else {
+			$("#payoffDatePanel").hide();
+		}
+		if(contract.state == 'FINISH'){
+			$("#labelInprogress").hide();
+			$("#labelFinish").show();
+			$("#labelBad").hide();
+		} else if(contract.state == 'IN_PROGRESS'){
+			$("#labelInprogress").show();
+			$("#labelFinish").hide();
+			$("#labelBad").hide();
+		} else if(contract.state == 'BAD'){
+			$("#labelInprogress").hide();
+			$("#labelFinish").hide();
+			$("#labelBad").show();
+		}
 		var payments = contract.paymentScheduleDetails;
 		var paymentText = "";
 		for(var i = 0; i < payments.length; i++){
@@ -726,6 +745,19 @@ function nc_initNotificationPage(){
 	    language: 'vi'
 	});
 }
+
+function ph_initPage(){
+	 initDateLocally();
+	 var dateConf = {
+			    format: 'dd/mm/yyyy',
+			    todayHighlight: true,
+			    autoclose:true,
+			    language: 'vi'
+			};
+	$( "#startDateHistory" ).datepicker(dateConf);
+	$( "#endDateHistory" ).datepicker(dateConf);
+}
+
 function cf_init(){
 	cf_initInputs();
 	cf_initButtons();

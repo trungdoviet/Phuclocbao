@@ -22,6 +22,9 @@ public class PaymentHistoryUtil {
 		history.setLogDate(DateTimeUtil.getCurrentDate());
 		history.setCompanyId(companyId);
 		history.setHistoryType(type.getType());
+		if(contract != null){
+			history.setContractId(contract.getId());
+		}
 		String startDate = StringUtils.EMPTY;
 		String payoffDate = StringUtils.EMPTY;
 		String msg =  StringUtils.EMPTY;
@@ -30,28 +33,28 @@ public class PaymentHistoryUtil {
 			history.setFee(fee);
 			startDate = DateTimeUtil.date2String(contract.getStartDate());
 			msg = MessageFormat.format(MSG_CUSTOMER_DEBT, contract.getId(), startDate, contract.getCustomer().getName(), 
-													contract.getCustomer().getBirthYear());
+													String.valueOf(contract.getCustomer().getBirthYear()));
 			history.setDetail(msg);
 			break;
 		case COMPANY_DEBT:
 			history.setFee(fee);
 			startDate = DateTimeUtil.date2String(contract.getStartDate());
 			msg = MessageFormat.format(MSG_COMPANY_DEBT, contract.getId(), startDate, contract.getCustomer().getName(), 
-													contract.getCustomer().getBirthYear(), payoffDate);
+														String.valueOf(contract.getCustomer().getBirthYear()), payoffDate);
 			history.setDetail(msg);
 			break;
 		case CUSTOMER_PAY_DEBT:
 			history.setFee(fee);
 			startDate = DateTimeUtil.date2String(contract.getStartDate());
 			msg = MessageFormat.format(MSG_CUSTOMER_PAY_DEBT, contract.getId(), startDate, contract.getCustomer().getName(), 
-													contract.getCustomer().getBirthYear(), payoffDate);
+																String.valueOf(contract.getCustomer().getBirthYear()), payoffDate);
 			history.setDetail(msg);
 			break;
 		case COMPANY_PAY_DEBT:
 			history.setFee(fee);
 			startDate = DateTimeUtil.date2String(contract.getStartDate());
 			msg = MessageFormat.format(MSG_COMPANY_PAY_DEBT, contract.getId(), startDate, contract.getCustomer().getName(), 
-													contract.getCustomer().getBirthYear(), payoffDate);
+															String.valueOf(contract.getCustomer().getBirthYear()), payoffDate);
 			history.setDetail(msg);
 			break;
 		case INVEST_FUNDING:
@@ -66,21 +69,21 @@ public class PaymentHistoryUtil {
 			startDate = DateTimeUtil.date2String(contract.getStartDate());
 			payoffDate = DateTimeUtil.date2String(contract.getPayoffDate());
 			msg = MessageFormat.format(MSG_PAYOFF_CONTRACT, contract.getId(), startDate, contract.getCustomer().getName(), 
-													contract.getCustomer().getBirthYear(), payoffDate);
+														String.valueOf(contract.getCustomer().getBirthYear()), payoffDate);
 			history.setDetail(msg);
 			break;
 		case RENTING_COST:
 			history.setFee(fee);
 			startDate = DateTimeUtil.date2String(contract.getStartDate());
 			msg = MessageFormat.format(MSG_RENTING_COST, contract.getId(), startDate, contract.getCustomer().getName(), 
-													contract.getCustomer().getBirthYear(), payoffDate);
+															String.valueOf(contract.getCustomer().getBirthYear()), payoffDate);
 			history.setDetail(msg);
 			break;
 		case RENTING_NEW_MOTOBIKE:
 			history.setRentingAmount(contract.getTotalAmount());
 			startDate = DateTimeUtil.date2String(contract.getStartDate());
 			msg = MessageFormat.format(MSG_RENTING_NEW_CONTRACT, contract.getId(), startDate, contract.getCustomer().getName(), 
-													contract.getCustomer().getBirthYear());
+																String.valueOf(contract.getCustomer().getBirthYear()));
 			history.setDetail(msg);
 			break;
 		default:
