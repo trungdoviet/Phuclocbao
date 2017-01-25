@@ -11,7 +11,15 @@ public class UserAccountDto implements IBaseDTO{
 	   * Identifier
 	   */
 	  private java.lang.Integer id;
+	  private String isAdmin;
 
+	  public String getIsAdmin() {
+		return isAdmin;
+	  }
+		
+	  public void setIsAdmin(String isAdmin) {
+		this.isAdmin = isAdmin;
+	  }
 	  /**
 	   * Gets the field id.
 	   * @return the value of the field id; may be null.

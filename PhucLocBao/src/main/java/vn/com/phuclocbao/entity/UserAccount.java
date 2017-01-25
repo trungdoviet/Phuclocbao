@@ -20,8 +20,18 @@ public class UserAccount implements IBaseEntity {
   @javax.persistence.Id
   @javax.persistence.GeneratedValue
   private java.lang.Integer id;
+  @javax.persistence.Column(length=1)
+  private String isAdmin;
 
-  /**
+  public String getIsAdmin() {
+	return isAdmin;
+  }
+	
+  public void setIsAdmin(String isAdmin) {
+	this.isAdmin = isAdmin;
+  }
+
+/**
    * Gets the field id.
    * @return the value of the field id; may be null.
    */

@@ -44,6 +44,12 @@
        <put-attribute name="body" value="/WEB-INF/pages/oldContracts.jsp" />  
    </definition> 
    
+    <!--Bad Contracts Page -->
+   <definition name="badContracts" extends="base-definition">  
+       <put-attribute name="title" value="Hợp đồng Xấu - Phúc Lộc Bảo" />  
+       <put-attribute name="body" value="/WEB-INF/pages/badContracts.jsp" />  
+   </definition> 
+   
     <!--Notification Page -->
    <definition name="notificationContract" extends="base-definition">  
        <put-attribute name="title" value="Thông báo - Phúc Lộc Bảo" />  
@@ -64,10 +70,15 @@
     
     <!-- Company Financial -->
      <definition name="companyFinancial" extends="base-definition">  
-       <put-attribute name="title" value="Tài chính công ty - Phúc Lộc Bảo" />  
+       <put-attribute name="title" value="Quản lý Tài chính - Phúc Lộc Bảo" />  
        <put-attribute name="body" value="/WEB-INF/pages/companyFinancial.jsp" />  
    </definition>  
    
+    <!-- Company Branch -->
+     <definition name="companyBranch" extends="base-definition">  
+       <put-attribute name="title" value="Quản lý Chi nhánh - Phúc Lộc Bảo" />  
+       <put-attribute name="body" value="/WEB-INF/pages/companyBranch.jsp" />  
+   </definition>  
    <!-- login definition --> 
  <definition name="index" 
        template="/WEB-INF/pages/layouts/loginPage.jsp">  

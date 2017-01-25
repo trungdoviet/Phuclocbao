@@ -24,7 +24,7 @@ use phuclocbao;
         costBeforeStartDate double precision,
         description varchar(255),
         fax varchar(255),
-        investBeforeStartDate varchar(255),
+        investBeforeStartDate double precision,
         motobikeRentingFund varchar(255),
         name varchar(255) not null,
         originalFund double precision,
@@ -101,6 +101,7 @@ use phuclocbao;
         password varchar(100),
         username varchar(30),
         companyEntity_id integer,
+        isAdmin varchar(1),
         primary key (id)
     );
     create table tblContractHistory (
@@ -177,6 +178,6 @@ INSERT INTO `phuclocbao`.`tblcompanytype` (`name`) VALUES ('Trụ sở chính');
 INSERT INTO `phuclocbao`.`tblcompanytype` (`name`) VALUES ('Chi nhánh');
 INSERT INTO `phuclocbao`.`tblcompany` (`address`, `city`, `description`, `name`, `phoneNumber`, `companytype`) VALUES ('B64, Bạch Đằng, Tân Bình, TP.HCM', 'TP Hồ Chí Minh', 'Thế chấp xe tại tphcm', 'Phúc Lộc Bảo', '0965506248', '1');
 
-INSERT INTO `phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao', '123456', 'phuclocbao', '1');
-INSERT INTO `phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao 2', '123456', 'phuclocbao1', '1');
+INSERT INTO `phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao', '123456', 'phuclocbao','Y', '1');
+INSERT INTO `phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao 2', '123456', 'phuclocbao2','N', '1');
 

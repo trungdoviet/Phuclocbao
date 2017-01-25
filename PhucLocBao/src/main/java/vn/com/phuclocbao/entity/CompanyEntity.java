@@ -40,7 +40,7 @@ public class CompanyEntity implements IBaseEntity
 	  private java.util.Set<vn.com.phuclocbao.entity.Contract> contracts;
 	  private java.util.Date startDate;
 	  private java.lang.Double originalFund;
-	  private java.lang.String investBeforeStartDate;
+	  private java.lang.Double investBeforeStartDate;
 	  /**
 	   * Gets the field id.
 	   * @return the value of the field id; may be null.
@@ -339,7 +339,7 @@ public class CompanyEntity implements IBaseEntity
 	   * Gets the field investBeforeStartDate.
 	   * @return the value of the field investBeforeStartDate; may be null.
 	   */
-	  public java.lang.String getInvestBeforeStartDate()
+	  public java.lang.Double getInvestBeforeStartDate()
 	  {
 	    return investBeforeStartDate;
 	  }
@@ -348,7 +348,7 @@ public class CompanyEntity implements IBaseEntity
 	   * Sets the field investBeforeStartDate.
 	   * @param _investBeforeStartDate the new value of the field investBeforeStartDate.
 	   */
-	  public void setInvestBeforeStartDate(java.lang.String _investBeforeStartDate)
+	  public void setInvestBeforeStartDate(java.lang.Double _investBeforeStartDate)
 	  {
 	    investBeforeStartDate = _investBeforeStartDate;
 	  }

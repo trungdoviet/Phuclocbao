@@ -65,6 +65,7 @@ public class ContractController {
 
 	private static final String MSG_CAN_NOT_FIND_CONTRACT = "msg.contractNotFound";
 	private static final String MSG_ERROR_WHEN_OPEN = "msg.errorWhenOpen";
+	private static org.apache.log4j.Logger logger = Logger.getLogger(ContractController.class);
 	@Autowired
 	@Qualifier(value="contractService")
 	ContractService contractService;
@@ -92,7 +93,7 @@ public class ContractController {
 			 binder.setValidator(oldValidator);
 		 }*/
 	}
-	private static org.apache.log4j.Logger logger = Logger.getLogger(ContractController.class);
+	
 	@RequestMapping(value = { "/newContractAction"}, params="save", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView createContract(HttpServletRequest request, HttpServletResponse response, 
 			@ModelAttribute("contractBean") @Validated ContractBean contractBean, 
@@ -236,7 +237,6 @@ public class ContractController {
 			BindingResult result, SessionStatus status, final RedirectAttributes redirectAttributes) {
 		oldValidator.validate(contractBean, result);
 		ModelAndView model = null;
-		logger.info("=============3434:" + id + "-Stage:" + contractBean.getProcessStaging());
 		if (result.hasErrors()) {
 			model = reloadUpdateContractPage(request, id, contractBean,ProcessStaging.PAID);
 		} else {

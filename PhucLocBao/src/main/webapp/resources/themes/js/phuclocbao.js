@@ -451,34 +451,7 @@ function showErrorDialog(msg){
 	$("#messageContent").text("Đã có lỗi xảy ra:" + msg);
 	$("#errorModal").modal("show");
 }
-/*function initContractPopup(){
-	$('#contractDetail').on('shown.bs.modal', function (event) {
-		var linkTag = $(event.relatedTarget);
-		var contractId = $(linkTag).attr('data-id');
-		if(contractId == ""){
-			return;
-		}
-		var search = {}
-		search["contractId"] = contractId;
-		$.ajax({
-			type : "POST",
-			contentType : "application/json",
-			url : "search/getContractDetail",
-			data : JSON.stringify(search),
-			dataType : 'json',
-			timeout : 100000,
-			success : function(data) {
-				console.log(data);
-			},
-			error : function(e) {
-				console.log("ERROR: ", e);
-			},
-			done : function(e) {
-				console.log("DONE");
-			}
-		});
-	});
-}*/
+
 function initPaymentPopup(){
 	$('#paymentModal').on('shown.bs.modal', function (event) {
 		var dateFormat = "dd/MM/yyyy"; 
@@ -752,4 +725,83 @@ function nc_initNotificationPage(){
 	    autoclose:true,
 	    language: 'vi'
 	});
+}
+function cf_init(){
+	cf_initInputs();
+	cf_initButtons();
+}
+
+function cf_initInputs(){
+	initDateLocally();
+	$( "#companyStartDate" ).datepicker({
+	    format: 'dd/mm/yyyy',
+	    todayHighlight: true,
+	    autoclose:true,
+	    language: 'vi'
+	});
+	
+	var numberConf = {
+	        aSep: '.',
+	        aDec: ',', 
+	        pSign: 's',
+	        aSign: ' VNĐ',
+	        vMin: 0, 
+	        vMax: 999999999999
+	    };
+	 var unExponentialAmount = parseFloat($("#originalFund").attr("value"));
+	 $("#originalFund").attr("value", unExponentialAmount);
+	 
+	 unExponentialAmount = parseFloat($("#totalFund").attr("value"));
+	 $("#totalFund").attr("value", unExponentialAmount);
+	 
+	 unExponentialAmount = parseFloat($("#revenueBeforeStartDate").attr("value"));
+	 $("#revenueBeforeStartDate").attr("value", unExponentialAmount);
+	 
+	 unExponentialAmount = parseFloat($("#costBeforeStartDate").attr("value"));
+	 $("#costBeforeStartDate").attr("value", unExponentialAmount);
+	 
+	 unExponentialAmount = parseFloat($("#investBeforeStartDate").attr("value"));
+	 $("#investBeforeStartDate").attr("value", unExponentialAmount);
+	 
+	 $("#originalFund").autoNumeric("init", numberConf);
+	 $("#totalFund").autoNumeric("init", numberConf);
+	 $("#revenueBeforeStartDate").autoNumeric("init", numberConf);
+	 $("#costBeforeStartDate").autoNumeric("init", numberConf);
+	 $("#investBeforeStartDate").autoNumeric("init", numberConf);
+}
+
+function cf_initButtons(){
+	$( "#btnSaveCompanyFinancial" ).off( "click");
+	$( "#btnSaveCompanyFinancial" ).on( "click", function() {
+		 var originalFund = $("#originalFund").autoNumeric("get");
+		 $("#originalFund").val(originalFund);
+		 
+		 var totalFund = $("#totalFund").autoNumeric("get");
+		 $("#totalFund").val(totalFund);
+		 
+		 var costBeforeStartDate = $("#costBeforeStartDate").autoNumeric("get");
+		 $("#costBeforeStartDate").val(costBeforeStartDate);
+		 
+		 var revenueBeforeStartDate = $("#revenueBeforeStartDate").autoNumeric("get");
+		 $("#revenueBeforeStartDate").val(revenueBeforeStartDate);
+		 
+		 var investBeforeStartDate = $("#investBeforeStartDate").autoNumeric("get");
+		 $("#investBeforeStartDate").val(investBeforeStartDate);
+	});
+}
+
+function general_formatTotalFunding(){
+	var totalFundString = $("#companyTotalAmount").text();
+	if(totalFundString != undefined || totalFundString != ''){
+		var totalFund = parseFloat(totalFundString);
+		var numberConf = {
+		        aSep: '.',
+		        aDec: ',', 
+		        pSign: 's',
+		        aSign: ' VNĐ',
+		        vMin: 0, 
+		        vMax: 999999999999
+		    };
+		$("#companyTotalAmount").text($.fn.autoFormat(totalFund,numberConf)); 
+	}
 }

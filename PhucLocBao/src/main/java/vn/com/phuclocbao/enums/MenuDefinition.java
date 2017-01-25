@@ -8,7 +8,9 @@ public enum MenuDefinition {
 	DAILY_WORK("dailyWorks"),
 	NOTIFICATION("notificationContract"),
 	HISTORY("history"),
-	BAD_CONTRACT("badContract")
+	BAD_CONTRACT("badContracts"),
+	COMPANY_BRANCH("companyBranch"),
+	COMPANY_FINANCIAL("companyFinancial"),
 	;
 	private MenuDefinition(String name){
 		this.name = name;

@@ -25,6 +25,7 @@
 		<property name="userDao" ref="userDao"></property>
 	</bean>
 	<bean id="companyService" class="vn.com.phuclocbao.service.impl.DefaultCompanyService">
+		<property name="companyDao" ref="companyDao"></property>
 	</bean>
 	<bean id="contractService" class="vn.com.phuclocbao.service.impl.DefaultContractService">
 		<property name="companyDao" ref="companyDao"></property>
@@ -82,4 +83,5 @@
 	<bean id="loginUserValidator" class="vn.com.phuclocbao.validator.LoginUserValidator" />
 	<bean id="newContractValidator" class="vn.com.phuclocbao.validator.NewContractValidator" />
 	<bean id="oldContractValidator" class="vn.com.phuclocbao.validator.OldContractValidator" />
+	<bean id="companyFinancialValidator" class="vn.com.phuclocbao.validator.CompanyFinancialValidator" />
 </beans>

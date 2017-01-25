@@ -48,6 +48,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 	@Autowired
 	private ContractDao contractDao;
 	
+	
 	@Transactional
 	@Override
 	public boolean saveNewContract(ContractDto contractDto) throws BusinessException {
@@ -67,6 +68,11 @@ public class DefaultContractService extends BaseService implements ContractServi
 				mapReference(contract, company);
 				ContractHistoryUtil.createNewHistory(contract, ContractHistoryType.RENTING_NEW_MOTOBIKE, 0D, StringUtils.EMPTY);
 				Contract persistedObject = contractDao.merge(contract);
+				if(persistedObject != null){
+					Double totalFunding = company.getTotalFund() - contract.getTotalAmount();
+					company.setTotalFund(totalFunding);
+					companyDao.merge(company);
+				}
 				return Long.valueOf(persistedObject.getId());
 			}
 			return null;
@@ -77,7 +83,14 @@ public class DefaultContractService extends BaseService implements ContractServi
 				contractDto.getPaymentSchedules().stream()
 				.filter(item -> ConstantVariable.NO_OPTION.equalsIgnoreCase(item.getFinish()))
 				.forEach(item ->{
-					item.setNotifiedDate(DateTimeUtil.addMoreDate(item.getExpectedPayDate(), -contractDto.getPeriodOfPayment()));
+					Date notifiedDate = DateTimeUtil.addMoreDate(item.getExpectedPayDate(), -contractDto.getPeriodOfPayment());
+					Date currentDate = DateTimeUtil.getCurrentDateWithoutTime();
+					if(notifiedDate.compareTo(currentDate) < 0){
+						item.setNotifiedDate(currentDate);
+						
+					} else {
+						item.setNotifiedDate(notifiedDate);
+					}
 				});
 			}
 		}
@@ -192,13 +205,25 @@ public class DefaultContractService extends BaseService implements ContractServi
 				try {
 					Contract contract = contractDao.findById(dto.getId(), dto.getCompany().getId());
 					
-					 Double totalPaidCost = 10D;
+					 Double totalPaidCost = 0D;
 					 long numberOfOldPaidTime = contract.getPaymentSchedules().stream().filter(item-> item.getFinish().equalsIgnoreCase(ConstantVariable.YES_OPTION)).count();
 					 long numberOfNewPaidTime  = dto.getPaymentSchedules().stream().filter(item-> item.getFinish().equalsIgnoreCase(ConstantVariable.YES_OPTION)).count();
 					 totalPaidCost = (numberOfNewPaidTime - numberOfOldPaidTime) * contract.getPeriodOfPayment() * contract.getFeeADay();
 					 ContractConverter.getInstance().updateContractInPaidTime(dto, contract);
 					 ContractHistoryUtil.createNewHistory(contract, ContractHistoryType.RENTING_COST, totalPaidCost, StringUtils.EMPTY);
-					 return ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
+					 ContractDto updatedContract= ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
+					 if(updatedContract != null){
+						 CompanyEntity company = companyDao.findById(dto.getCompany().getId());
+						 if(company != null){
+								Double totalFunding = company.getTotalFund() + totalPaidCost;
+								company.setTotalFund(totalFunding);
+								companyDao.merge(company);
+						} else {
+							logger.error("Can not update contract to company because company not found: " + dto.getId());
+							throw new BusinessException(PLBErrorCode.CAN_NOT_UPDATE_DATA.name());
+						}
+					 }
+					 return updatedContract;
 					
 				} catch (Exception nre){
 					logger.error("Can not update contract: id:" + dto.getId() +" - companyid:" + dto.getCompany().getId());
@@ -220,7 +245,19 @@ public class DefaultContractService extends BaseService implements ContractServi
 					
 					 ContractConverter.getInstance().updateContractInPayOffTime(dto, contract);
 					 ContractHistoryUtil.createNewHistory(contract, ContractHistoryType.PAYOFF, 0D, StringUtils.EMPTY);
-					 return ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
+					 ContractDto updatedContract = ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
+					 if(updatedContract != null){
+						 CompanyEntity company = companyDao.findById(dto.getCompany().getId());
+						 if(company != null){
+								Double totalFunding = company.getTotalFund() + contract.getTotalAmount();
+								company.setTotalFund(totalFunding);
+								companyDao.merge(company);
+						} else {
+							logger.error("Can not update contract to company because company not found: " + dto.getId());
+							throw new BusinessException(PLBErrorCode.CAN_NOT_UPDATE_DATA.name());
+						}
+					 }
+					 return updatedContract;
 					
 				} catch (Exception nre){
 					logger.error("Can not payoff contract: id:" + dto.getId() +" - companyid:" + dto.getCompany().getId());
@@ -314,15 +351,20 @@ public class DefaultContractService extends BaseService implements ContractServi
 		List<NotificationContractBean> ncBeans = contracts.stream().map(item -> {
 			NotificationContractBean bean = new NotificationContractBean();
 			bean.setContract(item);
-			PaymentScheduleDto latestPaid = PlbUtil.getLatestPaid(item.getPaymentSchedules());
-			if(latestPaid != null && DateTimeUtil.daysBetweenDates(item.getExpireDate(), selectedDate) != 0){
+			PaymentScheduleDto latestPaid = PlbUtil.getNearliestUnpaid(item.getPaymentSchedules());
+			if(DateTimeUtil.daysBetweenDates(DateTimeUtil.getCurrentDateWithoutTime(), item.getExpireDate()) > 0){
+				Date calculatedDate = latestPaid != null ? latestPaid.getNotifiedDate():item.getPaymentSchedules().get(0).getNotifiedDate();
+				
 				bean.setStage(ProcessStaging.PAID.getName());
-				bean.setAmountDays(DateTimeUtil.daysBetweenDates(latestPaid.getExpectedPayDate(), selectedDate));
-				bean.setPaidDate(latestPaid.getExpectedPayDate());
+				bean.setAmountDays(DateTimeUtil.daysBetweenDates(calculatedDate, selectedDate));
+				bean.setPaidDate(calculatedDate);
 			} else {
 				bean.setStage(ProcessStaging.PAYOFF.getName());
 				bean.setAmountDays(DateTimeUtil.daysBetweenDates(item.getExpireDate(), selectedDate));
 				bean.setPaidDate(item.getExpireDate());
+			}
+			if(bean.getAmountDays() <0){
+				bean.setAmountDays(bean.getAmountDays() * -1);
 			}
 			bean.setSeverity(ContractSeverity.getSeverityByAmountDays(bean.getAmountDays()).getName());
 			return bean;

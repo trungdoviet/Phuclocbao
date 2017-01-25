@@ -25,4 +25,15 @@ public class PlbUtil {
 		}
 		return null;
 	}
+	
+	public static PaymentScheduleDto getNearliestUnpaid(List<PaymentScheduleDto> sortedPayments){
+		if(CollectionUtils.isNotEmpty(sortedPayments)){
+			List<PaymentScheduleDto> orderItems = sortedPayments.stream().sorted((x,y) -> x.getExpectedPayDate().compareTo(y.getExpectedPayDate())).collect(Collectors.toList());
+			Optional<PaymentScheduleDto> result = orderItems.stream().filter(item -> item.getPayDate() == null || item.getFinish().equalsIgnoreCase(ConstantVariable.NO_OPTION)).findFirst();
+			if(result.isPresent()){
+				return result.get();
+			}
+		}
+		return null;
+	}
 }

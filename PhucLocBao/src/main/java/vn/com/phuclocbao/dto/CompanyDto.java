@@ -3,9 +3,17 @@ package vn.com.phuclocbao.dto;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import vn.com.phuclocbao.dto.base.IBaseDTO;
 
 public class CompanyDto implements IBaseDTO {
+	private static final String AM_GOOD = "am_good";
+	private static final String AM_WARNING = "am_warning";
+	private static final String AM_RED = "am_red";
+	private static final String AM_GRAY = "am_gray";
+	private static final int THIRTY_MILION = 30000000;
+	private static final int ONE_HUNDRED_MILION = 100000000;
 	/**
 	 * 
 	 */
@@ -24,10 +32,11 @@ public class CompanyDto implements IBaseDTO {
 	private java.lang.String phoneNumber;
 	private java.lang.Double originalFund;
 	private java.lang.String motobikeRentingFund;
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private java.util.Date startDate;
 	private java.lang.Double revenueBeforeStartDate;
 	private java.lang.Double costBeforeStartDate;
-	private java.lang.String investBeforeStartDate;
+	private java.lang.Double investBeforeStartDate;
 	private java.util.List<ContractDto> contracts;
 	private java.lang.Double totalFund;
 
@@ -49,6 +58,19 @@ public class CompanyDto implements IBaseDTO {
 	      return df.format(this.totalFund);
 	}
 
+	public String getTotalRefundingSeverity(){
+		if(totalFund == null || totalFund == 0){
+			return AM_GRAY;
+		} else if(totalFund > 0 && totalFund <= THIRTY_MILION){
+			return AM_RED;
+		} else if(totalFund > THIRTY_MILION && totalFund <= ONE_HUNDRED_MILION){
+			return AM_WARNING;
+		} else if(totalFund > ONE_HUNDRED_MILION ){
+			return AM_GOOD;
+		}
+		
+		return org.apache.commons.lang3.StringUtils.EMPTY;
+	}
 	/**
 	 * Sets the field totalFund.
 	 * 
@@ -312,7 +334,7 @@ public class CompanyDto implements IBaseDTO {
 	 * 
 	 * @return the value of the field investBeforeStartDate; may be null.
 	 */
-	public java.lang.String getInvestBeforeStartDate() {
+	public java.lang.Double getInvestBeforeStartDate() {
 		return investBeforeStartDate;
 	}
 
@@ -322,7 +344,7 @@ public class CompanyDto implements IBaseDTO {
 	 * @param _investBeforeStartDate
 	 *            the new value of the field investBeforeStartDate.
 	 */
-	public void setInvestBeforeStartDate(java.lang.String _investBeforeStartDate) {
+	public void setInvestBeforeStartDate(java.lang.Double _investBeforeStartDate) {
 		investBeforeStartDate = _investBeforeStartDate;
 	}
 

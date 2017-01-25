@@ -26,4 +26,10 @@ public class CompanyConverter extends BaseConverter<CompanyDto, CompanyEntity>{
 		dest.setStartDate(entity.getStartDate());
 		return dest;
 	}
+	
+	public CompanyEntity updateEntity(CompanyEntity entity, CompanyDto dto) throws BusinessException{
+		entity = toEntity(dto, entity, "id");
+		entity.setStartDate(dto.getStartDate());
+		return entity;
+	}
 }

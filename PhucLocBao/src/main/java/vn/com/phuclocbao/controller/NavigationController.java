@@ -1,6 +1,4 @@
 package vn.com.phuclocbao.controller;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -16,20 +14,22 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import vn.com.phuclocbao.bean.PLBSession;
+import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.enums.AlertType;
 import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.enums.ProcessStaging;
 import vn.com.phuclocbao.exception.BusinessException;
+import vn.com.phuclocbao.service.CompanyService;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.util.MessageBundleUtil;
+import vn.com.phuclocbao.viewbean.CompanyFinancialBean;
 import vn.com.phuclocbao.viewbean.ContractBean;
 import vn.com.phuclocbao.viewbean.ManageContractBean;
 import vn.com.phuclocbao.viewbean.NotificationPage;
@@ -39,18 +39,39 @@ import vn.com.phuclocbao.viewbean.NotificationPage;
 @Controller
 @RequestMapping("/")
 public class NavigationController {
+	private static final String MSG_CANNOT_FIND_COMPANY = "msg.cannotFindCompany";
 	private static final String MSG_ERROR_WHEN_OPEN = "msg.errorWhenOpen";
 	private static org.apache.log4j.Logger logger = Logger.getLogger(NavigationController.class);
 	public static final int DEFAULT_PERIOD_OF_PAYMENT = 10;
 	@Autowired
 	@Qualifier(value="contractService")
 	ContractService contractService;
-	
+	@Autowired
+	@Qualifier(value="companyService")
+	CompanyService companyService;
 	@RequestMapping(value = { "/home"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public String productsPage(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.HOME);
+		reloadCompanySession(null, request);
 		return "home";
+	}
+	
+	private void reloadCompanySession(ModelAndView model,  HttpServletRequest request){
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		try {
+			CompanyDto company = companyService.findById(plbSession.getCompanyId());
+			plbSession.setCurrentCompany(company);
+			if(plbSession.getUserAccount().getCompanyEntity().getId().equals(company.getId())){
+				plbSession.getUserAccount().setCompanyEntity(company);
+			}
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			logger.error(e);
+			if(model != null){
+				showErrorAlert(model, MSG_CANNOT_FIND_COMPANY);
+			}
+		}
 	}
 	
 	@RequestMapping(value = { "/mngContracts"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
@@ -58,6 +79,7 @@ public class NavigationController {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.MANAGE_CONTRACT);
 		ModelAndView model = new ModelAndView("mngContracts");
+		reloadCompanySession(model, request);
 		try {
 			List<ContractDto> contracts = contractService.findContractsByStateAndId(ContractStatusType.IN_PROGRESS, plbSession.getCompanyId());
 			ManageContractBean mcb = contractService.buildManageContractBean(contracts);
@@ -77,6 +99,7 @@ public class NavigationController {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.OLD_CONTRACT);
 		ModelAndView model = new ModelAndView("oldContracts");
+		reloadCompanySession(model, request);
 		try {
 			List<ContractDto> contracts = contractService.findContractsByStateAndId(ContractStatusType.FINISH, plbSession.getCompanyId());
 			ManageContractBean mcb = contractService.buildManageOldContractBean(contracts);
@@ -94,6 +117,7 @@ public class NavigationController {
 		ModelAndView model = new ModelAndView("newContract");
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.NEW_CONTRACT);
+		reloadCompanySession(model, request);
 		if(contractBean == null){
 			contractBean = new ContractBean();
 		}
@@ -115,6 +139,7 @@ public class NavigationController {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.NOTIFICATION);
 		ModelAndView model = new ModelAndView("notificationContract");
+		reloadCompanySession(model, request);
 		if(ncPage == null){
 			ncPage = new NotificationPage();
 		}
@@ -140,6 +165,7 @@ public class NavigationController {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.DAILY_WORK);
 		ModelAndView model = new ModelAndView("dailyWorks");
+		reloadCompanySession(model, request);
 		return model;
 	}
 	
@@ -148,6 +174,40 @@ public class NavigationController {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.HISTORY);
 		ModelAndView model = new ModelAndView("history");
+		reloadCompanySession(model, request);
+		return model;
+	}
+	
+	@RequestMapping(value = { "/badContracts"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView openBadContract(HttpServletRequest request, HttpServletResponse response) {
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		plbSession.getMenuBean().makeActive(MenuDefinition.BAD_CONTRACT);
+		ModelAndView model = new ModelAndView(MenuDefinition.BAD_CONTRACT.getName());
+		reloadCompanySession(model, request);
+		return model;
+	}
+	
+	@RequestMapping(value = { "/companyFinancial"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView openCompanyFinancial(HttpServletRequest request, HttpServletResponse response, CompanyFinancialBean cfBean) {
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		plbSession.getMenuBean().makeActive(MenuDefinition.COMPANY_FINANCIAL);
+		
+		ModelAndView model = new ModelAndView(MenuDefinition.COMPANY_FINANCIAL.getName());
+		if(cfBean == null){
+			cfBean = new CompanyFinancialBean();
+		}
+		cfBean.setCities(VietnamCityService.loadCities());
+		reloadCompanySession(model, request);
+		cfBean.setCompany(plbSession.getCurrentCompany());
+		model.addObject("cfBean", cfBean);
+		return model;
+	}
+	
+	@RequestMapping(value = { "/companyBranch"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView openCompanyBranch(HttpServletRequest request, HttpServletResponse response) {
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		plbSession.getMenuBean().makeActive(MenuDefinition.COMPANY_BRANCH);
+		ModelAndView model = new ModelAndView(MenuDefinition.COMPANY_BRANCH.getName());
 		return model;
 	}
 	

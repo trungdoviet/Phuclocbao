@@ -306,6 +306,18 @@
 	font-weight:bold;
 	color: #30a5ff;
 }
+.am_gray{
+	color:#cdcdcd;
+}
+.am_red{
+	color:red;
+}
+.am_warning{
+	color: orange;
+}
+.am_good{
+	color: #30a5ff;
+}
 .refunding-number{
 	font-size: 27px;
 }
@@ -323,4 +335,7 @@
 }
 .state_alert{
 	color:red;
+}
+.big-money-size{
+	 font-size: 20px;
 }

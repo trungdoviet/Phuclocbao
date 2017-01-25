@@ -64,6 +64,9 @@
 			$(window).on('resize', function () {
 			  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
 			})
+			$( document ).ready(function() {
+				general_formatTotalFunding();
+			});
 		</script>	
 </body>
 </html>

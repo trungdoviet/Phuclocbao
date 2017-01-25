@@ -25,6 +25,7 @@ import vn.com.phuclocbao.viewbean.LoginBean;
 
 @Controller
 public class LoginController {
+		private static final String SESSION_IS_USER_ADMIN = "isUserAdmin";
 		private static final String ERROR_USER_LOGIN_FAILED = "error.userLoginFailed";
 		private static final String MSG_WELCOME_LOGIN = "msg.welcomeLogin";
 		private static org.apache.log4j.Logger logger = Logger.getLogger(LoginController.class);
@@ -78,6 +79,7 @@ public class LoginController {
 								plbSession.setUserAccount(userAccount);
 								plbSession.setCurrentCompany(userAccount.getCompanyEntity());
 								request.getSession().setAttribute(PLBSession.SESSION_ATTRIBUTE_KEY, plbSession);
+								request.getSession().setAttribute(SESSION_IS_USER_ADMIN, userAccount.getIsAdmin());
 								System.out.println("User Login Successful with username:" + userAccount.getFullname());
 								model = new ModelAndView("redirect:/home");
 								redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(MSG_WELCOME_LOGIN) + userAccount.getFullname());
@@ -99,6 +101,7 @@ public class LoginController {
 		public ModelAndView performLogout(HttpServletRequest request, HttpServletResponse response, LoginBean loginBean){
 			ModelAndView model = null;
 			request.getSession().removeAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+			request.getSession().removeAttribute(SESSION_IS_USER_ADMIN);
 			System.out.println("User logout");
 			model = new ModelAndView("redirect:/index");
 			return model;
