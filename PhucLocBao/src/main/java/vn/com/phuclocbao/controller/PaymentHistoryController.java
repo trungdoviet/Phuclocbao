@@ -26,7 +26,7 @@ import vn.com.phuclocbao.viewbean.PaymentHistoryView;
 @Controller
 @RequestMapping("/")
 public class PaymentHistoryController extends BaseController {
-	private static final String MSG_ERROR_WHEN_OPEN = "msg.errorWhenOpen";
+	
 	private static org.apache.log4j.Logger logger = Logger.getLogger(PaymentHistoryController.class);
 	
 	@Autowired

@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,7 +19,6 @@ import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.PaymentHistoryDto;
 import vn.com.phuclocbao.dto.UserHistoryDto;
-import vn.com.phuclocbao.enums.AlertType;
 import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.enums.ProcessStaging;
@@ -30,11 +28,10 @@ import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.service.PaymentHistoryService;
 import vn.com.phuclocbao.service.UserHistoryService;
 import vn.com.phuclocbao.service.VietnamCityService;
-import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.DateTimeUtil;
-import vn.com.phuclocbao.util.MessageBundleUtil;
 import vn.com.phuclocbao.viewbean.CompanyFinancialBean;
 import vn.com.phuclocbao.viewbean.ContractBean;
+import vn.com.phuclocbao.viewbean.GeneralView;
 import vn.com.phuclocbao.viewbean.ManageContractBean;
 import vn.com.phuclocbao.viewbean.NotificationPage;
 import vn.com.phuclocbao.viewbean.PaymentHistoryView;
@@ -44,7 +41,7 @@ import vn.com.phuclocbao.viewbean.UserActionHistoryView;
 
 @Controller
 @RequestMapping("/")
-public class NavigationController {
+public class NavigationController extends BaseController {
 	private static final String MSG_CANNOT_FIND_COMPANY = "msg.cannotFindCompany";
 	private static final String MSG_ERROR_WHEN_OPEN = "msg.errorWhenOpen";
 	private static org.apache.log4j.Logger logger = Logger.getLogger(NavigationController.class);
@@ -63,11 +60,20 @@ public class NavigationController {
 	UserHistoryService userHistoryService;
 	
 	@RequestMapping(value = { "/home"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public String productsPage(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+	public ModelAndView productsPage(HttpServletRequest request, HttpServletResponse response, GeneralView gv) {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.HOME);
-		reloadCompanySession(null, request);
-		return "home";
+		ModelAndView model = new ModelAndView(MenuDefinition.HOME.getName());
+		try {
+			gv = contractService.collectStatistic(plbSession.getCompanyId());
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
+		}
+		model.addObject("generalView", gv);
+		reloadCompanySession(model, request);
+		return model;
 	}
 	
 	private void reloadCompanySession(ModelAndView model,  HttpServletRequest request){
@@ -121,6 +127,7 @@ public class NavigationController {
 		} catch (BusinessException e) {
 			logger.error(e);
 			e.printStackTrace();
+			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
 		}
 		return model;
 	}
@@ -223,6 +230,15 @@ public class NavigationController {
 		plbSession.getMenuBean().makeActive(MenuDefinition.BAD_CONTRACT);
 		ModelAndView model = new ModelAndView(MenuDefinition.BAD_CONTRACT.getName());
 		reloadCompanySession(model, request);
+		try {
+			List<ContractDto> contracts = contractService.findContractsByStateAndId(ContractStatusType.BAD, plbSession.getCompanyId());
+			ManageContractBean mcb = contractService.buildManageBadContractBean(contracts);
+			model.addObject("badContract", mcb);
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
+		}
 		return model;
 	}
 	
@@ -249,10 +265,4 @@ public class NavigationController {
 		ModelAndView model = new ModelAndView(MenuDefinition.COMPANY_BRANCH.getName());
 		return model;
 	}
-	
-	private void showErrorAlert(ModelAndView model, String message) {
-		model.addObject(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(message));
-		model.addObject(ConstantVariable.ATTR_FLASH_MSG_CSS, AlertType.DANGER.getName());
-	}
-
 }

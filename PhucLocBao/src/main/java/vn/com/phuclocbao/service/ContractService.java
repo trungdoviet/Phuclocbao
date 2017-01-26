@@ -7,6 +7,7 @@ import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.view.ContractView;
+import vn.com.phuclocbao.viewbean.GeneralView;
 import vn.com.phuclocbao.viewbean.ManageContractBean;
 import vn.com.phuclocbao.viewbean.NotificationContractBean;
 import vn.com.phuclocbao.vo.UserActionParamVO;
@@ -17,6 +18,7 @@ public interface ContractService {
 	public List<ContractDto> findContractsByStateAndId(ContractStatusType state, Integer companyId) throws BusinessException;
 	public ManageContractBean buildManageContractBean(List<ContractDto> dtos);
 	public ManageContractBean buildManageOldContractBean(List<ContractDto> dtos);
+	public ManageContractBean buildManageBadContractBean(List<ContractDto> dtos);
 	public ContractDto findContractDtoById(Integer id, Integer companyId) throws BusinessException;
 	public ContractDto updateContractInPaidTime(ContractDto dto, UserActionParamVO userActionParam) throws BusinessException;
 	public ContractDto updateContractInPayOffTime(ContractDto dto, UserActionParamVO userActionParam) throws BusinessException;
@@ -24,4 +26,5 @@ public interface ContractService {
 	public ContractDto updateOldContract(ContractDto dto, UserActionParamVO userActionParam) throws BusinessException;
 	public List<ContractDto> getNotifiedContractBySpecificDateAndCompanyId(Date targetDate, Integer companyId) throws BusinessException;
 	public List<NotificationContractBean> convertToNotificationBeans(Date selectedDate, List<ContractDto> contracts) throws BusinessException;
+	public GeneralView collectStatistic(Integer companyId) throws BusinessException;
 }

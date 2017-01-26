@@ -8,6 +8,7 @@ import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.MessageBundleUtil;
 
 public class BaseController {
+	protected static final String MSG_ERROR_WHEN_OPEN = "msg.errorWhenOpen";
 	public void showErrorAlert(final RedirectAttributes redirectAttributes, String message) {
 		redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(message));
 		redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG_CSS, AlertType.DANGER.getName());

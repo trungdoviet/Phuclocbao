@@ -45,6 +45,7 @@ import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.util.PlbUtil;
 import vn.com.phuclocbao.util.UserHistoryUtil;
 import vn.com.phuclocbao.view.ContractView;
+import vn.com.phuclocbao.viewbean.GeneralView;
 import vn.com.phuclocbao.viewbean.ManageContractBean;
 import vn.com.phuclocbao.viewbean.NotificationContractBean;
 import vn.com.phuclocbao.vo.UserActionParamVO;
@@ -206,6 +207,29 @@ public class DefaultContractService extends BaseService implements ContractServi
 			mcb.setFinishContract(dtos.size());
 			mcb.setTotalAlreadyPayoffAmmount(dtos.stream().map(item -> item.getTotalAmount()).reduce(0D, (x,y) -> x + y));
 			dtos.forEach(item -> item.setTotalContractDays(DateTimeUtil.daysBetweenDates(item.getStartDate(), item.getPayoffDate())));
+		}
+		return mcb;
+	}
+	@Override
+	public ManageContractBean buildManageBadContractBean(List<ContractDto> dtos) {
+		ManageContractBean mcb = new ManageContractBean();
+		if(CollectionUtils.isNotEmpty(dtos)){
+			dtos.stream().forEach(item -> {
+				PaymentScheduleDto lastPayment = PlbUtil.getLatestPaid(item.getPaymentSchedules());
+				if(lastPayment != null){
+					item.setLastPaidDate(lastPayment.getPayDate());
+					item.setTotalLateDays(DateTimeUtil.daysBetweenDates(item.getLastPaidDate(), DateTimeUtil.getCurrentDateWithoutTime()));
+				} else {
+					item.setLastPaidDate(null);
+					item.setTotalLateDays(DateTimeUtil.daysBetweenDates(item.getStartDate(), DateTimeUtil.getCurrentDateWithoutTime()));
+				}
+				
+				item.setTotalUnpaidFee(item.getTotalLateDays() * item.getFeeADay() + item.getCustomerDebt() - item.getCompanyDebt());
+			});
+			mcb.setContracts(dtos);
+			mcb.setBadContract(dtos.size());
+			mcb.setTotalAmountFeeOfBadContract(dtos.stream().map(item ->item.getTotalUnpaidFee()).reduce(0D, Double::sum));
+			mcb.setTotalAmountBadContract(dtos.stream().map(item -> item.getTotalAmount()).reduce(0D, (x,y) -> x + y));
 		}
 		return mcb;
 	}
@@ -478,4 +502,29 @@ public class DefaultContractService extends BaseService implements ContractServi
 		.collect(Collectors.toList());
 		return ncBeans;
 	}
+	@Override
+	public GeneralView collectStatistic(Integer companyId) throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<GeneralView>() {
+
+			@Override
+			public GeneralView execute() throws BusinessException, ClassNotFoundException, IOException {
+				GeneralView view = new GeneralView();
+				Long totalContract = 0L;
+				Long totalInProgressContract = 0L;
+				Long totalBadContract = 0L;
+				Long totalNotificationToDay = 0L;
+				totalContract = contractDao.countContractByCompanyId(companyId);
+				totalInProgressContract = contractDao.countContractByStatusAndCompanyId(ContractStatusType.IN_PROGRESS, companyId);
+				totalNotificationToDay = contractDao.countNotifiedContractBySpecificDateAndCompanyId(DateTimeUtil.getCurrentDate(), companyId);
+				totalBadContract = contractDao.countContractByStatusAndCompanyId(ContractStatusType.BAD, companyId);
+				
+				view.setTotalBadContract(totalBadContract);
+				view.setTotalContractOfCompany(totalContract);
+				view.setTotalInProgressContract(totalInProgressContract);
+				view.setTotalNotification(totalNotificationToDay);
+				return view;
+			}
+		});
+	}
+	
 }

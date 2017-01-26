@@ -1,4 +1,4 @@
-use phuclocbao;
+use c43phuclocbao;
 	drop table if exists tblCompany;
 
     drop table if exists tblCompanyType;
@@ -169,10 +169,10 @@ use phuclocbao;
         foreign key (companyEntity_id) 
         references tblCompany (id);
         
-INSERT INTO `phuclocbao`.`tblcompanytype` (`name`) VALUES ('Trụ sở chính');
-INSERT INTO `phuclocbao`.`tblcompanytype` (`name`) VALUES ('Chi nhánh');
-INSERT INTO `phuclocbao`.`tblcompany` (`address`, `city`, `description`, `name`, `phoneNumber`, `companytype`) VALUES ('B64, Bạch Đằng, Tân Bình, TP.HCM', 'TP Hồ Chí Minh', 'Thế chấp xe tại tphcm', 'Phúc Lộc Bảo', '0965506248', '1');
+INSERT INTO `c43phuclocbao`.`tblcompanytype` (`name`) VALUES ('Trụ sở chính');
+INSERT INTO `c43phuclocbao`.`tblcompanytype` (`name`) VALUES ('Chi nhánh');
+INSERT INTO `c43phuclocbao`.`tblcompany` (`address`, `city`, `description`, `name`, `phoneNumber`, `companytype`) VALUES ('B64, Bạch Đằng, Tân Bình, TP.HCM', '01', 'Thế chấp xe tại tphcm', 'Phúc Lộc Bảo', '0965506248', '1');
 
-INSERT INTO `phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao', '123456', 'phuclocbao','Y', '1');
-INSERT INTO `phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao 2', '123456', 'phuclocbao2','N', '1');
+INSERT INTO `c43phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao', '123456', 'phuclocbao','Y', '1');
+INSERT INTO `c43phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao 2', '123456', 'phuclocbao2','N', '1');
 

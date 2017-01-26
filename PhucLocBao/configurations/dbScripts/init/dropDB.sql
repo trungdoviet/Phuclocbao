@@ -1,4 +1,4 @@
-use phuclocbao;
+use c43phuclocbao;
 DROP TABLE 
 `phuclocbao`.`tblpaymentschedule`,
 `phuclocbao`.`tblcustomer`, 

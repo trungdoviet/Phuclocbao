@@ -14,4 +14,8 @@ public interface ContractDao {
 	public List<Contract> getContractByStatusAndCompanyId(ContractStatusType state, Integer id) throws BusinessException;
 	public List<Contract> getNotifiedContractBySpecificDateAndCompanyId(Date targetDate, Integer companyId) throws BusinessException;
 	public Contract findById(Integer id, Integer companyId) throws BusinessException;
+	
+	public Long countNotifiedContractBySpecificDateAndCompanyId(Date targetDate, Integer companyId) throws BusinessException;
+	public Long countContractByStatusAndCompanyId(ContractStatusType state, Integer id) throws BusinessException;
+	public Long countContractByCompanyId(Integer companyId) throws BusinessException;
 }
