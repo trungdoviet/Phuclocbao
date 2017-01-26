@@ -346,3 +346,15 @@
 	margin-top: 6px;
     margin-left: 3px;
 }
+.detail-message-table{
+	max-width:200px; 
+	font-size: 11px;
+}
+
+.detail-message-table-medium{
+	max-width:200px; 
+	font-size: 13px;
+}
+.phuclocbao .fixed-table-body{
+	height: 115%;
+}

@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,14 +15,19 @@ import vn.com.phuclocbao.converter.CompanyConverter;
 import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.dao.PaymentHistoryDao;
 import vn.com.phuclocbao.dao.PersistenceExecutable;
+import vn.com.phuclocbao.dao.UserHistoryDao;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.entity.CompanyEntity;
+import vn.com.phuclocbao.entity.UserHistory;
 import vn.com.phuclocbao.enums.PaymentHistoryType;
+import vn.com.phuclocbao.enums.UserActionHistoryType;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.BaseService;
 import vn.com.phuclocbao.service.CompanyService;
 import vn.com.phuclocbao.util.PaymentHistoryUtil;
+import vn.com.phuclocbao.util.UserHistoryUtil;
+import vn.com.phuclocbao.vo.UserActionParamVO;
 @Service
 public class DefaultCompanyService extends BaseService implements CompanyService {
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DefaultCompanyService.class);
@@ -29,6 +35,8 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 	private CompanyDao companyDao;
 	@Autowired
 	private PaymentHistoryDao paymentHistoryDao;
+	@Autowired
+	private UserHistoryDao userHistoryDao;
 	@PersistenceContext
 	private EntityManager manager;
 	@Override
@@ -36,6 +44,14 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 		return manager;
 	}
 	
+	public UserHistoryDao getUserHistoryDao() {
+		return userHistoryDao;
+	}
+
+	public void setUserHistoryDao(UserHistoryDao userHistoryDao) {
+		this.userHistoryDao = userHistoryDao;
+	}
+
 	public PaymentHistoryDao getPaymentHistoryDao() {
 		return paymentHistoryDao;
 	}
@@ -46,7 +62,7 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 
 	@Transactional
 	@Override
-	public CompanyDto mergeFinancial(CompanyDto dto) throws BusinessException {
+	public CompanyDto mergeFinancial(CompanyDto dto, UserActionParamVO userActionParam) throws BusinessException {
 		 return methodWrapper(new PersistenceExecutable<CompanyDto>() {
 			@Override
 			public CompanyDto execute() throws BusinessException, ClassNotFoundException, IOException {
@@ -61,6 +77,10 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 				CompanyDto updatedCompanyDto = CompanyConverter.getInstance().toDto(companyDao.merge(updatedCompany), new CompanyDto());
 				if(updatedCompany != null){
 					paymentHistoryDao.persist(PaymentHistoryUtil.createNewHistory(null, dto.getId(), PaymentHistoryType.INVEST_FUNDING, investFunding, null));
+					UserHistory userHistory = UserHistoryUtil.createNewHistory(null, dto.getId(), 
+							dto.getName(), userActionParam.getUsername(), 
+							UserActionHistoryType.UPDATE_COMPANY_FINANCIAL, StringUtils.EMPTY);
+					userHistoryDao.persist(userHistory);
 				}
 				return updatedCompanyDto;
 			}

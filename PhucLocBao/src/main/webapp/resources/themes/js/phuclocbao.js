@@ -758,6 +758,18 @@ function ph_initPage(){
 	$( "#endDateHistory" ).datepicker(dateConf);
 }
 
+function uh_initPage(){
+	 initDateLocally();
+	 var dateConf = {
+			    format: 'dd/mm/yyyy',
+			    todayHighlight: true,
+			    autoclose:true,
+			    language: 'vi'
+			};
+	$( "#startDateUserHistory" ).datepicker(dateConf);
+	$( "#endDateUserHistory" ).datepicker(dateConf);
+}
+
 function cf_init(){
 	cf_initInputs();
 	cf_initButtons();

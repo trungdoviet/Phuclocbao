@@ -37,6 +37,9 @@
 	</bean>
 	<bean id="paymentHistoryService" class="vn.com.phuclocbao.service.impl.DefaultPaymentHistoryService">
 	</bean>
+	<bean id="userHistoryService" class="vn.com.phuclocbao.service.impl.DefaultUserHistoryService">
+	</bean>
+	<!-- Dao -->
 	<bean name="userDao" class="vn.com.phuclocbao.dao.impl.DefaultUserDao">
 	</bean>
 	<bean name="companyDao" class="vn.com.phuclocbao.dao.impl.DefaultCompanyDao">
@@ -46,6 +49,8 @@
 	<bean name="customerDao" class="vn.com.phuclocbao.dao.impl.DefaultCustomerDao">
 	</bean>
 	<bean name="paymentHistoryDao" class="vn.com.phuclocbao.dao.impl.DefaultPaymentHistoryDao">
+	</bean>
+	<bean name="userHistoryDao" class="vn.com.phuclocbao.dao.impl.DefaultUserHistoryDao">
 	</bean>
 	  <bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">

@@ -3,19 +3,21 @@ package vn.com.phuclocbao.enums;
 import java.util.Arrays;
 import java.util.Optional;
 
-public enum PaymentHistoryType {
-	INVEST_FUNDING("INVEST_FUNDING","Nhập vốn"),
-	RENTING_NEW_MOTOBIKE("RENTING_NEW_MOTOBIKE","Cho thuê xe"),
-	RENTING_COST("RENTING_COST","Phí thuê xe"),
-	PAYOFF("PAYOFF","Thanh lý thuê xe"),
+public enum UserActionHistoryType {
+	NEW_CONTRACT("NEW_CONTRACT","Thêm hợp đồng mới"),
+	UPDATE_CONTRACT("UPDATE_CONTRACT","Cập nhật hợp đồng"),
+	PAYOFF_CONTRACT("PAYOFF_CONTRACT","Thanh lý hợp đồng"),
+	RENTING_COST("RENTING_COST","Trả phí"),
 	CUSTOMER_DEBT("CUSTOMER_DEBT","Khách nợ phí"),
 	CUSTOMER_PAY_DEBT("CUSTOMER_PAY_DEBT","Khách trả nợ phí"),
 	COMPANY_DEBT("COMPANY_DEBT","Công ty nợ phí"),
 	COMPANY_PAY_DEBT("COMPANY_DEBT","Công ty trả nợ phí"),
+	UPDATE_COMPANY_FINANCIAL("UPDATE_COMPANY_FINANCIAL","Cập nhật tài chính công ty"),
+	UPDATE_COMPANY_BRANCH("UPDATE_COMPANY_BRANCH","Cập nhật chi nhánh công ty"),
 	OTHER("OTHER","Chi khác...")
 	;
 	private String type;
-	private PaymentHistoryType(String type, String name){
+	private UserActionHistoryType(String type, String name){
 		this.name = name;
 		this.type = type;
 	}
@@ -32,13 +34,13 @@ public enum PaymentHistoryType {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public static PaymentHistoryType getByType(String type){
-		Optional<PaymentHistoryType> result = Arrays.stream(PaymentHistoryType.values())
+	public static UserActionHistoryType getByType(String type){
+		Optional<UserActionHistoryType> result = Arrays.stream(UserActionHistoryType.values())
 				.filter(item -> item.getType().equalsIgnoreCase(type)).findFirst();
 		if(result.isPresent()){
 			return result.get();
 		}
-		return PaymentHistoryType.OTHER;
+		return UserActionHistoryType.OTHER;
 	}
 
 }

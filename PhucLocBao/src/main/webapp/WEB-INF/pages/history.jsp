@@ -2,28 +2,28 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="includes/jstl.jsp"%>
-<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main phuclocbao">			
 	<div class="row">
 		<ol class="breadcrumb">
 			<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
 			<li class="active">Nhật ký hoạt động</li>
 		</ol>
 	</div><!--/.row-->
-	<%-- <c:if test="${not empty msg}">
-		<div id="historyAlert" class="alert alert-${css} alert-dismissible fade in" role="alert">
+	<c:if test="${not empty msg}">
+		<div id="uhAlert" class="alert alert-${css} alert-dismissible fade in" role="alert">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>
 			<strong>${msg}</strong>
 		</div>
 	</c:if>
-	<form:form role="form" id="historyForm" method="post" action="filterHistory" modelAttribute="historyView">
+	<form:form role="form" id="userHistoryForm" method="post" action="filterUserHistory" modelAttribute="historyView">
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="panel panel-default">
-					<div class="panel-heading text-center"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>Thông báo</div>
+					<div class="panel-heading text-center"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>Nhật ký hoạt động</div>
 					<div class="panel-body">
-						<div class="col-md-6">
+						<div class="col-md-12">
 							<div class="row">
 								<div class="col-md-12 text-left">
 									<div class="pull-left">
@@ -31,8 +31,8 @@
 									</div>
 									<spring:bind path="startDate">
 										<div class="form-group ${status.error ? 'has-error' : ''} pull-left stay-left" >
-											<form:input id="startDateHistory" class="form-control readonlyDate"
-												readonly="true" placeholder="Ngày/Tháng/Năm" name="startDateHistory"
+											<form:input id="startDateUserHistory" class="form-control readonlyDate"
+												readonly="true" placeholder="Ngày/Tháng/Năm" name="startDateUserHistory"
 												path="startDate" />
 											<form:errors path="startDate" cssClass="error" />
 										</div>
@@ -42,8 +42,8 @@
 									</div>
 										<spring:bind path="endDate">
 											<div class="form-group ${status.error ? 'has-error' : ''} pull-left stay-left" >
-												<form:input id="endDateHistory" class="form-control readonlyDate"
-													readonly="true" placeholder="Ngày/Tháng/Năm" name="endDateHistory"
+												<form:input id="endDateUserHistory" class="form-control readonlyDate"
+													readonly="true" placeholder="Ngày/Tháng/Năm" name="endDateUserHistory"
 													path="endDate" />
 												<form:errors path="endDate" cssClass="error" />
 											</div>
@@ -68,44 +68,34 @@
 						<table data-toggle="table" data-pagination="true" >
 						    <thead>
 						    <tr>
-						        <th data-field="historyType" data-sortable="true">Loại chi phí</th>
-						        <th data-field="fee" data-sortable="true">Số tiền</th>
-						        <th data-field="rentingAmount" data-sortable="true">Cho thuê</th>
-						        <th data-field="payoff" data-sortable="true">Thanh lý</th>
-						        <th data-field="logDate" data-sortable="true">Ngày tháng</th>
-						        <th data-field="detail" data-sortable="true">Thông tin thêm</th>
-						        <th data-sortable="true">Tham chiếu>
+						        <th data-field="historyType" data-sortable="true">Hoạt động</th>
+						        <th data-field="fee" data-sortable="true">Tài khoản</th>
+						        <th data-field="rentingAmount" data-sortable="true">Công ty</th>
+						        <th data-field="payoff" data-sortable="true">Thông tin hoạt động</th>
+						        <th data-field="logDate" data-sortable="true">Thời gian</th>
 						    </tr>
 						    </thead>
 						    <tbody>
-						    	<c:forEach var="history" items="${historyView.paymentHistories}">
+						    	<c:forEach var="history" items="${historyView.userHistories}">
 							    	<tr>
-							    		<td>
+							    		<td >
 							    			${history.historyName}
 							    		</td>
-										<td class="text-right">
-											<fmt:formatNumber  currencySymbol=" "  value="${history.fee}" type="currency" maxFractionDigits="0" var="fee"/>
-												${fn:replace(fee, ",", ".")}
-												VNĐ
+										<td>
+											${history.accountName}
 										</td>
-										<td class="text-right">
-											<fmt:formatNumber  currencySymbol=" "  value="${history.rentingAmount}" type="currency" maxFractionDigits="0" var="rentingAmount"/>
-												${fn:replace(rentingAmount, ",", ".")}
-												VNĐ
+										
+										<td>
+											${history.companyName}
 										</td>
-										<td class="text-right">
-											<fmt:formatNumber  currencySymbol=" "  value="${history.payoff}" type="currency" maxFractionDigits="0" var="payoff"/>
-											${fn:replace(payoff, ",", ".")}
-											VNĐ
+	
+										<td >
+										<div class="detail-message-table-medium">
+											${history.detail}
+											</div>
 										</td>
 										<td class="text-center">
-											<fmt:formatDate pattern="dd/MM/yyyy" value="${history.logDate}" />
-										</td>
-										<td class="text-left">
-											${history.detail}
-										</td>
-										<td>
-											<a href="#" onclick="openContractDetail(${history.contractId})">Hợp đồng số HDTC<span>${history.contractId}</span></a>
+											<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${history.happenTime}" />
 										</td>
 							    	</tr>
 						    	</c:forEach>
@@ -115,12 +105,10 @@
 				</div>
 			</div>
 		</div>
-		<jsp:include page="includes/contractDetailDialog.jsp"></jsp:include>
 </div>
 <script type="text/javascript">
 $( document ).ready(function() {
-	hideAlert("historyAlert");
-	ph_initPage();
+	hideAlert("uhAlert");
+	uh_initPage();
 });
-</script> --%>
-	
+</script>

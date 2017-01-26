@@ -1,5 +1,8 @@
 package vn.com.phuclocbao.entity;
 
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
 import vn.com.phuclocbao.entity.base.IBaseEntity;
 
 /**
@@ -7,6 +10,9 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
 @SuppressWarnings("all")
 @javax.persistence.Entity
 @javax.persistence.Table(name="tblUserHistory")
+@NamedQueries({
+	@NamedQuery(name = "userHistory_getHistoriesInDateRange", query = "SELECT uh FROM UserHistory uh WHERE uh.companyId = :companyId AND uh.happenTime >= :startDate AND uh.happenTime <= :endDate")
+})
 public class UserHistory implements IBaseEntity
 {
   /** SerialVersionUID */

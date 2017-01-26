@@ -19,6 +19,7 @@ import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.PaymentHistoryDto;
+import vn.com.phuclocbao.dto.UserHistoryDto;
 import vn.com.phuclocbao.enums.AlertType;
 import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.enums.MenuDefinition;
@@ -27,6 +28,7 @@ import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.CompanyService;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.service.PaymentHistoryService;
+import vn.com.phuclocbao.service.UserHistoryService;
 import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.DateTimeUtil;
@@ -36,6 +38,7 @@ import vn.com.phuclocbao.viewbean.ContractBean;
 import vn.com.phuclocbao.viewbean.ManageContractBean;
 import vn.com.phuclocbao.viewbean.NotificationPage;
 import vn.com.phuclocbao.viewbean.PaymentHistoryView;
+import vn.com.phuclocbao.viewbean.UserActionHistoryView;
 
 
 
@@ -55,6 +58,9 @@ public class NavigationController {
 	
 	@Autowired
 	PaymentHistoryService paymentHistoryService;
+	
+	@Autowired
+	UserHistoryService userHistoryService;
 	
 	@RequestMapping(value = { "/home"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public String productsPage(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
@@ -171,7 +177,7 @@ public class NavigationController {
 	public ModelAndView openDailyWorks(HttpServletRequest request, HttpServletResponse response, PaymentHistoryView paymentHistory) {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.DAILY_WORK);
-		ModelAndView model = new ModelAndView("dailyWorks");
+		ModelAndView model = new ModelAndView(MenuDefinition.DAILY_WORK.getName());
 		if(paymentHistory == null){
 			paymentHistory = new PaymentHistoryView();
 		}
@@ -189,12 +195,23 @@ public class NavigationController {
 	}
 	
 	@RequestMapping(value = { "/history"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public ModelAndView openHistory(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView openHistory(HttpServletRequest request, HttpServletResponse response, UserActionHistoryView userHistoryView) {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.HISTORY);
-		ModelAndView model = new ModelAndView("history");
-		
-		
+		ModelAndView model = new ModelAndView(MenuDefinition.HISTORY.getName());
+		if(userHistoryView == null){
+			userHistoryView = new UserActionHistoryView();
+		}
+		try {
+			List<UserHistoryDto> paymentDtos = userHistoryService.getHistories(plbSession.getCompanyId(), userHistoryView.getStartDate(), userHistoryView.getEndDate());
+			userHistoryView.setUserHistories(paymentDtos);
+			userHistoryView.setCurrentCompany(plbSession.getCurrentCompany());
+			model.addObject("historyView", userHistoryView);
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
+		}
 		reloadCompanySession(model, request);
 		
 		return model;

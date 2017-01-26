@@ -1,6 +1,8 @@
 package vn.com.phuclocbao.dto;
 
 import vn.com.phuclocbao.dto.base.IBaseDTO;
+import vn.com.phuclocbao.enums.PaymentHistoryType;
+import vn.com.phuclocbao.enums.UserActionHistoryType;
 
 public class UserHistoryDto implements IBaseDTO {
 
@@ -14,7 +16,9 @@ public class UserHistoryDto implements IBaseDTO {
 	private java.lang.String companyName;
 	private java.util.Date happenTime;
 	private java.lang.String detail;
-
+	public String getHistoryName(){
+		return UserActionHistoryType.getByType(actionType).getName();
+	}
 	/**
 	 * Gets the field id.
 	 * 

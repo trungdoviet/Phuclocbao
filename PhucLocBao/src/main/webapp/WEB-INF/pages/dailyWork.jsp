@@ -108,7 +108,7 @@
 											<fmt:formatDate pattern="dd/MM/yyyy" value="${history.logDate}" />
 										</td>
 										<td class="text-left" >
-										<div style="max-width:200px">
+										<div class="detail-message-table">
 											${history.detail}
 											</div>
 										</td>

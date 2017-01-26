@@ -23,6 +23,7 @@ import vn.com.phuclocbao.service.CompanyService;
 import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.validator.CompanyFinancialValidator;
 import vn.com.phuclocbao.viewbean.CompanyFinancialBean;
+import vn.com.phuclocbao.vo.UserActionParamVO.UserActionParamVOBuilder;
 
 
 
@@ -53,7 +54,9 @@ public class CompanyController extends BaseController{
 			model = new ModelAndView(MenuDefinition.HOME.getRedirectCommand());
 			try {
 				cfBean.getCompany().setId(plbSession.getCompanyId());
-				CompanyDto savedCompany = companyService.mergeFinancial(cfBean.getCompany());
+				CompanyDto savedCompany = companyService.mergeFinancial(cfBean.getCompany(), UserActionParamVOBuilder.createBuilder()
+																													.setUsername(plbSession.getUserAccount().getUsername())
+																													.build());
 				if(savedCompany != null){
 					plbSession.setCurrentCompany(savedCompany);
 					if(plbSession.getCompanyId().equals(plbSession.getUserAccount().getCompanyEntity().getId())){

@@ -23,15 +23,18 @@ import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.dao.ContractDao;
 import vn.com.phuclocbao.dao.PaymentHistoryDao;
 import vn.com.phuclocbao.dao.PersistenceExecutable;
+import vn.com.phuclocbao.dao.UserHistoryDao;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.PaymentScheduleDto;
 import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.entity.Contract;
 import vn.com.phuclocbao.entity.PaymentHistory;
+import vn.com.phuclocbao.entity.UserHistory;
 import vn.com.phuclocbao.enums.PaymentHistoryType;
 import vn.com.phuclocbao.enums.ContractSeverity;
 import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.enums.ProcessStaging;
+import vn.com.phuclocbao.enums.UserActionHistoryType;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.BaseService;
@@ -40,9 +43,11 @@ import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.PaymentHistoryUtil;
 import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.util.PlbUtil;
+import vn.com.phuclocbao.util.UserHistoryUtil;
 import vn.com.phuclocbao.view.ContractView;
 import vn.com.phuclocbao.viewbean.ManageContractBean;
 import vn.com.phuclocbao.viewbean.NotificationContractBean;
+import vn.com.phuclocbao.vo.UserActionParamVO;
 @Service
 public class DefaultContractService extends BaseService implements ContractService {
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DefaultContractService.class);
@@ -54,9 +59,12 @@ public class DefaultContractService extends BaseService implements ContractServi
 	@Autowired
 	private PaymentHistoryDao paymentHistoryDao;
 	
+	@Autowired
+	private UserHistoryDao userHistoryDao;
+	
 	@Transactional
 	@Override
-	public boolean saveNewContract(ContractDto contractDto) throws BusinessException {
+	public boolean saveNewContract(ContractDto contractDto, UserActionParamVO userActionParam) throws BusinessException {
 	  Long id = methodWrapper(new PersistenceExecutable<Long>() {
 
 		@Override
@@ -79,6 +87,10 @@ public class DefaultContractService extends BaseService implements ContractServi
 					companyDao.merge(company);
 					paidHistory.setContractId(persistedObject.getId());
 					paymentHistoryDao.persist(paidHistory);
+					UserHistory userHistory = UserHistoryUtil.createNewHistory(persistedObject, contractDto.getCompany().getId(), 
+															persistedObject.getCompany().getName(), userActionParam.getUsername(), 
+															UserActionHistoryType.NEW_CONTRACT, StringUtils.EMPTY);
+					userHistoryDao.persist(userHistory);
 				}
 				return Long.valueOf(persistedObject.getId());
 			}
@@ -139,6 +151,13 @@ public class DefaultContractService extends BaseService implements ContractServi
 	}
 	public void setPaymentHistoryDao(PaymentHistoryDao paymentHistoryDao) {
 		this.paymentHistoryDao = paymentHistoryDao;
+	}
+	
+	public UserHistoryDao getUserHistoryDao() {
+		return userHistoryDao;
+	}
+	public void setUserHistoryDao(UserHistoryDao userHistoryDao) {
+		this.userHistoryDao = userHistoryDao;
 	}
 	@Override
 	public ContractView findContractById(Integer id) throws BusinessException {
@@ -211,7 +230,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 	}
 	@Transactional
 	@Override
-	public ContractDto updateContractInPaidTime(ContractDto dto) throws BusinessException {
+	public ContractDto updateContractInPaidTime(ContractDto dto, UserActionParamVO userActionParam) throws BusinessException {
 		return methodWrapper(new PersistenceExecutable<ContractDto>() {
 
 			@Override
@@ -238,6 +257,14 @@ public class DefaultContractService extends BaseService implements ContractServi
 						}
 						 
 						paymentHistoryDao.persist(paidHistory);
+						UserActionHistoryType actionType = UserActionHistoryType.RENTING_COST;
+						if(totalPaidCost == 0D){
+							actionType = UserActionHistoryType.UPDATE_CONTRACT;
+						}
+						UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+								company.getName(), userActionParam.getUsername(), 
+								actionType, StringUtils.EMPTY);
+						userHistoryDao.persist(userHistory);
 					 }
 					 return updatedContract;
 					
@@ -252,7 +279,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 	}
 	@Transactional
 	@Override
-	public ContractDto updateContractInPayOffTime(ContractDto dto) throws BusinessException {
+	public ContractDto updateContractInPayOffTime(ContractDto dto, UserActionParamVO userActionParam) throws BusinessException {
 		return methodWrapper(new PersistenceExecutable<ContractDto>() {
 			@Override
 			public ContractDto execute() throws BusinessException, ClassNotFoundException, IOException {
@@ -273,6 +300,11 @@ public class DefaultContractService extends BaseService implements ContractServi
 							throw new BusinessException(PLBErrorCode.CAN_NOT_UPDATE_DATA.name());
 						}
 						paymentHistoryDao.persist(paidHistory);
+						UserActionHistoryType actionType = UserActionHistoryType.PAYOFF_CONTRACT;
+						UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, updatedContract.getCompany().getId(), 
+								company.getName(), userActionParam.getUsername(), 
+								actionType, StringUtils.EMPTY);
+						userHistoryDao.persist(userHistory);
 					 }
 					 return updatedContract;
 					
@@ -287,7 +319,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 	}
 	@Transactional
 	@Override
-	public ContractDto updateAsDraftContractInPayOffTime(ContractDto dto) throws BusinessException {
+	public ContractDto updateAsDraftContractInPayOffTime(ContractDto dto, UserActionParamVO userActionParam) throws BusinessException {
 		return methodWrapper(new PersistenceExecutable<ContractDto>() {
 			@Override
 			public ContractDto execute() throws BusinessException, ClassNotFoundException, IOException {
@@ -297,25 +329,58 @@ public class DefaultContractService extends BaseService implements ContractServi
 					Double companyDebt = dto.getCompanyDebt() - contract.getCompanyDebt();
 					ContractConverter.getInstance().updateAsDraftContractInPayOffTime(dto, contract);
 					List<PaymentHistory> paymentHistories = new ArrayList<>();
+					List<UserHistory> userHistories = new ArrayList<>();
+					CompanyEntity company = companyDao.findById(dto.getCompany().getId());
+					if(company != null){
+						dto.getCompany().setName(company.getName());
+					}
 					if(isIncreasingDebt(customerDebt)){
-						PaymentHistory customerDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.CUSTOMER_DEBT, customerDebt, StringUtils.EMPTY);
+						PaymentHistory customerDebtHistory = PaymentHistoryUtil.createNewHistory(contract, 
+																				dto.getCompany().getId(), PaymentHistoryType.CUSTOMER_DEBT, 
+																				customerDebt, StringUtils.EMPTY);
 						paymentHistories.add(customerDebtHistory);
+						UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+																	dto.getCompany().getName(), userActionParam.getUsername(), 
+																	UserActionHistoryType.CUSTOMER_DEBT, StringUtils.EMPTY);
+						userHistories.add(userHistory);
 					} else if(isDecreasingDebt(customerDebt)){
 						PaymentHistory customerDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.CUSTOMER_PAY_DEBT, customerDebt, StringUtils.EMPTY);
 						paymentHistories.add(customerDebtHistory);
-					}
+						UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+								dto.getCompany().getName(), userActionParam.getUsername(), 
+								UserActionHistoryType.CUSTOMER_PAY_DEBT, StringUtils.EMPTY);
+						userHistories.add(userHistory);
+					} 
 					
 					if(isIncreasingDebt(companyDebt)){
 						PaymentHistory companyDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.COMPANY_DEBT, companyDebt, StringUtils.EMPTY);
 						paymentHistories.add(companyDebtHistory);
+						UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+								dto.getCompany().getName(), userActionParam.getUsername(), 
+								UserActionHistoryType.COMPANY_DEBT, StringUtils.EMPTY);
+						userHistories.add(userHistory);
 					} else if(isDecreasingDebt(companyDebt)){
 						PaymentHistory companyDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.COMPANY_PAY_DEBT, companyDebt, StringUtils.EMPTY);
 						paymentHistories.add(companyDebtHistory);
+						UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+								dto.getCompany().getName(), userActionParam.getUsername(), 
+								UserActionHistoryType.COMPANY_PAY_DEBT, StringUtils.EMPTY);
+						userHistories.add(userHistory);
+					}
+					
+					if(isKeepDebt(companyDebt) && isKeepDebt(customerDebt)){
+						UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+								dto.getCompany().getName(), userActionParam.getUsername(), 
+								UserActionHistoryType.UPDATE_CONTRACT, StringUtils.EMPTY);
+						userHistories.add(userHistory);
 					}
 					
 					 ContractDto updatedContract = ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
 					 if(updatedContract != null && CollectionUtils.isNotEmpty(paymentHistories)){
 						 paymentHistoryDao.persistList(paymentHistories);
+					 }
+					 if(updatedContract != null && CollectionUtils.isNotEmpty(userHistories)){
+						 userHistoryDao.persistList(userHistories);
 					 }
 					 return updatedContract;
 					
@@ -333,20 +398,35 @@ public class DefaultContractService extends BaseService implements ContractServi
 			private boolean isIncreasingDebt(Double debt) {
 				return debt > 0;
 			}
+			
+			private boolean isKeepDebt(Double debt){
+				return debt == 0;
+			}
 		
 		});
 	}
 	
 	@Transactional
 	@Override
-	public ContractDto updateOldContract(ContractDto dto) throws BusinessException {
+	public ContractDto updateOldContract(ContractDto dto, UserActionParamVO userActionParam) throws BusinessException {
 		return methodWrapper(new PersistenceExecutable<ContractDto>() {
 			@Override
 			public ContractDto execute() throws BusinessException, ClassNotFoundException, IOException {
 				try {
 					Contract contract = contractDao.findById(dto.getId(), dto.getCompany().getId());
 					ContractConverter.getInstance().updateOldContract(dto, contract);
-					return ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
+					ContractDto updatedContract = ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
+					if(updatedContract != null){
+						CompanyEntity company = companyDao.findById(dto.getCompany().getId());
+						if(company != null){
+							UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+									company.getName(), userActionParam.getUsername(), 
+									UserActionHistoryType.UPDATE_CONTRACT, StringUtils.EMPTY);
+							userHistoryDao.persist(userHistory);
+						}
+						
+					}
+					return updatedContract;
 					
 				} catch (Exception nre){
 					logger.error("Can not update contract: id:" + dto.getId() +" - companyid:" + dto.getCompany().getId());

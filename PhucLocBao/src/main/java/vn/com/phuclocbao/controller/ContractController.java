@@ -48,6 +48,7 @@ import vn.com.phuclocbao.validator.NewContractValidator;
 import vn.com.phuclocbao.validator.OldContractValidator;
 import vn.com.phuclocbao.viewbean.ContractBean;
 import vn.com.phuclocbao.viewbean.NotificationPage;
+import vn.com.phuclocbao.vo.UserActionParamVO.UserActionParamVOBuilder;
 
 
 
@@ -112,7 +113,9 @@ public class ContractController {
 				String paymentInfo =  contractBean.getPaidInfo();
 				logger.info("payment schedule:" + contractBean.getPaidInfo());
 				contractBean.getContractDto().setPaymentSchedules(PaymentScheduleParser.parsePaymentSchedule(paymentInfo));
-				boolean isSuccess = contractService.saveNewContract(contractBean.getContractDto());
+				boolean isSuccess = contractService.saveNewContract(contractBean.getContractDto(), UserActionParamVOBuilder.createBuilder()
+																															.setUsername(plbSession.getUserAccount().getUsername())
+																															.build());
 				if(isSuccess){
 					showSucessAlert(redirectAttributes, MSG_CREATE_CONTRACT_SUCCESS);
 				} else {
@@ -249,7 +252,9 @@ public class ContractController {
 			contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
 			contractBean.getContractDto().setPaymentSchedules(PaymentScheduleParser.parsePaymentSchedule(contractBean.getPaidInfo()));
 			try {
-				ContractDto updatedContract = contractService.updateContractInPaidTime(contractBean.getContractDto());
+				ContractDto updatedContract = contractService.updateContractInPaidTime(contractBean.getContractDto(), UserActionParamVOBuilder.createBuilder()
+																																	.setUsername(plbSession.getUserAccount().getUsername())
+																																	.build());
 				if(updatedContract != null){
 					showSucessAlert(redirectAttributes, MSG_CONTRACT_UPDATE_SUCCESS);
 				}
@@ -279,7 +284,9 @@ public class ContractController {
 			contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
 			contractBean.getContractDto().setPaymentSchedules(PaymentScheduleParser.parsePaymentSchedule(contractBean.getPaidInfo()));
 			try {
-				ContractDto updatedContract = contractService.updateAsDraftContractInPayOffTime(contractBean.getContractDto());
+				ContractDto updatedContract = contractService.updateAsDraftContractInPayOffTime(contractBean.getContractDto(), UserActionParamVOBuilder.createBuilder()
+																																	.setUsername(plbSession.getUserAccount().getUsername())
+																																	.build());
 				if(updatedContract != null){
 					showSucessAlert(redirectAttributes, MSG_CONTRACT_UPDATE_SUCCESS);
 				}
@@ -309,7 +316,9 @@ public class ContractController {
 			contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
 			contractBean.getContractDto().setPaymentSchedules(PaymentScheduleParser.parsePaymentSchedule(contractBean.getPaidInfo()));
 			try {
-				ContractDto updatedContract = contractService.updateContractInPayOffTime(contractBean.getContractDto());
+				ContractDto updatedContract = contractService.updateContractInPayOffTime(contractBean.getContractDto(), UserActionParamVOBuilder.createBuilder()
+																																.setUsername(plbSession.getUserAccount().getUsername())
+																																.build());
 				if(updatedContract != null){
 					showSucessAlert(redirectAttributes, MSG_CONTRACT_UPDATE_SUCCESS);
 				}
@@ -338,7 +347,9 @@ public class ContractController {
 			contractBean.getContractDto().setId(id);
 			contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
 			try {
-				ContractDto updatedContract = contractService.updateOldContract(contractBean.getContractDto());
+				ContractDto updatedContract = contractService.updateOldContract(contractBean.getContractDto(), UserActionParamVOBuilder.createBuilder()
+																																.setUsername(plbSession.getUserAccount().getUsername())
+																																.build());
 				if(updatedContract != null){
 					showSucessAlert(redirectAttributes, MSG_CONTRACT_UPDATE_SUCCESS);
 				}
