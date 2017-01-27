@@ -18,6 +18,8 @@ import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.delegator.LoginDelegator;
 import vn.com.phuclocbao.dto.UserAccountDto;
 import vn.com.phuclocbao.enums.AlertType;
+import vn.com.phuclocbao.enums.MenuDefinition;
+import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.MessageBundleUtil;
 import vn.com.phuclocbao.validator.LoginUserValidator;
@@ -34,6 +36,8 @@ public class LoginController {
 		@Autowired
 		LoginUserValidator validator;
 	
+		@Autowired
+		ContractService contractService;
 		
 		@RequestMapping(value={"/", "/index", "/login"},method=RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 		public ModelAndView displayLogin(HttpServletRequest request, HttpServletResponse response, LoginBean loginBean){
@@ -81,7 +85,9 @@ public class LoginController {
 								request.getSession().setAttribute(PLBSession.SESSION_ATTRIBUTE_KEY, plbSession);
 								request.getSession().setAttribute(SESSION_IS_USER_ADMIN, userAccount.getIsAdmin());
 								System.out.println("User Login Successful with username:" + userAccount.getFullname());
-								model = new ModelAndView("redirect:/home");
+								int numberOfBadContract = contractService.updateBadContract(plbSession.getCompanyId());
+								System.out.println("Update " + numberOfBadContract +" contract as BAD contract");
+								model = new ModelAndView(MenuDefinition.HOME.getRedirectCommand());
 								redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(MSG_WELCOME_LOGIN) + userAccount.getFullname());
 								redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG_CSS, AlertType.SUCCESS.getName());
 						}

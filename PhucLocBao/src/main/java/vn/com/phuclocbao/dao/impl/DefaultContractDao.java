@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
@@ -70,5 +71,10 @@ public class DefaultContractDao extends BaseDaoJpaImpl<Contract, Integer> implem
 		query.setParameter("companyId", companyId);
 		return ((Number)query.getSingleResult()).longValue();
 	}
-
+	@Override
+	public int updateBadContract(Integer companyId) throws BusinessException {
+		Query query = getEm().createNativeQuery("UPDATE tblContract SET state='BAD' WHERE company_id=? AND state != 'FINISH' AND datediff(now(), expireDate) >= 10");
+		query.setParameter(1, companyId);
+		return query.executeUpdate();
+	}
 }

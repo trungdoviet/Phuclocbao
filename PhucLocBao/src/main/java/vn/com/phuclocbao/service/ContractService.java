@@ -27,4 +27,5 @@ public interface ContractService {
 	public List<ContractDto> getNotifiedContractBySpecificDateAndCompanyId(Date targetDate, Integer companyId) throws BusinessException;
 	public List<NotificationContractBean> convertToNotificationBeans(Date selectedDate, List<ContractDto> contracts) throws BusinessException;
 	public GeneralView collectStatistic(Integer companyId) throws BusinessException;
+	public int updateBadContract(Integer companyId) throws BusinessException;
 }

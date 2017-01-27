@@ -8,6 +8,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import vn.com.phuclocbao.dto.ContractDto;
+import vn.com.phuclocbao.util.MessageConstant;
 import vn.com.phuclocbao.viewbean.ContractBean;
 import vn.com.phuclocbao.viewbean.LoginBean;
 
@@ -24,7 +25,7 @@ public class NewContractValidator implements Validator {
 		ContractBean contract = (ContractBean) target;
 		ContractDto dto = contract.getContractDto();
 		//Validate customer
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "contractDto.customer.idNo", "error.requiredField", "This field is required.");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "contractDto.customer.idNo", "error.requiredField1", MessageConstant.MSG_REQUIRED);
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "contractDto.customer.name", "error.requiredField", "This field is required.");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "contractDto.customer.phone", "error.requiredField", "This field is required.");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "contractDto.customer.address", "error.requiredField", "This field is required.");

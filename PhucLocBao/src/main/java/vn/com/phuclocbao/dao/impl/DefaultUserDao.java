@@ -1,5 +1,6 @@
 package vn.com.phuclocbao.dao.impl;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -16,6 +17,9 @@ import vn.com.phuclocbao.dao.BaseDaoJpaImpl;
 import vn.com.phuclocbao.dao.UserDao;
 import vn.com.phuclocbao.dto.UserAccountDto;
 import vn.com.phuclocbao.entity.UserAccount;
+import vn.com.phuclocbao.exception.BusinessException;
+import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
+import vn.com.phuclocbao.util.PasswordHashing;
 @Repository
 @Transactional
 public class DefaultUserDao extends BaseDaoJpaImpl<UserAccount, Long> implements UserDao
@@ -25,12 +29,14 @@ public class DefaultUserDao extends BaseDaoJpaImpl<UserAccount, Long> implements
 	
 
 		@Override
-		public boolean isValidUser(String username, String password){
+		public boolean isValidUser(String username, String password) throws BusinessException{
 			List<UserAccount> allUsers =  this.findAll();	
 			if(CollectionUtils.isNotEmpty(allUsers)){
-				UserAccount user = allUsers.stream()
-							.filter(item -> item.getUsername().equalsIgnoreCase(username) && item.getPassword().equalsIgnoreCase(password))
-							.findFirst().orElse(null);
+				UserAccount user = null;
+				String hashingPassword = PasswordHashing.hashMD5(password);
+				user = allUsers.stream()
+						.filter(item -> item.getUsername().equalsIgnoreCase(username) && item.getPassword().equalsIgnoreCase(hashingPassword))
+						.findFirst().orElse(null);
 				return user != null;
 			}
 			return false;

@@ -79,6 +79,13 @@
        <put-attribute name="title" value="Quản lý Chi nhánh - Phúc Lộc Bảo" />  
        <put-attribute name="body" value="/WEB-INF/pages/companyBranch.jsp" />  
    </definition>  
+   
+     <!-- User setting -->
+     <definition name="userSetting" extends="base-definition">  
+       <put-attribute name="title" value="Cài đặt tài khoản - Phúc Lộc Bảo" />  
+       <put-attribute name="body" value="/WEB-INF/pages/userSetting.jsp" />  
+   </definition>  
+   
    <!-- login definition --> 
  <definition name="index" 
        template="/WEB-INF/pages/layouts/loginPage.jsp">  

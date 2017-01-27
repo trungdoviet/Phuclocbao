@@ -22,7 +22,18 @@ public class UserAccount implements IBaseEntity {
   private java.lang.Integer id;
   @javax.persistence.Column(length=1)
   private String isAdmin;
-
+  @javax.persistence.Column(length=30)
+  private java.lang.String username;
+  @javax.persistence.Column(length=100)
+  private java.lang.String password;
+  @javax.persistence.Column(length=255)
+  private java.lang.String fullname;
+  @javax.persistence.Column(length=255)
+  private java.lang.String email;
+  @javax.persistence.ManyToOne(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER)
+  private vn.com.phuclocbao.entity.CompanyEntity companyEntity;
+  
+  
   public String getIsAdmin() {
 	return isAdmin;
   }
@@ -49,8 +60,7 @@ public class UserAccount implements IBaseEntity {
     id = _id;
   }
 
-  @javax.persistence.Column(length=30)
-  private java.lang.String username;
+  
 
   /**
    * Gets the field username.
@@ -70,8 +80,7 @@ public class UserAccount implements IBaseEntity {
     username = _username;
   }
 
-  @javax.persistence.Column(length=100)
-  private java.lang.String password;
+  
 
   /**
    * Gets the field password.
@@ -91,8 +100,7 @@ public class UserAccount implements IBaseEntity {
     password = _password;
   }
 
-  @javax.persistence.Column(length=255)
-  private java.lang.String fullname;
+  
 
   /**
    * Gets the field fullname.
@@ -112,8 +120,7 @@ public class UserAccount implements IBaseEntity {
     fullname = _fullname;
   }
 
-  @javax.persistence.Column(length=255)
-  private java.lang.String email;
+  
 
   /**
    * Gets the field email.
@@ -133,8 +140,7 @@ public class UserAccount implements IBaseEntity {
     email = _email;
   }
 
-  @javax.persistence.ManyToOne(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER)
-  private vn.com.phuclocbao.entity.CompanyEntity companyEntity;
+  
 
   /**
    * Gets the field companyEntity.

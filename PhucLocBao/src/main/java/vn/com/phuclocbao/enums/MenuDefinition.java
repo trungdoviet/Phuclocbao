@@ -11,6 +11,7 @@ public enum MenuDefinition {
 	BAD_CONTRACT("badContracts"),
 	COMPANY_BRANCH("companyBranch"),
 	COMPANY_FINANCIAL("companyFinancial"),
+	USER_SETTING("userSetting")
 	;
 	private MenuDefinition(String name){
 		this.name = name;

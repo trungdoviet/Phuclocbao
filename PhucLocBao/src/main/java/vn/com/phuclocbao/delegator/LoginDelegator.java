@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.UserService;
 
 @Component
@@ -21,7 +22,7 @@ public class LoginDelegator
 				this.userService = userService;
 		}
 
-		public boolean isValidUser(String username, String password)   {
+		public boolean isValidUser(String username, String password) throws BusinessException   {
 		    return userService.isValidUser(username, password);
     }
 }

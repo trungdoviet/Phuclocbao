@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import vn.com.phuclocbao.bean.PLBSession;
+import vn.com.phuclocbao.delegator.LoginDelegator;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.PaymentHistoryDto;
+import vn.com.phuclocbao.dto.UserAccountDto;
 import vn.com.phuclocbao.dto.UserHistoryDto;
 import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.enums.MenuDefinition;
@@ -36,6 +38,7 @@ import vn.com.phuclocbao.viewbean.ManageContractBean;
 import vn.com.phuclocbao.viewbean.NotificationPage;
 import vn.com.phuclocbao.viewbean.PaymentHistoryView;
 import vn.com.phuclocbao.viewbean.UserActionHistoryView;
+import vn.com.phuclocbao.viewbean.UserSettingBean;
 
 
 
@@ -52,7 +55,8 @@ public class NavigationController extends BaseController {
 	@Autowired
 	@Qualifier(value="companyService")
 	CompanyService companyService;
-	
+	@Autowired
+	private LoginDelegator loginDelegate;
 	@Autowired
 	PaymentHistoryService paymentHistoryService;
 	
@@ -263,6 +267,26 @@ public class NavigationController extends BaseController {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.COMPANY_BRANCH);
 		ModelAndView model = new ModelAndView(MenuDefinition.COMPANY_BRANCH.getName());
+		return model;
+	}
+	
+	@RequestMapping(value = { "/userSetting"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView openUserSetting(HttpServletRequest request, HttpServletResponse response, UserSettingBean usBean) {
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		ModelAndView model = new ModelAndView(MenuDefinition.USER_SETTING.getName());
+		if(usBean == null){
+			usBean = new UserSettingBean();
+		}
+		try {
+			 UserAccountDto user = loginDelegate.getUserService().getUserByUsername(plbSession.getUserAccount().getUsername());
+			 usBean.setUser(user);
+			 plbSession.setUserAccount(user);
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
+		}
+		model.addObject("usBean", usBean);
 		return model;
 	}
 }

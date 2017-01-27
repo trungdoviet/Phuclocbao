@@ -325,7 +325,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 						}
 						paymentHistoryDao.persist(paidHistory);
 						UserActionHistoryType actionType = UserActionHistoryType.PAYOFF_CONTRACT;
-						UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, updatedContract.getCompany().getId(), 
+						UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, company.getId(), 
 								company.getName(), userActionParam.getUsername(), 
 								actionType, StringUtils.EMPTY);
 						userHistoryDao.persist(userHistory);
@@ -523,6 +523,16 @@ public class DefaultContractService extends BaseService implements ContractServi
 				view.setTotalInProgressContract(totalInProgressContract);
 				view.setTotalNotification(totalNotificationToDay);
 				return view;
+			}
+		});
+	}
+	@Override
+	public int updateBadContract(Integer companyId) throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<Integer>() {
+
+			@Override
+			public Integer execute() throws BusinessException, ClassNotFoundException, IOException {
+				return contractDao.updateBadContract(companyId);
 			}
 		});
 	}
