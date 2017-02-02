@@ -10,7 +10,21 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
+				
 				<a class="navbar-brand" href="#"><span>PhúcLộcBảo</span>Admin</a>
+				<div class="clock group">
+					<div id="Date" class="pull-left"></div>
+					<div class="pull-left marginClock">
+					  <ul>
+					      <li id="hours"></li>
+					      <li id="point">:</li>
+					      <li id="min"></li>
+					      <li id="point">:</li>
+					      <li id="sec"></li>
+					  </ul>
+					</div>
+				</div>
+				
 				<ul class="user-menu">
 					<li class="dropdown pull-right">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg><%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getUserAccount().getFullname() %><span class="caret"></span></a>

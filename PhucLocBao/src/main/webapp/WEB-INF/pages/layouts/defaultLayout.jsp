@@ -67,6 +67,9 @@
 			$( document ).ready(function() {
 				general_formatTotalFunding();
 			});
+			$(document).ready(function() {
+				initDigitalClock();
+			});
 		</script>	
 </body>
 </html>

@@ -18,7 +18,7 @@ public class UserAccountConverter extends BaseConverter<UserAccountDto, UserAcco
 
 	@Override
 	public String[] getIgnoredProperties() {
-		return new String[]{"password", "companyEntity"};
+		return new String[]{"companyEntity"};
 	}
 
 	@Override

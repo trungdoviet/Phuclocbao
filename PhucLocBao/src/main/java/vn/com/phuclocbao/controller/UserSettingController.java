@@ -52,20 +52,20 @@ public class UserSettingController extends BaseController {
 	@Autowired
 	@Qualifier("userSettingValidator")
 	UserSettingValidator userSettingValidator;
-	@Autowired
-	private LoginDelegator loginDelegate;
-	@InitBinder
-	protected void initBinder(WebDataBinder binder) {
-		binder.setValidator(userSettingValidator);
-	}
 	
 	@RequestMapping(value = { "/saveUserSetting"}, params="save", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView saveUserSetting(HttpServletRequest request, HttpServletResponse response, 
-			@ModelAttribute("usBean") @Validated UserSettingBean usBean, 
+			@ModelAttribute("usBean")  UserSettingBean usBean, 
 			BindingResult result, SessionStatus status) {
 		
 		ModelAndView model = null;
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		String userFullname = usBean.getUser().getFullname();
+		String userEmail = usBean.getUser().getEmail();
+		usBean.setUser(plbSession.getUserAccount());
+		usBean.getUser().setFullname(userFullname);
+		usBean.getUser().setEmail(userEmail);
+		userSettingValidator.validate(usBean, result);
 		if(result.hasErrors()){
 			model = new ModelAndView(MenuDefinition.USER_SETTING.getName());
 			usBean.setUser(plbSession.getUserAccount());
@@ -75,6 +75,8 @@ public class UserSettingController extends BaseController {
 			try {
 				if(StringUtils.isEmpty(usBean.getOldPassword())){
 					usBean.getUser().setPassword(StringUtils.EMPTY);
+				} else {
+					usBean.getUser().setPassword(usBean.getNewPassword());
 				}
 				UserAccountDto user = userService.saveUser(usBean.getUser());
 				model = new ModelAndView(MenuDefinition.HOME.getRedirectCommand());
