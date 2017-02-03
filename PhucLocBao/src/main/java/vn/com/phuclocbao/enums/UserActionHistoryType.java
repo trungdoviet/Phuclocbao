@@ -14,7 +14,9 @@ public enum UserActionHistoryType {
 	COMPANY_PAY_DEBT("COMPANY_DEBT","Công ty trả nợ phí"),
 	UPDATE_COMPANY_FINANCIAL("UPDATE_COMPANY_FINANCIAL","Cập nhật tài chính công ty"),
 	UPDATE_COMPANY_BRANCH("UPDATE_COMPANY_BRANCH","Cập nhật chi nhánh công ty"),
+	CREATE_COMPANY_BRANCH("CREATE_COMPANY_BRANCH","Tạo công ty"),
 	OTHER("OTHER","Chi khác...")
+	
 	;
 	private String type;
 	private UserActionHistoryType(String type, String name){

@@ -19,12 +19,14 @@
 			<li class='<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("badContracts")%>'><a href="${pageContext.request.contextPath}/badContracts"><svg class="glyph stroked table"><use xlink:href="#stroked-table"></use></svg>Báo cáo nợ xấu</a></li>
 			<li role="presentation" class="divider"></li>
 			<!-- <li><a href="login.html"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> Login Page</a></li> -->
-			<li class="parent <%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("companyFinancial")%> <%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("companyBranch")%> ">
+			<li class="parent <%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("companyFinancial")%> 
+			<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("companyBranch")%>
+			<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("mngUser")%> ">
 				<a href="#">
 					<span data-toggle="collapse" href="#sub-item-1"><svg class="glyph stroked chevron-down"><use xlink:href="#stroked-chevron-down"></use></svg></span> Công ty <%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getCurrentCompany().getName() %> 
 				</a>
 				<c:if test="${sessionScope.isUserAdmin == 'Y'}">
-					<ul class="children collapse" id="sub-item-1">
+					<ul class="children collapse <%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getCompanyMenuCollapseState()%>" id="sub-item-1">
 						<li class="<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("companyFinancial")%>">
 							<a  href="${pageContext.request.contextPath}/companyFinancial">
 								<svg class="glyph stroked chevron-right"><use xlink:href="#stroked-chevron-right"></use></svg> Quản lý Tài chính
@@ -35,8 +37,15 @@
 								<svg class="glyph stroked chevron-right"><use xlink:href="#stroked-chevron-right"></use></svg> Quản lý chi nhánh
 							</a>
 						</li>
+						<li class="<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("mngUser")%>">
+							<a  href="${pageContext.request.contextPath}/mngUser">
+								<svg class="glyph stroked chevron-right"><use xlink:href="#stroked-chevron-right"></use></svg> Quản lý Tài khoản
+							</a>
+						</li>
 					</ul>
 				</c:if>
 			</li>
 		</ul>
+		<div class="divider"></div>
+		<div class="text-center"><label class="normal-text-weight">Phúc Lộc Bảo &copy;&nbsp;<script>document.write(new Date().getFullYear())</script></label></div>
 	</div><!--/.sidebar-->

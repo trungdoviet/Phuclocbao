@@ -38,6 +38,9 @@
 .modal-dialog{
 	width: 800px;
 }
+.company-branch .modal-dialog{
+	width: 370px;
+}
 .color-check-day{
 	color: #30a5ff;
 	padding-left: 3px;
@@ -418,3 +421,13 @@ a.mute-link-style:hover {
 }
 
 /* END*/
+.adminRole{
+	color: red;
+}
+.divider{
+	border-bottom: 1px solid #eee;
+    margin: 20px 0;
+}
+.normal-text-weight{
+	font-weight:normal
+}

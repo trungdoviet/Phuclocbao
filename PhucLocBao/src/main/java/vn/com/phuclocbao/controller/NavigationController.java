@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.delegator.LoginDelegator;
 import vn.com.phuclocbao.dto.CompanyDto;
+import vn.com.phuclocbao.dto.CompanyTypeDto;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.PaymentHistoryDto;
 import vn.com.phuclocbao.dto.UserAccountDto;
@@ -26,11 +27,13 @@ import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.enums.ProcessStaging;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.CompanyService;
+import vn.com.phuclocbao.service.CompanyTypeService;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.service.PaymentHistoryService;
 import vn.com.phuclocbao.service.UserHistoryService;
 import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.util.DateTimeUtil;
+import vn.com.phuclocbao.viewbean.CompanyBranchBean;
 import vn.com.phuclocbao.viewbean.CompanyFinancialBean;
 import vn.com.phuclocbao.viewbean.ContractBean;
 import vn.com.phuclocbao.viewbean.GeneralView;
@@ -55,6 +58,9 @@ public class NavigationController extends BaseController {
 	@Autowired
 	@Qualifier(value="companyService")
 	CompanyService companyService;
+	@Autowired
+	@Qualifier(value="companyTypeService")
+	CompanyTypeService companyTypeService;
 	@Autowired
 	private LoginDelegator loginDelegate;
 	@Autowired
@@ -263,10 +269,34 @@ public class NavigationController extends BaseController {
 	}
 	
 	@RequestMapping(value = { "/companyBranch"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public ModelAndView openCompanyBranch(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView openCompanyBranch(HttpServletRequest request, HttpServletResponse response, CompanyBranchBean cbBean) {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.COMPANY_BRANCH);
 		ModelAndView model = new ModelAndView(MenuDefinition.COMPANY_BRANCH.getName());
+		if(cbBean == null){
+			cbBean = new CompanyBranchBean();
+		}
+		try {
+			List<CompanyDto> companies = companyService.findAll();
+			cbBean.setCompanies(companies);
+			List<CompanyTypeDto> availableTypes = companyTypeService.findAll();
+			cbBean.setAvailableCompanyTypes(availableTypes);
+			cbBean.setCities(VietnamCityService.loadCities());
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
+		}
+		model.addObject("cbBean", cbBean);
+		return model;
+	}
+	
+	@RequestMapping(value = { "/mngUser"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView openManageUser(HttpServletRequest request, HttpServletResponse response) {
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		plbSession.getMenuBean().makeActive(MenuDefinition.MANAGE_USER);
+		ModelAndView model = new ModelAndView(MenuDefinition.MANAGE_USER.getName());
+		
 		return model;
 	}
 	

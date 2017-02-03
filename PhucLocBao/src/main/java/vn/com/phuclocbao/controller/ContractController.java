@@ -128,7 +128,6 @@ public class ContractController {
 			}
 			model = new ModelAndView("redirect:/home");
 		}
-		logger.info("AAAAAAAAAAAAAAAAaa:" + contractBean.getContractDto().getStartDate());
 		return model;
 	}
 

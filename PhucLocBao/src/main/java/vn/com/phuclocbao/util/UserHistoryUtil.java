@@ -10,7 +10,7 @@ import vn.com.phuclocbao.enums.UserActionHistoryType;
 
 public class UserHistoryUtil {
 	private static final String MSG_CONTRACT_ACTION = "{0} HDCT{1}. Khách hàng: {2} {3}.";
-	
+	private static final String MSG_CREATE_COMPANY="Tạo công ty {0}";
 	public static UserHistory createNewHistory(Contract contract, Integer companyId, String companyName, String accountName, UserActionHistoryType type, String customMessage){
 		UserHistory history = new UserHistory();
 		history.setHappenTime(DateTimeUtil.getCurrentDate());
@@ -37,6 +37,10 @@ public class UserHistoryUtil {
 		case UPDATE_COMPANY_BRANCH:
 		case UPDATE_COMPANY_FINANCIAL:
 			history.setDetail(type.getName());
+			break;
+		case CREATE_COMPANY_BRANCH:
+			msg = MessageFormat.format(MSG_CREATE_COMPANY, customMessage);
+			history.setDetail(msg);
 			break;
 		case OTHER:
 			history.setDetail(msg);

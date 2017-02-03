@@ -84,7 +84,13 @@
      <definition name="userSetting" extends="base-definition">  
        <put-attribute name="title" value="Cài đặt tài khoản - Phúc Lộc Bảo" />  
        <put-attribute name="body" value="/WEB-INF/pages/userSetting.jsp" />  
-   </definition>  
+     </definition>
+     
+     <!-- Manage User -->
+     <definition name="mngUser" extends="base-definition">  
+       <put-attribute name="title" value="Quản lý tài khoản - Phúc Lộc Bảo" />  
+       <put-attribute name="body" value="/WEB-INF/pages/mngUser.jsp" />  
+     </definition>    
    
    <!-- login definition --> 
  <definition name="index" 

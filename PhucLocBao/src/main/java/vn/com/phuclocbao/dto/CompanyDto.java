@@ -39,6 +39,25 @@ public class CompanyDto implements IBaseDTO {
 	private java.lang.Double investBeforeStartDate;
 	private java.util.List<ContractDto> contracts;
 	private java.lang.Double totalFund;
+	private String cityInString;
+	private String userAccountsInString;
+	
+
+	public String getCityInString() {
+		return cityInString;
+	}
+
+	public void setCityInString(String cityInString) {
+		this.cityInString = cityInString;
+	}
+
+	public String getUserAccountsInString() {
+		return userAccountsInString;
+	}
+
+	public void setUserAccountsInString(String userAccountsInString) {
+		this.userAccountsInString = userAccountsInString;
+	}
 
 	/**
 	 * Gets the field totalFund.

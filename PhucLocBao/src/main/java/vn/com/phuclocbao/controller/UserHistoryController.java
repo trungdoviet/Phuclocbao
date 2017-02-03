@@ -40,7 +40,7 @@ public class UserHistoryController extends BaseController {
 			@ModelAttribute("historyView") UserActionHistoryView userHistoryView, 
 			BindingResult result, SessionStatus status) {
 		
-		ModelAndView model = new ModelAndView(MenuDefinition.DAILY_WORK.getName());
+		ModelAndView model = new ModelAndView(MenuDefinition.HISTORY.getName());
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.NOTIFICATION);
 		try {

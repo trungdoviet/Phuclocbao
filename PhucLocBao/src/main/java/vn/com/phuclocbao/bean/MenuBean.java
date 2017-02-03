@@ -24,6 +24,7 @@ public class MenuBean {
 		items.put(MenuDefinition.BAD_CONTRACT.getName(), new MenuItem(MenuDefinition.BAD_CONTRACT));
 		items.put(MenuDefinition.COMPANY_FINANCIAL.getName(), new MenuItem(MenuDefinition.COMPANY_FINANCIAL));
 		items.put(MenuDefinition.COMPANY_BRANCH.getName(), new MenuItem(MenuDefinition.COMPANY_BRANCH));
+		items.put(MenuDefinition.MANAGE_USER.getName(), new MenuItem(MenuDefinition.MANAGE_USER));
 		makeActive(MenuDefinition.HOME);
 	}
 	
@@ -56,6 +57,14 @@ public class MenuBean {
 		return StringUtils.EMPTY;
 	}
 	
+	public String getCompanyMenuCollapseState(){
+		if(MapUtils.isNotEmpty(items)){
+			return (items.get(MenuDefinition.COMPANY_BRANCH.getName()).getState() == MenuState.ACTIVE
+					|| items.get(MenuDefinition.MANAGE_USER.getName()).getState() == MenuState.ACTIVE
+					|| items.get(MenuDefinition.COMPANY_FINANCIAL.getName()).getState() == MenuState.ACTIVE) ? "in" : StringUtils.EMPTY ;
+		}
+		return StringUtils.EMPTY;
+	}
 	private void makeAllInactive(){
 		if(MapUtils.isNotEmpty(items)){
 			items.forEach((k,v) -> {

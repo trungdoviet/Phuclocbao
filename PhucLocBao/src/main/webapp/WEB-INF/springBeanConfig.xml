@@ -27,6 +27,8 @@
 	<bean id="companyService" class="vn.com.phuclocbao.service.impl.DefaultCompanyService">
 		<property name="companyDao" ref="companyDao"></property>
 	</bean>
+	<bean id="companyTypeService" class="vn.com.phuclocbao.service.impl.DefaultCompanyTypeService">
+	</bean>
 	<bean id="contractService" class="vn.com.phuclocbao.service.impl.DefaultContractService">
 		<property name="companyDao" ref="companyDao"></property>
 		<property name="contractDao" ref="contractDao"></property>
@@ -43,6 +45,8 @@
 	<bean name="userDao" class="vn.com.phuclocbao.dao.impl.DefaultUserDao">
 	</bean>
 	<bean name="companyDao" class="vn.com.phuclocbao.dao.impl.DefaultCompanyDao">
+	</bean>
+	<bean name="companyTypeDao" class="vn.com.phuclocbao.dao.impl.DefaultCompanyTypeDao">
 	</bean>
 	<bean name="contractDao" class="vn.com.phuclocbao.dao.impl.DefaultContractDao">
 	</bean>

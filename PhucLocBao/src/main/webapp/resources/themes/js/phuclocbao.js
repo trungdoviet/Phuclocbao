@@ -885,3 +885,10 @@ function initDigitalClock(){
 		$("#hours").html(( hours < 10 ? "0" : "" ) + hours);
 	    }, 1000);
 }
+
+function cb_init(){
+	$( "#btnNewBranch" ).off( "click");
+	$( "#btnNewBranch" ).on( "click", function() {
+		$('#addCompanyBranch').modal("show");
+	});
+}

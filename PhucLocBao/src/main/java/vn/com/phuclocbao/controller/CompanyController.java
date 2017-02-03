@@ -22,6 +22,7 @@ import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.CompanyService;
 import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.validator.CompanyFinancialValidator;
+import vn.com.phuclocbao.viewbean.CompanyBranchBean;
 import vn.com.phuclocbao.viewbean.CompanyFinancialBean;
 import vn.com.phuclocbao.vo.UserActionParamVO.UserActionParamVOBuilder;
 
@@ -30,6 +31,8 @@ import vn.com.phuclocbao.vo.UserActionParamVO.UserActionParamVOBuilder;
 @Controller
 @RequestMapping("/")
 public class CompanyController extends BaseController{
+	private static final String MSG_CREATE_COMPANY_FAILED = "msg.createCompanyFailed";
+	private static final String MSG_CREATE_COMPANY_SUCCESS = "msg.createCompanySuccess";
 	private static final String MSG_UPDATE_COMPANY_FINANCIAL_SUCCESS = "msg.updateCompanyFinancialSuccess";
 	private static final String MSG_UPDATE_COMPANY_FINANCIAL_FAILED = "msg.updateCompanyFinancialFailed";
 	@Autowired
@@ -40,7 +43,7 @@ public class CompanyController extends BaseController{
 	private static org.apache.log4j.Logger logger = Logger.getLogger(CompanyController.class);
 	
 	@RequestMapping(value = { "/updateCompanyFinancial"}, params="save", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public ModelAndView createContract(HttpServletRequest request, HttpServletResponse response, 
+	public ModelAndView updateFinancial(HttpServletRequest request, HttpServletResponse response, 
 			@ModelAttribute("cfBean") @Validated CompanyFinancialBean cfBean, 
 			BindingResult result, SessionStatus status, final RedirectAttributes redirectAttributes) {
 		ModelAndView model = null;
@@ -81,6 +84,34 @@ public class CompanyController extends BaseController{
 		cfBean.setCities(VietnamCityService.loadCities());
 		cfBean.setCompany(plbSession.getCurrentCompany());
 		return cfBean;
+	}
+	
+	@RequestMapping(value = { "/addBranch"}, params="save", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView createBranch(HttpServletRequest request, HttpServletResponse response, 
+			@ModelAttribute("cbBean") CompanyBranchBean cbBean, 
+			BindingResult result, SessionStatus status, final RedirectAttributes redirectAttributes) {
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		ModelAndView model = null;
+		model = new ModelAndView(MenuDefinition.COMPANY_BRANCH.getRedirectCommand());
+		System.out.println("New name:" + cbBean.getCompany().getName() +"-id:" + cbBean.getCompany().getType().getId());
+		try {
+			
+			CompanyDto persistedDto = companyService.persist(cbBean.getCompany(), UserActionParamVOBuilder.createBuilder()
+																											.setUsername(plbSession.getUserAccount().getUsername())
+																											.setCompanyId(plbSession.getCompanyId())
+																											.setCompanyName(plbSession.getCurrentCompany().getName())
+																											.build());
+			if(persistedDto !=null){
+				showSucessAlert(redirectAttributes, MSG_CREATE_COMPANY_SUCCESS);
+			} else {
+				showErrorAlert(redirectAttributes, MSG_CREATE_COMPANY_FAILED);
+			}
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(redirectAttributes, MSG_CREATE_COMPANY_FAILED);
+		}
+		return model;
 	}
 
 }
