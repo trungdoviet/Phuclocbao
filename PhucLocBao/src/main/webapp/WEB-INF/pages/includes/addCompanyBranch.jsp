@@ -87,7 +87,8 @@
 	        
 	      </div>
 	      <div class="modal-footer">
-	      	<button type="submit" class="btn btn-primary"  id="addBranch" name="save">Tạo</button>
+	      <small>(<span class="state_alert">*</span>) là bắt buộc nhập để tiếp tục </small>
+	      	<button type="submit" disabled="disabled" class="btn btn-primary"  id="addBranch" name="save">Tạo</button>
 	        <button type="button" class="btn btn-default" data-dismiss="modal" id="branchingClose">Đóng</button>
 	      </div>
       </form:form>

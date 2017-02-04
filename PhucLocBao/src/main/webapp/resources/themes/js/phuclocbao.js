@@ -891,4 +891,22 @@ function cb_init(){
 	$( "#btnNewBranch" ).on( "click", function() {
 		$('#addCompanyBranch').modal("show");
 	});
+	$("#companyName").change(function(){
+		cb_validate();
+	});
+	$("#companyType").change(function(){
+		cb_validate();
+	});
+	$("#phoneNumber").change(function(){
+		cb_validate();
+	});
+}
+
+function cb_validate(){
+	if($("#companyName").val() != "" && $("#companyType").val() != "" 
+			&& $("#phoneNumber").val() != ""){
+		$("#addBranch").prop("disabled",false);
+	} else {
+		$("#addBranch").prop("disabled",true);
+	}
 }
