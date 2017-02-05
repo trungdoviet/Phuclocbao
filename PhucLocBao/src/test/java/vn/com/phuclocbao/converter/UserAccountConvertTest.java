@@ -25,7 +25,7 @@ public class UserAccountConvertTest {
 		assertThat(dto, is(not(nullValue())));
 		assertThat(dto.getUsername(), is(equalTo("phuclocbao")));
 		assertThat(dto.getEmail(), is(equalTo("trung@dv.com")));
-		assertThat(dto.getPassword(), is((nullValue())));
+		assertThat(dto.getPassword(), is(equalTo("111")));
 		assertThat(dto.getCompanyEntity(), is((nullValue())));
 	}
 	
@@ -36,7 +36,7 @@ public class UserAccountConvertTest {
 		assertThat(dto, is(not(nullValue())));
 		assertThat(dto.getUsername(), is(equalTo("phuclocbao")));
 		assertThat(dto.getEmail(), is(equalTo("trung@dv.com")));
-		assertThat(dto.getPassword(), is((nullValue())));
+		assertThat(dto.getPassword(), is(equalTo("111")));
 		assertThat(dto.getCompanyEntity(), is(not(nullValue())));
 		assertThat(dto.getCompanyEntity().getName(), is(equalTo("Axon Active")));
 	}

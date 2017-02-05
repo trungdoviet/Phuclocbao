@@ -173,6 +173,6 @@ INSERT INTO `c43phuclocbao`.`tblcompanytype` (`name`) VALUES ('Trụ sở chính
 INSERT INTO `c43phuclocbao`.`tblcompanytype` (`name`) VALUES ('Chi nhánh');
 INSERT INTO `c43phuclocbao`.`tblcompany` (`address`, `city`, `description`, `name`, `phoneNumber`, `companytype`) VALUES ('B64, Bạch Đằng, Tân Bình, TP.HCM', '01', 'Thế chấp xe tại tphcm', 'Phúc Lộc Bảo', '0965506248', '1');
 
-INSERT INTO `c43phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao', '123456', 'phuclocbao','Y', '1');
-INSERT INTO `c43phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao 2', '123456', 'phuclocbao2','N', '1');
+INSERT INTO `c43phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao', 'e10adc3949ba59abbe56e057f20f883e', 'plbadmin','Y', '1');
+INSERT INTO `c43phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao 2', 'e10adc3949ba59abbe56e057f20f883e', 'plbuser','N', '1');
 

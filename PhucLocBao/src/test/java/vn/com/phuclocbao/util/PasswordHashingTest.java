@@ -15,7 +15,7 @@ public class PasswordHashingTest {
 	@Test
 	public void testHashingPassword() throws BusinessException {
 		String result = null;
-		result = PasswordHashing.hashMD5("1234567");
+		result = PasswordHashing.hashMD5("123456");
 		assertThat(result, is(not(nullValue())));
 		assertThat(result.length(), is(equalTo(32)));
 		System.out.println(result.length());
