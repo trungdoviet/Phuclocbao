@@ -889,6 +889,7 @@ function initDigitalClock(){
 function cb_init(){
 	$( "#btnNewBranch" ).off( "click");
 	$( "#btnNewBranch" ).on( "click", function() {
+		 $("#newBranchForm .form-input").val("");
 		$('#addCompanyBranch').modal("show");
 	});
 	$("#companyName").change(function(){
@@ -912,8 +913,14 @@ function cb_validate(){
 }
 
 function mu_init(){
+	try{
+		$("#userForm").validate();
+	} catch(err) {
+	    console.log(err.message);
+	}
 	$( "#btnNewUser" ).off( "click");
 	$( "#btnNewUser" ).on( "click", function() {
+		 $("#userForm .form-input").val("");
 		$('#addUser').modal("show");
 	});
 }

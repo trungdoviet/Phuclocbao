@@ -21,9 +21,9 @@
 								<spring:bind path="user.username">
 									<div class="form-group ${status.error ? 'has-error' : ''}">
 										<label>Tên đăng nhập(<span class="state_alert">*</span>):</label>
-										<form:input id="username" class="form-control"
+										<form:input id="username" class="form-control form-input"
 											placeholder="vd: phuclocbao" name="username"
-											path="user.username" />
+											path="user.username" required="true" />
 										<form:errors path="user.username" cssClass="error" />
 									</div>
 								</spring:bind>
@@ -41,7 +41,7 @@
 								<spring:bind path="user.companyEntity.id">
 									<div class="form-group ${status.error ? 'has-error' : ''}">
 										<label>Thuộc công ty:</label>
-										<form:select class="form-control" id="userCompany"  
+										<form:select class="form-control form-input" id="userCompany"  required="true"
 											name="userCompany" path="user.companyEntity.id">
 											<form:option value="" label="--Chọn Công ty--" />
 											<form:options items="${muBean.companies}" itemValue="id"
@@ -56,7 +56,7 @@
 								<spring:bind path="user.fullname">
 									<div class="form-group ${status.error ? 'has-error' : ''}">
 										<label>Họ Tên(<span class="state_alert">*</span>):</label>
-										<form:input id="fullname" class="form-control"
+										<form:input id="fullname" class="form-control form-input" required="true"
 											placeholder="vd: Nguyễn Văn A" name="fullname"
 											path="user.fullname" />
 										<form:errors path="user.fullname" cssClass="error" />
@@ -67,7 +67,7 @@
 								<spring:bind path="user.password">
 									<div class="form-group ${status.error ? 'has-error' : ''}">
 										<label>Mật khẩu(<span class="state_alert">*</span>):</label>
-										<form:input id="password" class="form-control"
+										<form:input id="password" class="form-control form-input" minlength="6" required="true"
 											type="password" name="password" autocomplete="new-password"
 											path="user.password" />
 										<form:errors path="user.password" cssClass="error" />
@@ -78,7 +78,7 @@
 								<spring:bind path="user.email">
 									<div class="form-group ${status.error ? 'has-error' : ''}">
 										<label>Email:</label>
-										<form:input id="email" class="form-control"
+										<form:input id="email" class="form-control form-input" type="email"
 											placeholder="vd: someone@gmail.com" name="email"
 											path="user.email" />
 										<form:errors path="user.email" cssClass="error" />

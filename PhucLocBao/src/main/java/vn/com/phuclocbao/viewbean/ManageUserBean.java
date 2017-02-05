@@ -4,12 +4,16 @@ import java.util.List;
 
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.UserAccountDto;
+import vn.com.phuclocbao.util.ConstantVariable;
 
 public class ManageUserBean {
 	private List<UserAccountDto> users;
 	private UserAccountDto user;
 	private List<CompanyDto> companies;
-	
+	public ManageUserBean(){
+		this.user = new UserAccountDto();
+		this.user.setIsAdmin(ConstantVariable.NO_OPTION);
+	}
 	public List<UserAccountDto> getUsers() {
 		return users;
 	}

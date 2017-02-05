@@ -21,7 +21,7 @@
 								<spring:bind path="company.name">
 									<div class="form-group ${status.error ? 'has-error' : ''}">
 										<label>Tên chi nhánh(<span class="state_alert">*</span>):</label>
-										<form:input id="companyName" class="form-control"
+										<form:input id="companyName" class="form-control form-input"
 											placeholder="vd: Phúc Lộc Bảo Sài Gòn" name="companyName"
 											path="company.name" />
 										<form:errors path="company.name" cssClass="error" />
@@ -32,7 +32,7 @@
 								<spring:bind path="company.type.id">
 									<div class="form-group ${status.error ? 'has-error' : ''}">
 										<label>Loại hình(<span class="state_alert">*</span>):</label>
-										<form:select class="form-control" id="companyType"  
+										<form:select class="form-control form-input" id="companyType"  
 											name="companyType" path="company.type.id">
 											<form:option value="" label="--Chọn Loại hình công ty--" />
 											<form:options items="${cbBean.availableCompanyTypes}" itemValue="id"
@@ -46,7 +46,7 @@
 								<spring:bind path="company.phoneNumber">
 									<div class="form-group ${status.error ? 'has-error' : ''}">
 										<label>Số ĐT(<span class="state_alert">*</span>):</label>
-										<form:input id="phoneNumber" class="form-control"
+										<form:input id="phoneNumber" class="form-control form-input"
 											placeholder="vd: 099 0099009" name="phoneNumber"
 											path="company.phoneNumber" />
 										<form:errors path="company.phoneNumber" cssClass="error" />
@@ -57,7 +57,7 @@
 								<spring:bind path="company.address">
 									<div class="form-group ${status.error ? 'has-error' : ''}">
 										<label>Địa chỉ:</label>
-										<form:textarea id="companyAddress" class="form-control"
+										<form:textarea id="companyAddress" class="form-control form-input"
 											placeholder="vd: B64 Bạch Đằng" rows="6" name="companyAddress"
 											path="company.address" />
 										<form:errors path="company.address" cssClass="error" />
@@ -68,7 +68,7 @@
 								<spring:bind path="company.city">
 									<div class="form-group ${status.error ? 'has-error' : ''}">
 										<label>Tỉnh/Thành phố:</label>
-										<form:select class="form-control" id="companyCity"  
+										<form:select class="form-control form-input" id="companyCity"  
 											name="companyCity" path="company.city">
 											<form:option value="" label="--Chọn Tỉnh/TP--" />
 											<form:options items="${cbBean.cities}" itemValue="code"

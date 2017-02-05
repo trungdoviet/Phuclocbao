@@ -83,8 +83,9 @@
 		</div>
 	</div>
 	<jsp:include page="includes/addUser.jsp"></jsp:include>
+	
 </div>
-
+<script src="<c:url value='/resources/js/jquery.validate.min.js' />"><!-- comment --></script>
 <script type="text/javascript">
 $( document ).ready(function() {
 	hideAlert("muAlert");
