@@ -1,20 +1,23 @@
 package vn.com.phuclocbao.service.impl;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import vn.com.phuclocbao.converter.UserAccountConverter;
+import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.dao.PersistenceExecutable;
 import vn.com.phuclocbao.dao.UserDao;
 import vn.com.phuclocbao.dto.UserAccountDto;
+import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.entity.UserAccount;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
@@ -25,6 +28,16 @@ import vn.com.phuclocbao.util.PasswordHashing;
 public class DefaultUserService extends BaseService implements UserService {
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private CompanyDao companyDao;
+	private static org.apache.log4j.Logger logger = Logger.getLogger(DefaultUserService.class);
+	public CompanyDao getCompanyDao() {
+		return companyDao;
+	}
+
+	public void setCompanyDao(CompanyDao companyDao) {
+		this.companyDao = companyDao;
+	}
 
 	public UserDao getUserDao()
 	{
@@ -79,6 +92,36 @@ public class DefaultUserService extends BaseService implements UserService {
 	@Override
 	public EntityManager getEm() {
 		return manager;
+	}
+
+	@Override
+	public List<UserAccountDto> findAll() throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<List<UserAccountDto>>() {
+			@Override
+			public List<UserAccountDto> execute() throws BusinessException, ClassNotFoundException, IOException {
+				List<UserAccount> users= userDao.findAll();
+				return UserAccountConverter.getInstance().toDtosExtra(users);
+			}
+		});
+	}
+
+	@Transactional
+	@Override
+	public boolean addNewUser(UserAccountDto dto) throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<Boolean>() {
+			@Override
+			public Boolean execute() throws BusinessException, ClassNotFoundException, IOException {
+				UserAccount entity = UserAccountConverter.getInstance().toNewEntity(dto);
+				CompanyEntity company = companyDao.findById(dto.getCompanyEntity().getId());
+				if(entity == null || company == null){
+					logger.error("Can not convert user or not find company with id " + dto.getCompanyEntity().getId());
+					throw new BusinessException(PLBErrorCode.OBJECT_NOT_FOUND.name());
+				}
+				company.getUserAccounts().add(entity);
+				entity.setCompanyEntity(company);
+				return userDao.persist(entity) != null;
+			}
+		});
 	}
 
 }

@@ -31,6 +31,7 @@ import vn.com.phuclocbao.service.CompanyTypeService;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.service.PaymentHistoryService;
 import vn.com.phuclocbao.service.UserHistoryService;
+import vn.com.phuclocbao.service.UserService;
 import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.viewbean.CompanyBranchBean;
@@ -38,6 +39,7 @@ import vn.com.phuclocbao.viewbean.CompanyFinancialBean;
 import vn.com.phuclocbao.viewbean.ContractBean;
 import vn.com.phuclocbao.viewbean.GeneralView;
 import vn.com.phuclocbao.viewbean.ManageContractBean;
+import vn.com.phuclocbao.viewbean.ManageUserBean;
 import vn.com.phuclocbao.viewbean.NotificationPage;
 import vn.com.phuclocbao.viewbean.PaymentHistoryView;
 import vn.com.phuclocbao.viewbean.UserActionHistoryView;
@@ -68,6 +70,8 @@ public class NavigationController extends BaseController {
 	
 	@Autowired
 	UserHistoryService userHistoryService;
+	@Autowired
+	private UserService userService;
 	
 	@RequestMapping(value = { "/home"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView productsPage(HttpServletRequest request, HttpServletResponse response, GeneralView gv) {
@@ -292,11 +296,24 @@ public class NavigationController extends BaseController {
 	}
 	
 	@RequestMapping(value = { "/mngUser"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public ModelAndView openManageUser(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView openManageUser(HttpServletRequest request, HttpServletResponse response, ManageUserBean muBean) {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.MANAGE_USER);
 		ModelAndView model = new ModelAndView(MenuDefinition.MANAGE_USER.getName());
-		
+		if(muBean == null){
+			muBean = new ManageUserBean();
+		}
+		try {
+			List<UserAccountDto> users = userService.findAll();
+			muBean.setUsers(users);
+			List<CompanyDto> companies = companyService.findAll();
+			muBean.setCompanies(companies);
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
+		}
+		model.addObject("muBean", muBean);
 		return model;
 	}
 	

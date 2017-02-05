@@ -910,3 +910,10 @@ function cb_validate(){
 		$("#addBranch").prop("disabled",true);
 	}
 }
+
+function mu_init(){
+	$( "#btnNewUser" ).off( "click");
+	$( "#btnNewUser" ).on( "click", function() {
+		$('#addUser').modal("show");
+	});
+}

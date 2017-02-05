@@ -17,9 +17,77 @@
 			<strong>${msg}</strong>
 		</div>
 	</c:if>
+	<!-- Table -->
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="pull-right">
+								<button id="btnNewUser" type="button" class="btn btn-primary" name="new">
+									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+									Tạo tài khoản
+								</button>
+								
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<table data-toggle="table" data-pagination="true" >
+							    <thead>
+							    <tr>
+							        <th data-field="username" data-sortable="true">Tài khoản</th>
+							        <th data-field="fullname" data-sortable="true">Họ tên</th>
+							        <th data-field="email" data-sortable="true">Email</th>
+							        <th data-field="isAdmin" >Quyền hạn</th>
+							        <th data-field="companyEntity">Công ty</th>
+							        <th >Thao tác</th>
+							    </tr>
+							    </thead>
+							    <tbody>
+							    	<c:forEach var="user" items="${muBean.users}">
+								    	<tr>
+								    		<td>
+								    			${user.username}
+								    		</td>
+											<td>
+												${user.fullname}
+											</td>
+											<td>
+												${user.email}
+											</td>
+											<td >
+												<c:if test="${user.isAdmin == 'Y' }">
+													<span class="label label-success">Admin</span>
+												</c:if>
+												<c:if test="${user.isAdmin != 'Y' }">
+													<span class="label label-info">Thường</span>
+												</c:if>
+											</td>
+											<td  >
+												${user.companyEntity.name}
+											</td>
+											<td>
+												
+											</td>
+								    	</tr>
+							    	</c:forEach>
+							    </tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<jsp:include page="includes/addUser.jsp"></jsp:include>
 </div>
+
 <script type="text/javascript">
 $( document ).ready(function() {
 	hideAlert("muAlert");
+	mu_init();
 });
 </script>
