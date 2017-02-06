@@ -14,4 +14,5 @@ public interface UserDao
 		public UserAccount getUserByUsername(String username) throws PersistenceException;
 		public List<UserAccount> findAll() throws BusinessException;
 		public UserAccount persist(UserAccount ua) throws BusinessException;
+		public boolean isUserExist(String username) throws BusinessException;
 }

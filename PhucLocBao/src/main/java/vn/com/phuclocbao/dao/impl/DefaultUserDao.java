@@ -1,6 +1,5 @@
 package vn.com.phuclocbao.dao.impl;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -15,10 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import vn.com.phuclocbao.dao.BaseDaoJpaImpl;
 import vn.com.phuclocbao.dao.UserDao;
-import vn.com.phuclocbao.dto.UserAccountDto;
 import vn.com.phuclocbao.entity.UserAccount;
 import vn.com.phuclocbao.exception.BusinessException;
-import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.util.PasswordHashing;
 @Repository
 @Transactional
@@ -57,6 +54,18 @@ public class DefaultUserDao extends BaseDaoJpaImpl<UserAccount, Long> implements
 				return query.getSingleResult();
 			}
 			return null;
+		}
+
+
+		@Override
+		public boolean isUserExist(String username) throws BusinessException {
+			if(StringUtils.isNotEmpty(username)){
+				TypedQuery<UserAccount> query = getEm().createNamedQuery("getUserByUsername", UserAccount.class);
+				query.setParameter("username", username);
+				List<UserAccount> users = query.getResultList();
+				return CollectionUtils.isNotEmpty(users);
+			}
+			return false;
 		}
 
 }

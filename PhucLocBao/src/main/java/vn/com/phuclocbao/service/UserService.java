@@ -12,4 +12,5 @@ public interface UserService {
 	public UserAccountDto saveUser(UserAccountDto entity) throws BusinessException;
 	public List<UserAccountDto> findAll() throws BusinessException;
 	public boolean addNewUser(UserAccountDto dto) throws BusinessException;
+	public boolean isUserExist(String username) throws BusinessException;
 }

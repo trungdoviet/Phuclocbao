@@ -27,6 +27,7 @@
 										<form:errors path="user.username" cssClass="error" />
 									</div>
 								</spring:bind>
+								<label id="userCheckingMessage"></label>
 							</div>
 							<div class="col-md-12">
 								<spring:bind path="user.isAdmin">

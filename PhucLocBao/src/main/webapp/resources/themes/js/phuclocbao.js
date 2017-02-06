@@ -921,6 +921,44 @@ function mu_init(){
 	$( "#btnNewUser" ).off( "click");
 	$( "#btnNewUser" ).on( "click", function() {
 		 $("#userForm .form-input").val("");
+		 $("#userCheckingMessage").text("");
 		$('#addUser').modal("show");
+	});
+	$("#username").change(function(){
+		var search = {}
+		search["username"] = $("#username").val();
+		$.ajax({
+			type : "POST",
+			contentType : "application/json",
+			url : "search/getUser",
+			data : JSON.stringify(search),
+			dataType : 'json',
+			timeout : 100000,
+			success : function(data) {
+				if(data.code == "200" && data.isExist == false){
+					$("#addUser").prop("disabled",false);
+					$("#userCheckingMessage").removeClass("state_alert");
+					$("#userCheckingMessage").removeClass("state_good");
+					$("#userCheckingMessage").addClass("state_good");
+				} else {
+					$("#addUser").prop("disabled",true);
+					$("#userCheckingMessage").removeClass("state_alert");
+					$("#userCheckingMessage").removeClass("state_good");
+					$("#userCheckingMessage").addClass("state_alert");
+				}
+				$("#userCheckingMessage").text(data.msg);
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+				$("#addUser").prop("disabled",true);
+				$("#userCheckingMessage").removeClass("state_alert");
+				$("#userCheckingMessage").removeClass("state_good");
+				$("#userCheckingMessage").addClass("state_alert");
+				$("#userCheckingMessage").text("Javascript error");
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
+		});
 	});
 }

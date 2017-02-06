@@ -111,6 +111,9 @@ public class DefaultUserService extends BaseService implements UserService {
 		return methodWrapper(new PersistenceExecutable<Boolean>() {
 			@Override
 			public Boolean execute() throws BusinessException, ClassNotFoundException, IOException {
+				if(userDao.isUserExist(dto.getUsername())){
+					throw new BusinessException(PLBErrorCode.OBJECT_ALREADY_EXIST.name());
+				}
 				UserAccount entity = UserAccountConverter.getInstance().toNewEntity(dto);
 				CompanyEntity company = companyDao.findById(dto.getCompanyEntity().getId());
 				if(entity == null || company == null){
@@ -120,6 +123,16 @@ public class DefaultUserService extends BaseService implements UserService {
 				company.getUserAccounts().add(entity);
 				entity.setCompanyEntity(company);
 				return userDao.persist(entity) != null;
+			}
+		});
+	}
+
+	@Override
+	public boolean isUserExist(String username) throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<Boolean>() {
+			@Override
+			public Boolean execute() throws BusinessException, ClassNotFoundException, IOException {
+				return userDao.isUserExist(username);
 			}
 		});
 	}

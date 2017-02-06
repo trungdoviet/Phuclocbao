@@ -46,7 +46,6 @@ public class ContractAjaxController {
 		
 		ContractResponseBody result = new ContractResponseBody();
 		if (isValidSearchCriteria(search)) {
-			logger.info("Search name: "+search.getCustomerId());
 			try {
 				List<CustomerDto> dtos = customerService.getCustomersByIdNo(search.getCustomerId());
 				result = customerService.buildContractResponse(dtos);
@@ -70,7 +69,6 @@ public class ContractAjaxController {
 		
 		ContractDetailResponseBody result = new ContractDetailResponseBody();
 		if (search != null && StringUtils.isNotEmpty(search.getContractId())) {
-			logger.info("Search contract id: "+search.getContractId());
 			try {
 				ContractView contractView = contractService.findContractById(Integer.parseInt(search.getContractId()));
 				result.setContract(contractView);
