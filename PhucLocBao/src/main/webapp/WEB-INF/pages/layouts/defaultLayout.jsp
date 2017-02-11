@@ -24,11 +24,11 @@
 </head>
  
 <body>
-		<header id="header">
-			<tiles:insertAttribute name="header" />
+		<header id="header" class="noprint">
+			<tiles:insertAttribute name="header"  />
 		</header>
 	
-		<section id="sidemenu">
+		<section id="sidemenu" class="noprint">
 			<tiles:insertAttribute name="menu" />
 		</section>
 			
@@ -36,14 +36,14 @@
 			<tiles:insertAttribute name="body" />
 		</section>
 		
-		<footer id="footer">
+		<footer id="footer" class="noprint">
 			<tiles:insertAttribute name="footer" />
 		</footer>
 		
 		<script src="<c:url value='/resources/js/bootstrap.min.js' />"><!-- comment --></script>
 	 	<script src="<c:url value='/resources/js/inputmask/inputmask.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/inputmask/inputmask.numeric.extensions.js' />"><!-- comment --></script>
-		<script src="<c:url value='/resources/js/inputmask/inputmask.regex.extensions.js' />"><!-- comment --></script> --%>
+		<script src="<c:url value='/resources/js/inputmask/inputmask.regex.extensions.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/inputmask/jquery.inputmask.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/bootstrap-datepicker.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/date.js' />"><!-- comment --></script>

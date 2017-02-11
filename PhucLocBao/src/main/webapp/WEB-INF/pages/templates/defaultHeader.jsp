@@ -1,7 +1,7 @@
 <%@ page import="vn.com.phuclocbao.bean.PLBSession" %>
 <%@ page import="vn.com.phuclocbao.dto.UserAccountDto" %>
 
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-inverse navbar-fixed-top noprint" role="navigation">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
@@ -39,7 +39,7 @@
 							
 		</div><!-- /.container-fluid -->
 	</nav>
-<div class="modal fade" id="errorModal" tabindex="-1" role="dialog">
+<div class="modal fade noprint" id="errorModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">

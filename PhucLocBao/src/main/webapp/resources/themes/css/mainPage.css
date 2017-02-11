@@ -295,3 +295,39 @@ a.mute-link-style:hover {
 .normal-text-weight{
 	font-weight:normal
 }
+@media print
+{
+	@page {size: landscape}
+	.noprint {display:none !important;}
+	.panel-default .panel-heading{
+	    border-bottom:none !important;
+	}
+	.fixed-table-container table{
+		width: 100% !important;
+	}
+
+	.fixed-table-pagination {
+		display:none;
+	}
+	table tbody td{
+		 word-wrap: break-word;
+		 word-break: break-all;
+	}
+	.notification-table .customer-phone{
+		width:5%;
+	
+	}
+	.col-lg-offset-2 {
+		    margin-left: 0 !important;
+		}
+	.phuclocbao .notification-table .fixed-table-body{
+		height:auto !important;
+		width: 100%;
+	}
+
+	.fixed-table-body {
+	 	overflow-x: hidden !important;
+	    overflow-y: hidden !important;
+	    height: 100%;
+	}
+}

@@ -1,6 +1,6 @@
 <%@ page import="vn.com.phuclocbao.bean.PLBSession" %>
 <%@include file="../includes/jstl.jsp"%>
-<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar noprint">
 		<form role="search">
 			<div class="form-group">
 				<!-- <input type="text" class="form-control" placeholder="Search"> -->
