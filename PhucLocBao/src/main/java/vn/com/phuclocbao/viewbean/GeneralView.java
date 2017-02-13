@@ -1,10 +1,14 @@
 package vn.com.phuclocbao.viewbean;
 
+import vn.com.phuclocbao.bean.StatisticInfo;
+
 public class GeneralView {
 	private Long totalNotification;
 	private Long totalContractOfCompany;
 	private Long totalInProgressContract;
 	private Long totalBadContract;
+	private StatisticInfo statistic;
+	
 	public Long getTotalNotification() {
 		return totalNotification;
 	}
@@ -28,5 +32,11 @@ public class GeneralView {
 	}
 	public void setTotalBadContract(Long totalBadContract) {
 		this.totalBadContract = totalBadContract;
+	}
+	public StatisticInfo getStatistic() {
+		return statistic;
+	}
+	public void setStatistic(StatisticInfo statistic) {
+		this.statistic = statistic;
 	}
 }

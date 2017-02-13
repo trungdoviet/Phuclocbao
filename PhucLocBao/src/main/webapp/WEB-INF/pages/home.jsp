@@ -77,9 +77,33 @@
 				</div>
 			</div>
 		</div><!--/.row-->
+		<div class="row">
+			<div class="col-lg-8">
+				<div class="panel panel-default">
+					<div class="panel-heading">Bar Chart</div>
+					<div class="panel-body">
+						<div class="canvas-wrapper">
+							<canvas class="main-chart" id="bar-chart" height="200" width="600"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<iframe id="fr31" style="border: none;" src="//www.tygia.com/api.php?cols=1&amp;title=0&amp;chart=1&amp;gold=1&amp;rate=0&amp;expand=0&amp;color=FFFFFF&amp;titlecolor=333333&amp;nganhang=VIETCOM&amp;fontsize=80&amp;change=1&amp;css=%23SJC_N_ng{display:%20table-row%20!important;}" width="100%" height="370"></iframe>
+			</div>
+			
+		</div>
 <script type="text/javascript">
 $( document ).ready(function() {
 	hideAlert("homeAlert");
+	onLoadChart();
 });
+var profitByMonth = ${generalView.statistic.profitByMonth};
+var costByMonth = ${generalView.statistic.rentingCostByMonth}
 </script>
+
 </div>
+<script src="<c:url value='/resources/js/chart.min.js' />"><!-- comment --></script>
+<script src="<c:url value='/resources/js/chart-data.js' />"><!-- comment --></script>
+<script src="<c:url value='/resources/js/easypiechart.js' />"><!-- comment --></script>
+<script src="<c:url value='/resources/js/easypiechart-data.js' />"><!-- comment --></script>

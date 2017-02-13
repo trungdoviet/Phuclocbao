@@ -4,6 +4,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 import vn.com.phuclocbao.entity.base.IBaseEntity;
+import vn.com.phuclocbao.util.DateTimeUtil;
 
 /**
  */
@@ -33,7 +34,9 @@ public class PaymentHistory implements IBaseEntity {
 	private java.lang.String detail;
 	private Integer companyId;
 	private Integer contractId;
-	
+	public Integer getLogMonth(){
+		return DateTimeUtil.getMonthOfDate(logDate);
+	}
 	
 	public Integer getContractId() {
 		return contractId;

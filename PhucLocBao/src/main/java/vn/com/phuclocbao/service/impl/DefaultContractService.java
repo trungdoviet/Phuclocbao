@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import vn.com.phuclocbao.bean.StatisticInfo;
 import vn.com.phuclocbao.converter.ContractConverter;
 import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.dao.ContractDao;
@@ -522,10 +525,42 @@ public class DefaultContractService extends BaseService implements ContractServi
 				view.setTotalContractOfCompany(totalContract);
 				view.setTotalInProgressContract(totalInProgressContract);
 				view.setTotalNotification(totalNotificationToDay);
+				view.setStatistic(new StatisticInfo());
+				int currentYear = view.getStatistic().getYear();
+				List<PaymentHistory> payments =paymentHistoryDao.getHistoriesInDateRange(companyId, DateTimeUtil.getFirstDateOfYear(currentYear), DateTimeUtil.getLastDateOfYear(currentYear));
+				if(CollectionUtils.isNotEmpty(payments)){
+							payments.stream()
+										.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.RENTING_NEW_MOTOBIKE.getType()))
+										.collect(Collectors.groupingBy(
+											PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getRentingAmount)	
+										)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
+									System.out.println(item.getKey() +"-V:" + item.getValue());
+									view.getStatistic().getRentingCostByMonth().set(item.getKey(), item.getValue());
+							});
+							
+							payments.stream()
+								.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.PAYOFF.getType()) )
+								.collect(Collectors.groupingBy(
+										PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getPayoff)	
+							)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
+								view.getStatistic().getProfitByMonth().set(item.getKey(), item.getValue());
+						});
+							
+						payments.stream()
+							.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.RENTING_COST.getType()) )
+							.collect(Collectors.groupingBy(
+									PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getFee)	
+						)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
+							Double totalValue = view.getStatistic().getRentingCostByMonth().get(item.getKey()) + item.getValue();
+							view.getStatistic().getProfitByMonth().set(item.getKey(), totalValue);
+					});
+					
+				}
 				return view;
 			}
 		});
 	}
+	
 	@Override
 	public int updateBadContract(Integer companyId) throws BusinessException {
 		return methodWrapper(new PersistenceExecutable<Integer>() {
