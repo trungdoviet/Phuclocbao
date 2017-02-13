@@ -84,7 +84,7 @@
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-lg-8">
-								Thống kê Thu chi <small>(triệu đồng)</small> <div class="profit-by-month"></div> <small>thu</small> <div class="cost-by-month"></div> <small>chi</small>
+								Thống kê thu chi <small>(triệu đồng)</small> <div class="profit-by-month"></div> <small>thu</small> <div class="cost-by-month"></div> <small>chi</small>
 							</div> 
 							<div class="col-lg-4">
 								<div class="pull-right" >
