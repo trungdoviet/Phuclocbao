@@ -962,3 +962,35 @@ function mu_init(){
 		});
 	});
 }
+
+function home_init(){
+	$("#availableYears").change(function(){
+		var search = {}
+		search["year"] = $("#availableYears").val();
+		$.ajax({
+			type : "POST",
+			contentType : "application/json",
+			url : "search/profitByYear",
+			data : JSON.stringify(search),
+			dataType : 'json',
+			timeout : 100000,
+			success : function(data) {
+				console.log(data);
+				if(data.code == "200" && barChartData.datasets.length == 2){
+					barChartData.datasets[0].data = data.statistic.profitByMonth;
+					barChartData.datasets[1].data = data.statistic.rentingCostByMonth;
+					onLoadChart();
+				} else {
+					
+				}
+				
+			},
+			error : function(e) {
+				
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
+		});
+	});
+}

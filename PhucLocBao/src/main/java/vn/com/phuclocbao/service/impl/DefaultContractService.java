@@ -527,40 +527,64 @@ public class DefaultContractService extends BaseService implements ContractServi
 				view.setTotalNotification(totalNotificationToDay);
 				view.setStatistic(new StatisticInfo());
 				int currentYear = view.getStatistic().getYear();
-				List<PaymentHistory> payments =paymentHistoryDao.getHistoriesInDateRange(companyId, DateTimeUtil.getFirstDateOfYear(currentYear), DateTimeUtil.getLastDateOfYear(currentYear));
-				if(CollectionUtils.isNotEmpty(payments)){
-							payments.stream()
-										.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.RENTING_NEW_MOTOBIKE.getType()))
-										.collect(Collectors.groupingBy(
-											PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getRentingAmount)	
-										)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
-									System.out.println(item.getKey() +"-V:" + item.getValue());
-									view.getStatistic().getRentingCostByMonth().set(item.getKey(), item.getValue());
-							});
-							
-							payments.stream()
-								.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.PAYOFF.getType()) )
-								.collect(Collectors.groupingBy(
-										PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getPayoff)	
-							)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
-								view.getStatistic().getProfitByMonth().set(item.getKey(), item.getValue());
-						});
-							
-						payments.stream()
-							.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.RENTING_COST.getType()) )
-							.collect(Collectors.groupingBy(
-									PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getFee)	
-						)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
-							Double totalValue = view.getStatistic().getRentingCostByMonth().get(item.getKey()) + item.getValue();
-							view.getStatistic().getProfitByMonth().set(item.getKey(), totalValue);
-					});
-					
-				}
+				buildProfitStatistic(companyId, view.getStatistic(), currentYear);
 				return view;
 			}
+
+			
 		});
 	}
-	
+	private StatisticInfo buildProfitStatistic(Integer companyId, StatisticInfo statistic, int currentYear)
+			throws BusinessException {
+		List<PaymentHistory> payments =paymentHistoryDao.getHistoriesInDateRange(companyId, DateTimeUtil.getFirstDateOfYear(currentYear), DateTimeUtil.getLastDateOfYear(currentYear));
+		if(CollectionUtils.isNotEmpty(payments)){
+					payments.stream()
+								.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.RENTING_NEW_MOTOBIKE.getType()))
+								.collect(Collectors.groupingBy(
+									PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getRentingAmount)	
+								)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
+							statistic.getRentingCostByMonth().set(item.getKey(), item.getValue());
+					});
+					
+					payments.stream()
+						.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.PAYOFF.getType()) )
+						.collect(Collectors.groupingBy(
+								PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getPayoff)	
+					)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
+						statistic.getProfitByMonth().set(item.getKey(), item.getValue());
+				});
+					
+				payments.stream()
+					.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.RENTING_COST.getType()) )
+					.collect(Collectors.groupingBy(
+							PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getFee)	
+				)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
+					Double totalValue = statistic.getProfitByMonth().get(item.getKey()) + item.getValue();
+					statistic.getProfitByMonth().set(item.getKey(), totalValue);
+			});
+				
+				 List<Double> effectiveRentingCost = statistic.getRentingCostByMonth().stream().map(item -> item /1000000).collect(Collectors.toList());
+				 List<Double> effectiveProfitCost = statistic.getProfitByMonth().stream().map(item -> item /1000000).collect(Collectors.toList());
+				 statistic.setRentingCostByMonth(effectiveRentingCost);
+				 statistic.setProfitByMonth(effectiveProfitCost);
+		}
+		return statistic;
+	}
+	@Override
+	public StatisticInfo collectProfitStatistic(Integer companyId, int year) throws BusinessException {
+
+		return  methodWrapper(new PersistenceExecutable<StatisticInfo>() {
+
+			@Override
+			public StatisticInfo execute() throws BusinessException, ClassNotFoundException, IOException {
+				StatisticInfo statistic = new StatisticInfo();
+				statistic.setYear(year);
+				statistic = buildProfitStatistic(companyId, statistic, year);
+				return statistic;
+			}
+			
+		});
+	}
 	@Override
 	public int updateBadContract(Integer companyId) throws BusinessException {
 		return methodWrapper(new PersistenceExecutable<Integer>() {
@@ -571,5 +595,6 @@ public class DefaultContractService extends BaseService implements ContractServi
 			}
 		});
 	}
+
 	
 }

@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@include file="includes/jstl.jsp"%>
 <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">	
 <div class="row">
@@ -80,8 +81,26 @@
 		<div class="row">
 			<div class="col-lg-8">
 				<div class="panel panel-default">
-					<div class="panel-heading">Bar Chart</div>
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-lg-8">
+								Thống kê Thu chi <small>(triệu đồng)</small> <div class="profit-by-month"></div> <small>thu</small> <div class="cost-by-month"></div> <small>chi</small>
+							</div> 
+							<div class="col-lg-4">
+								<div class="pull-right" >
+									<div style="display: inline-block;">Năm</div>
+									<select class="form-control" id="availableYears" style="width:85px;display: inline-block;"  
+										name="availableYears" >
+										<c:forEach items="${generalView.statistic.years}" var="year">
+											<option value="${year}">${year}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="panel-body">
+						
 						<div class="canvas-wrapper">
 							<canvas class="main-chart" id="bar-chart" height="200" width="600"></canvas>
 						</div>
@@ -97,6 +116,7 @@
 $( document ).ready(function() {
 	hideAlert("homeAlert");
 	onLoadChart();
+	home_init();
 });
 var profitByMonth = ${generalView.statistic.profitByMonth};
 var costByMonth = ${generalView.statistic.rentingCostByMonth}

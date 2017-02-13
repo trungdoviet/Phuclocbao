@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 public class StatisticInfo {
 	private Integer minYear = 2005;
 	public StatisticInfo(){
@@ -30,8 +32,9 @@ public class StatisticInfo {
 	
 	private List<Integer> years;
 	private Integer year;
+	@JsonView(Views.ProfitStatistic.class)
 	private List<Double> profitByMonth;
-	
+	@JsonView(Views.ProfitStatistic.class)
 	private List<Double> rentingCostByMonth;
 	
 	public Integer getYear() {

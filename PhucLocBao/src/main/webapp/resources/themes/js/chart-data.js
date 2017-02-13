@@ -1,6 +1,6 @@
 var randomScalingFactor = function(){ return Math.round(Math.random()*1000)};
 	
-	var lineChartData = {
+	/*var lineChartData = {
 			labels : ["January","February","March","April","May","June","July"],
 			datasets : [
 				{
@@ -25,30 +25,31 @@ var randomScalingFactor = function(){ return Math.round(Math.random()*1000)};
 				}
 			]
 
-		}
+		}*/
 		
 	var barChartData = {
 			labels : ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
 			datasets : [
 				{
-					fillColor : "rgba(220,220,220,0.5)",
-					strokeColor : "rgba(220,220,220,0.8)",
-					highlightFill: "rgba(220,220,220,0.75)",
-					highlightStroke: "rgba(220,220,220,1)",
-					data : profitByMonth
-				},
-				{
 					fillColor : "rgba(48, 164, 255, 0.2)",
 					strokeColor : "rgba(48, 164, 255, 0.8)",
 					highlightFill : "rgba(48, 164, 255, 0.75)",
 					highlightStroke : "rgba(48, 164, 255, 1)",
+					data : profitByMonth
+				},
+				{
+					fillColor : "rgba(228, 163, 58, 0.2)",
+					strokeColor : "rgba(228, 163, 58, 0.8)",
+					highlightFill: "rgba(228, 163, 58,0.75)",
+					highlightStroke: "rgba(228, 163, 58,1)",
+					
 					data : costByMonth
 				}
 			]
 	
 		}
 
-	var pieData = [
+	/*var pieData = [
 				{
 					value: 300,
 					color:"#30a5ff",
@@ -102,7 +103,7 @@ var randomScalingFactor = function(){ return Math.round(Math.random()*1000)};
 						label: "Red"
 					}
 	
-				];
+				];*/
 
 function onLoadChart(){
 	/*var chart1 = document.getElementById("line-chart").getContext("2d");

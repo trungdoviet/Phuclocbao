@@ -4,4 +4,5 @@ public class Views {
     
     public static class Contract {}
     public static class User {}
+    public static class ProfitStatistic {}
 }

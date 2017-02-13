@@ -331,3 +331,20 @@ a.mute-link-style:hover {
 	    height: 100%;
 	}
 }
+
+.profit-by-month{
+	display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: solid 1px rgba(48, 164, 255, 0.8);
+    background-color: rgba(48, 164, 255, 0.2);
+}
+
+.cost-by-month{
+	margin-left:5px;
+	display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: solid 1px rgba(228, 163, 58,0.8);
+    background-color: rgba(228, 163, 58,0.5);
+}
