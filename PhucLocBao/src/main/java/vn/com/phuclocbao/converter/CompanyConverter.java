@@ -8,6 +8,7 @@ import org.apache.commons.collections.CollectionUtils;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.CompanyTypeDto;
 import vn.com.phuclocbao.entity.CompanyEntity;
+import vn.com.phuclocbao.enums.CompanyState;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.util.LambdaExceptionUtil;
 
@@ -56,7 +57,7 @@ public class CompanyConverter extends BaseConverter<CompanyDto, CompanyEntity>{
 	}
 	public CompanyEntity toNewEntity(CompanyDto dto) throws BusinessException{
 		CompanyEntity entity = this.toEntity(dto, new CompanyEntity(),"id");
-		
+		entity.setState(CompanyState.ACTIVE.getName());
 		return entity;
 	}
 }

@@ -41,10 +41,18 @@ public class CompanyDto implements IBaseDTO {
 	private java.lang.Double totalFund;
 	private String cityInString;
 	private String userAccountsInString;
-	
+	 private java.lang.String state;
 
 	public String getCityInString() {
 		return cityInString;
+	}
+
+	public java.lang.String getState() {
+		return state;
+	}
+
+	public void setState(java.lang.String state) {
+		this.state = state;
 	}
 
 	public void setCityInString(String cityInString) {

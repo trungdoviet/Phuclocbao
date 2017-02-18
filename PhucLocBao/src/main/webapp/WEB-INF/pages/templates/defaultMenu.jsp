@@ -32,16 +32,18 @@
 								<svg class="glyph stroked chevron-right"><use xlink:href="#stroked-chevron-right"></use></svg> Quản lý Tài chính
 							</a>
 						</li>
-						<li class="<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("companyBranch")%>">
-							<a  href="${pageContext.request.contextPath}/companyBranch">
-								<svg class="glyph stroked chevron-right"><use xlink:href="#stroked-chevron-right"></use></svg> Quản lý chi nhánh
-							</a>
-						</li>
-						<li class="<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("mngUser")%>">
-							<a  href="${pageContext.request.contextPath}/mngUser">
-								<svg class="glyph stroked chevron-right"><use xlink:href="#stroked-chevron-right"></use></svg> Quản lý Tài khoản
-							</a>
-						</li>
+						<c:if test="${sessionScope.isHeadOffice == 'Y'}">
+							<li class="<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("companyBranch")%>">
+								<a  href="${pageContext.request.contextPath}/companyBranch">
+									<svg class="glyph stroked chevron-right"><use xlink:href="#stroked-chevron-right"></use></svg> Quản lý chi nhánh
+								</a>
+							</li>
+							<li class="<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("mngUser")%>">
+								<a  href="${pageContext.request.contextPath}/mngUser">
+									<svg class="glyph stroked chevron-right"><use xlink:href="#stroked-chevron-right"></use></svg> Quản lý Tài khoản
+								</a>
+							</li>
+						</c:if>
 					</ul>
 				</c:if>
 			</li>

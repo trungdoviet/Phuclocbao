@@ -32,13 +32,24 @@ public class UserAccount implements IBaseEntity {
   private java.lang.String email;
   @javax.persistence.ManyToOne(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER)
   private vn.com.phuclocbao.entity.CompanyEntity companyEntity;
-  
+  @javax.persistence.Column(length=45)
+  private java.lang.String state;
   
   public String getIsAdmin() {
 	return isAdmin;
   }
 	
-  public void setIsAdmin(String isAdmin) {
+  public java.lang.String getState() {
+	return state;
+}
+
+
+public void setState(java.lang.String state) {
+	this.state = state;
+}
+
+
+public void setIsAdmin(String isAdmin) {
 	this.isAdmin = isAdmin;
   }
 

@@ -12,8 +12,18 @@ public class UserAccountDto implements IBaseDTO{
 	   */
 	  private java.lang.Integer id;
 	  private String isAdmin;
+	  private java.lang.String state;
+	  
+	  
+	  public java.lang.String getState() {
+		return state;
+	}
 
-	  public String getIsAdmin() {
+	public void setState(java.lang.String state) {
+		this.state = state;
+	}
+
+	public String getIsAdmin() {
 		return isAdmin;
 	  }
 		

@@ -11,8 +11,10 @@ import org.apache.commons.collections.MapUtils;
 
 import vn.com.phuclocbao.bean.UserCompanyGrouping;
 import vn.com.phuclocbao.dto.CompanyDto;
+import vn.com.phuclocbao.dto.CompanyTypeDto;
 import vn.com.phuclocbao.dto.UserAccountDto;
 import vn.com.phuclocbao.entity.UserAccount;
+import vn.com.phuclocbao.enums.UserAccountState;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.util.LambdaExceptionUtil;
 import vn.com.phuclocbao.util.PasswordHashing;
@@ -39,6 +41,8 @@ public class UserAccountConverter extends BaseConverter<UserAccountDto, UserAcco
 		CompanyDto companyDto = new CompanyDto();
 		CompanyConverter.getInstance().toDto(entity.getCompanyEntity(), companyDto);
 		dest.setCompanyEntity(companyDto);
+		CompanyTypeDto type = CompanyTypeConverter.getInstance().toDto(entity.getCompanyEntity().getType(), new CompanyTypeDto());
+		dest.getCompanyEntity().setType(type);
 		return dest;
 	}
 	
@@ -92,6 +96,7 @@ public class UserAccountConverter extends BaseConverter<UserAccountDto, UserAcco
 		UserAccount entity = this.toEntity(dto, new UserAccount(), "id");
 		String passwordHashing = PasswordHashing.hashMD5(dto.getPassword());
 		entity.setPassword(passwordHashing);
+		entity.setState(UserAccountState.ACTIVE.getName());
 		return entity;
 		
 	}

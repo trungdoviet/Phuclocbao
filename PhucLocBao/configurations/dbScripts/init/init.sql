@@ -24,6 +24,7 @@ use c43phuclocbao;
         costBeforeStartDate double precision,
         description varchar(255),
         fax varchar(255),
+        state varchar(45),
         investBeforeStartDate double precision,
         motobikeRentingFund varchar(255),
         name varchar(255) not null,
@@ -102,6 +103,7 @@ use c43phuclocbao;
         username varchar(30),
         companyEntity_id integer,
         isAdmin varchar(1),
+        state varchar(45),
         primary key (id)
     );
     create table tblPaymentHistory (
@@ -171,8 +173,8 @@ use c43phuclocbao;
         
 INSERT INTO `c43phuclocbao`.`tblcompanytype` (`name`) VALUES ('Trụ sở chính');
 INSERT INTO `c43phuclocbao`.`tblcompanytype` (`name`) VALUES ('Chi nhánh');
-INSERT INTO `c43phuclocbao`.`tblcompany` (`address`, `city`, `description`, `name`, `phoneNumber`, `companytype`) VALUES ('B64, Bạch Đằng, Tân Bình, TP.HCM', '01', 'Thế chấp xe tại tphcm', 'Phúc Lộc Bảo', '0965506248', '1');
+INSERT INTO `c43phuclocbao`.`tblcompany` (`address`, `city`, `description`, `name`, `phoneNumber`, `companytype`,`state`) VALUES ('B64, Bạch Đằng, Tân Bình, TP.HCM', '01', 'Thế chấp xe tại tphcm', 'Phúc Lộc Bảo', '0965506248', '1','ACTIVE');
 
-INSERT INTO `c43phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao', 'e10adc3949ba59abbe56e057f20f883e', 'plbadmin','Y', '1');
-INSERT INTO `c43phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`) VALUES ('test@mail.com', 'Phuc loc bao 2', 'e10adc3949ba59abbe56e057f20f883e', 'plbuser','N', '1');
+INSERT INTO `c43phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`, `state`) VALUES ('test@mail.com', 'Phuc loc bao', 'e10adc3949ba59abbe56e057f20f883e', 'plbadmin','Y', '1','ACTIVE');
+INSERT INTO `c43phuclocbao`.`tbluser` (`email`, `fullname`, `password`, `username`, `isAdmin`, `companyEntity_id`, `state`) VALUES ('test@mail.com', 'Phuc loc bao 2', 'e10adc3949ba59abbe56e057f20f883e', 'plbuser','N', '1','ACTIVE');
 

@@ -27,6 +27,7 @@ import vn.com.phuclocbao.viewbean.LoginBean;
 
 @Controller
 public class LoginController {
+		private static final String SESSION_IS_HEAD_OFFICE = "isHeadOffice";
 		private static final String SESSION_IS_USER_ADMIN = "isUserAdmin";
 		private static final String ERROR_USER_LOGIN_FAILED = "error.userLoginFailed";
 		private static final String MSG_WELCOME_LOGIN = "msg.welcomeLogin";
@@ -84,6 +85,8 @@ public class LoginController {
 								plbSession.setCurrentCompany(userAccount.getCompanyEntity());
 								request.getSession().setAttribute(PLBSession.SESSION_ATTRIBUTE_KEY, plbSession);
 								request.getSession().setAttribute(SESSION_IS_USER_ADMIN, userAccount.getIsAdmin());
+								request.getSession().setAttribute(SESSION_IS_HEAD_OFFICE, getCompanyTypeString(userAccount));
+								
 								System.out.println("User Login Successful with username:" + userAccount.getFullname());
 								int numberOfBadContract = contractService.updateBadContract(plbSession.getCompanyId());
 								System.out.println("Update " + numberOfBadContract +" contract as BAD contract");
@@ -101,6 +104,10 @@ public class LoginController {
 				}
 
 				return model;
+		}
+
+		private String getCompanyTypeString(UserAccountDto userAccount) {
+			return userAccount.getCompanyEntity().getType().getId().equals(1) ? ConstantVariable.YES_OPTION : ConstantVariable.NO_OPTION;
 		}
 		
 		@RequestMapping(value="/logout",method=RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")

@@ -31,6 +31,8 @@ public class CompanyEntity implements IBaseEntity
 	  private java.lang.String city;
 	  @javax.persistence.Column(length=100)
 	  private java.lang.String phoneNumber;
+	  @javax.persistence.Column(length=45)
+	  private java.lang.String state;
 	  private java.lang.String motobikeRentingFund;
 	  private java.lang.String fax;
 	  private java.lang.Double totalFund;
@@ -59,7 +61,16 @@ public class CompanyEntity implements IBaseEntity
 	    id = _id;
 	  }
 
-	  /**
+	  
+	  public java.lang.String getState() {
+		return state;
+	}
+
+	public void setState(java.lang.String state) {
+		this.state = state;
+	}
+
+	/**
 	   * Gets the field name.
 	   * @return the value of the field name; may be null.
 	   */
