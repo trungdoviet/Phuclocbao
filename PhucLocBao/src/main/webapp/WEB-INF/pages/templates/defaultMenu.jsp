@@ -21,6 +21,7 @@
 			<!-- <li><a href="login.html"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> Login Page</a></li> -->
 			<li class="parent <%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("companyFinancial")%> 
 			<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("companyBranch")%>
+			<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("companyProfit")%>
 			<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("mngUser")%> ">
 				<a href="#">
 					<span data-toggle="collapse" href="#sub-item-1"><svg class="glyph stroked chevron-down"><use xlink:href="#stroked-chevron-down"></use></svg></span> Công ty <%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getCurrentCompany().getName() %> 
@@ -41,6 +42,11 @@
 							<li class="<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("mngUser")%>">
 								<a  href="${pageContext.request.contextPath}/mngUser">
 									<svg class="glyph stroked chevron-right"><use xlink:href="#stroked-chevron-right"></use></svg> Quản lý Tài khoản
+								</a>
+							</li>
+							<li class="<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("companyProfit")%>">
+								<a  href="${pageContext.request.contextPath}/companyProfit">
+									<svg class="glyph stroked chevron-right"><use xlink:href="#stroked-chevron-right"></use></svg> Báo cáo doanh thu
 								</a>
 							</li>
 						</c:if>

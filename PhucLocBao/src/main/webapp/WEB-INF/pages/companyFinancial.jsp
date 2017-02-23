@@ -171,14 +171,9 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="pull-right">
-					<spring:url value="/companyFinancial/cancel" var="cancelUrl" />
 					<button id="btnSaveCompanyFinancial" type="submit" class="btn btn-primary" name="save">
 						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 						Lưu thông tin
-					</button>
-					<button type="button" class="btn btn-slave" name="cancel" onclick="location.href='${cancelUrl}'">
-						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-						Thoát
 					</button>
 				</div>
 			</div>

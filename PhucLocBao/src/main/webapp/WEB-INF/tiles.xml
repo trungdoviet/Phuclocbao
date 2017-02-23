@@ -78,7 +78,13 @@
      <definition name="companyBranch" extends="base-definition">  
        <put-attribute name="title" value="Quản lý Chi nhánh - Phúc Lộc Bảo" />  
        <put-attribute name="body" value="/WEB-INF/pages/companyBranch.jsp" />  
-   </definition>  
+   </definition>
+   
+     <!-- Company Profit -->
+     <definition name="companyProfit" extends="base-definition">  
+       <put-attribute name="title" value="Báo cáo doanh thu - Phúc Lộc Bảo" />  
+       <put-attribute name="body" value="/WEB-INF/pages/companyProfit.jsp" />  
+   </definition>    
    
      <!-- User setting -->
      <definition name="userSetting" extends="base-definition">  

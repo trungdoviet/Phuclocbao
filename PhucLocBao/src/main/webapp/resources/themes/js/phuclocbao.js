@@ -487,16 +487,18 @@ function initPaymentPopup(){
 			$("#amountSession").text(":");
 		}
 		var lastPaymentDate = findLastPaymentDate();
+		var extraDay = 0;
 		var startDateString = $( "#startDate" ).val();
 		var startCalculationDate = undefined;
 		if(lastPaymentDate != ""){
 			startCalculationDate = Date.parseExact ( lastPaymentDate,dateFormat);
 		} else {
+			extraDay = 1;
 			startCalculationDate = Date.parseExact ( startDateString,dateFormat);
 		}
 		var endCalculationDate =  Date.parseExact ( expectedPayDate,dateFormat);
 		if(startCalculationDate.compareTo(endCalculationDate) <= 0){
-			var numberOfDay = (endCalculationDate - startCalculationDate)/(24*60*60*1000);
+			var numberOfDay = ((endCalculationDate - startCalculationDate))/(24*60*60*1000) + extraDay;
 			var feeAday =  $("#feeADay").autoNumeric("get");
 			if(numberOfDay > 0 && feeAday > 0 ){
 				var paymentAmount = numberOfDay*feeAday;

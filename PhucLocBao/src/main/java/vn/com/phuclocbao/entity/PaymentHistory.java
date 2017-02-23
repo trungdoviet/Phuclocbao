@@ -12,7 +12,8 @@ import vn.com.phuclocbao.util.DateTimeUtil;
 @javax.persistence.Entity
 @javax.persistence.Table(name = "tblPaymentHistory")
 @NamedQueries({
-	@NamedQuery(name = "paymentHistory_getHistoriesInDateRange", query = "SELECT ph FROM PaymentHistory ph WHERE ph.companyId = :companyId AND ph.logDate >= :startDate AND ph.logDate <= :endDate")
+	@NamedQuery(name = "paymentHistory_getHistoriesInDateRange", query = "SELECT ph FROM PaymentHistory ph WHERE ph.companyId = :companyId AND ph.logDate >= :startDate AND ph.logDate <= :endDate"),
+	@NamedQuery(name = "paymentHistory_getHistoriesInDateRangeAllCompany", query = "SELECT ph FROM PaymentHistory ph WHERE ph.logDate >= :startDate AND ph.logDate <= :endDate")
 })
 public class PaymentHistory implements IBaseEntity {
 	/** SerialVersionUID */

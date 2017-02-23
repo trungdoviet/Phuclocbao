@@ -223,7 +223,7 @@
 	font-size: 13px;
 }
 .phuclocbao .fixed-table-body{
-	height: 115%;
+	height: auto !important;
 }
 a.mute-link-style, a.mute-link-style:focus {
 	color: #fff;
@@ -332,6 +332,10 @@ a.mute-link-style:hover {
 	}
 }
 
+.phuclocbao .notification-table .fixed-table-body{
+		height:auto !important;
+		width: 100%;
+	}
 .profit-by-month{
 	display: inline-block;
     width: 10px;

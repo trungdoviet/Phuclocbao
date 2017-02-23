@@ -36,5 +36,13 @@ public class DefaultPaymentHistoryDao extends BaseDaoJpaImpl<PaymentHistory, Int
 		query.setParameter("companyId", companyId);
 		return query.getResultList();
 	}
+	@Override
+	public List<PaymentHistory> getHistoriesInDateRangeAllCompany(Date startDate, Date endDate)
+			throws BusinessException {
+		TypedQuery<PaymentHistory> query = getEm().createNamedQuery("paymentHistory_getHistoriesInDateRangeAllCompany", PaymentHistory.class);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		return query.getResultList();
+	}
 	
 }

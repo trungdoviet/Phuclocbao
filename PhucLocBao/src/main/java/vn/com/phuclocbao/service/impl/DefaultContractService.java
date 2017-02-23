@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -33,9 +31,9 @@ import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.entity.Contract;
 import vn.com.phuclocbao.entity.PaymentHistory;
 import vn.com.phuclocbao.entity.UserHistory;
-import vn.com.phuclocbao.enums.PaymentHistoryType;
 import vn.com.phuclocbao.enums.ContractSeverity;
 import vn.com.phuclocbao.enums.ContractStatusType;
+import vn.com.phuclocbao.enums.PaymentHistoryType;
 import vn.com.phuclocbao.enums.ProcessStaging;
 import vn.com.phuclocbao.enums.UserActionHistoryType;
 import vn.com.phuclocbao.exception.BusinessException;
@@ -43,8 +41,8 @@ import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.BaseService;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.util.ConstantVariable;
-import vn.com.phuclocbao.util.PaymentHistoryUtil;
 import vn.com.phuclocbao.util.DateTimeUtil;
+import vn.com.phuclocbao.util.PaymentHistoryUtil;
 import vn.com.phuclocbao.util.PlbUtil;
 import vn.com.phuclocbao.util.UserHistoryUtil;
 import vn.com.phuclocbao.view.ContractView;
@@ -83,14 +81,22 @@ public class DefaultContractService extends BaseService implements ContractServi
 				}
 				contract = ContractConverter.getInstance().toNewContract(contractDto, contract);
 				mapReference(contract, company);
-				 PaymentHistory paidHistory = PaymentHistoryUtil.createNewHistory(contract,contractDto.getCompany().getId(), PaymentHistoryType.RENTING_NEW_MOTOBIKE, 0D, StringUtils.EMPTY);
+				PaymentHistory rentingHistory = PaymentHistoryUtil.createNewHistory(contract,contractDto.getCompany().getId(), PaymentHistoryType.RENTING_NEW_MOTOBIKE, 0D, StringUtils.EMPTY);
 				Contract persistedObject = contractDao.merge(contract);
 				if(persistedObject != null){
-					Double totalFunding = company.getTotalFund() - contract.getTotalAmount();
+					long finishPaymentAmount = countFinishPayments(contractDto.getPaymentSchedules());
+					Double totalPaid = finishPaymentAmount * contract.getPeriodOfPayment() * contract.getFeeADay(); 
+					Double totalFunding = company.getTotalFund() - contract.getTotalAmount() + totalPaid;
 					company.setTotalFund(totalFunding);
 					companyDao.merge(company);
-					paidHistory.setContractId(persistedObject.getId());
-					paymentHistoryDao.persist(paidHistory);
+					rentingHistory.setContractId(persistedObject.getId());
+					paymentHistoryDao.persist(rentingHistory);
+					if(totalPaid > 0){
+						 PaymentHistory paidHistory = PaymentHistoryUtil.createNewHistory(persistedObject, contractDto.getCompany().getId(), PaymentHistoryType.RENTING_COST, totalPaid, StringUtils.EMPTY);
+						 paidHistory.setContractId(persistedObject.getId());
+						 paymentHistoryDao.persist(paidHistory);
+					}
+					
 					UserHistory userHistory = UserHistoryUtil.createNewHistory(persistedObject, contractDto.getCompany().getId(), 
 															persistedObject.getCompany().getName(), userActionParam.getUsername(), 
 															UserActionHistoryType.NEW_CONTRACT, StringUtils.EMPTY);
@@ -129,6 +135,13 @@ public class DefaultContractService extends BaseService implements ContractServi
 		}
 	  });
 		return Objects.nonNull(id);
+	}
+	
+	private long countFinishPayments(List<PaymentScheduleDto> payments){
+		if(CollectionUtils.isNotEmpty(payments)){
+			return payments.stream().filter(item -> ConstantVariable.YES_OPTION.equalsIgnoreCase(item.getFinish())).count();
+		}
+		return 0;
 	}
 
 	@PersistenceContext

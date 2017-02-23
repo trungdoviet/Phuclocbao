@@ -25,6 +25,7 @@ public class MenuBean {
 		items.put(MenuDefinition.COMPANY_FINANCIAL.getName(), new MenuItem(MenuDefinition.COMPANY_FINANCIAL));
 		items.put(MenuDefinition.COMPANY_BRANCH.getName(), new MenuItem(MenuDefinition.COMPANY_BRANCH));
 		items.put(MenuDefinition.MANAGE_USER.getName(), new MenuItem(MenuDefinition.MANAGE_USER));
+		items.put(MenuDefinition.COMPANY_PROFIT.getName(), new MenuItem(MenuDefinition.COMPANY_PROFIT));
 		makeActive(MenuDefinition.HOME);
 	}
 	

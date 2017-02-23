@@ -12,7 +12,8 @@ public enum MenuDefinition {
 	COMPANY_BRANCH("companyBranch"),
 	COMPANY_FINANCIAL("companyFinancial"),
 	USER_SETTING("userSetting"),
-	MANAGE_USER("mngUser")
+	MANAGE_USER("mngUser"),
+	COMPANY_PROFIT("companyProfit")
 	;
 	private MenuDefinition(String name){
 		this.name = name;
