@@ -10,6 +10,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title><tiles:getAsString name="title" /></title>
+	<link rel="icon" type="image/x-icon" href="<c:url value="/resources/img/favicon.ico"/>" />
 	<link href="<c:url value='/resources/css/bootstrap.css' />"  rel="stylesheet"></link>
 	<link href="<c:url value='/resources/css/jquery-ui.css' />"  rel="stylesheet"></link>
 	<link href="<c:url value='/resources/css/mainPage.css' />" rel="stylesheet"></link>

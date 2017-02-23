@@ -22,5 +22,5 @@
 	<mvc:annotation-driven />
 	 <mvc:resources mapping="/resources/**" location="/resources/themes/"/> 
 	<import resource="springBeanConfig.xml"/>
-
+	<mvc:resources location="/favicon.ico" mapping="/favicon.ico" />
 </beans>

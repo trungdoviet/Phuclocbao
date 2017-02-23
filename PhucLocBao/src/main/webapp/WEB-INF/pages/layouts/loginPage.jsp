@@ -7,6 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><tiles:getAsString name="title" /></title>
+		<link rel="icon" type="image/x-icon" href="<c:url value="/resources/img/favicon.ico"/>" />
 		 <script src="<c:url value="/resources/js/jquery-3.1.1.js" />"><!-- comment --></script>
    		 <script src="<c:url value="/resources/js/prefixfree.min.js" />"><!-- comment --></script>
    		 <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/loginTheme.css"/>">
