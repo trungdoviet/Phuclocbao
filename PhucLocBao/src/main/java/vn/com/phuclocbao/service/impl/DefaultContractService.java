@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -540,6 +541,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 				view.setTotalNotification(totalNotificationToDay);
 				view.setStatistic(new StatisticInfo());
 				int currentYear = view.getStatistic().getYear();
+				view.getStatistic().setCompanyId(companyId);
 				buildProfitStatistic(companyId, view.getStatistic(), currentYear);
 				return view;
 			}
@@ -550,6 +552,11 @@ public class DefaultContractService extends BaseService implements ContractServi
 	private StatisticInfo buildProfitStatistic(Integer companyId, StatisticInfo statistic, int currentYear)
 			throws BusinessException {
 		List<PaymentHistory> payments =paymentHistoryDao.getHistoriesInDateRange(companyId, DateTimeUtil.getFirstDateOfYear(currentYear), DateTimeUtil.getLastDateOfYear(currentYear));
+		buildPaymentStatisticForCompany(statistic, payments);
+		return statistic;
+	}
+
+	private void buildPaymentStatisticForCompany(StatisticInfo statistic, List<PaymentHistory> payments) {
 		if(CollectionUtils.isNotEmpty(payments)){
 					payments.stream()
 								.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.RENTING_NEW_MOTOBIKE.getType()))
@@ -581,8 +588,9 @@ public class DefaultContractService extends BaseService implements ContractServi
 				 statistic.setRentingCostByMonth(effectiveRentingCost);
 				 statistic.setProfitByMonth(effectiveProfitCost);
 		}
-		return statistic;
 	}
+	
+	
 	@Override
 	public StatisticInfo collectProfitStatistic(Integer companyId, int year) throws BusinessException {
 
@@ -608,6 +616,28 @@ public class DefaultContractService extends BaseService implements ContractServi
 			}
 		});
 	}
+
+	@Override
+	public List<StatisticInfo> collectAllProfitStatistic(int currentYear) throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<List<StatisticInfo>>() {
+			@Override
+			public List<StatisticInfo> execute() throws BusinessException, ClassNotFoundException, IOException {
+				List<PaymentHistory> payments = paymentHistoryDao.getHistoriesInDateRangeAllCompany(DateTimeUtil.getFirstDateOfYear(currentYear), DateTimeUtil.getLastDateOfYear(currentYear));
+				List<StatisticInfo> result = new ArrayList<>();
+				if(CollectionUtils.isNotEmpty(payments)){
+					Map<Integer, List<PaymentHistory>> paymentByCompany = payments.stream().collect(Collectors.groupingBy(PaymentHistory::getCompanyId));
+					paymentByCompany.forEach((k,v) -> {
+						StatisticInfo stat = new StatisticInfo();
+						stat.setCompanyId(k);
+						buildPaymentStatisticForCompany(stat, v);
+						result.add(stat);
+					});
+				}
+				return result;
+			}
+		});
+	}
+	
 
 	
 }

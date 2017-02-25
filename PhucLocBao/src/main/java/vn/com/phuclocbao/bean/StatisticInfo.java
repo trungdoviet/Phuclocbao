@@ -8,6 +8,15 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 public class StatisticInfo {
 	private Integer minYear = 2005;
+	private Integer companyId;
+	private String companyName;
+	public StatisticInfo(Integer companyId){
+		this.companyId = companyId;
+		profitByMonth = new ArrayList<Double>();
+		rentingCostByMonth = new ArrayList<>();
+		initMoneyStatisticForYear(profitByMonth);
+		initMoneyStatisticForYear(rentingCostByMonth);
+	}
 	public StatisticInfo(){
 		year = LocalDate.now().getYear();
 		profitByMonth = new ArrayList<Double>();
@@ -63,5 +72,16 @@ public class StatisticInfo {
 	public void setRentingCostByMonth(List<Double> rentingCostByMonth) {
 		this.rentingCostByMonth = rentingCostByMonth;
 	}
-	
+	public Integer getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
 }

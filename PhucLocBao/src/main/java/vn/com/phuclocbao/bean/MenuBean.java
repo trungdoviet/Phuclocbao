@@ -62,6 +62,7 @@ public class MenuBean {
 		if(MapUtils.isNotEmpty(items)){
 			return (items.get(MenuDefinition.COMPANY_BRANCH.getName()).getState() == MenuState.ACTIVE
 					|| items.get(MenuDefinition.MANAGE_USER.getName()).getState() == MenuState.ACTIVE
+					|| items.get(MenuDefinition.COMPANY_PROFIT.getName()).getState() == MenuState.ACTIVE
 					|| items.get(MenuDefinition.COMPANY_FINANCIAL.getName()).getState() == MenuState.ACTIVE) ? "in" : StringUtils.EMPTY ;
 		}
 		return StringUtils.EMPTY;

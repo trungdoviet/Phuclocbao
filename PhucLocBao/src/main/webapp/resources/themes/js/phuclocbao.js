@@ -777,6 +777,9 @@ function cf_init(){
 	cf_initButtons();
 }
 
+function cp_init(){
+	$("td").not("[class*='valid']").remove();
+}
 function cf_initInputs(){
 	initDateLocally();
 	$( "#companyStartDate" ).datepicker({

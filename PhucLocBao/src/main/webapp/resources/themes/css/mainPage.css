@@ -203,6 +203,12 @@
 .state_alert{
 	color:red;
 }
+.state_normal{
+	color:#cdcdcd;
+}
+.bold-text{
+	font-weight:bold;
+}
 .big-money-size{
 	 font-size: 20px;
 }
@@ -295,6 +301,15 @@ a.mute-link-style:hover {
 .normal-text-weight{
 	font-weight:normal
 }
+.month-header-screen{
+	display:inline;
+}
+.month-header-print{
+	display:none;
+}
+.year-profit{
+	display:none;
+}
 @media print
 {
 	@page {size: landscape}
@@ -330,6 +345,21 @@ a.mute-link-style:hover {
 	    overflow-y: hidden !important;
 	    height: 100%;
 	}
+	.month-header-screen{
+		display: none;
+	}
+	.month-header-print{
+		display: inline;
+	}
+	.printable{
+		display:inline;
+	}
+	.header-print{
+		height:10px;
+	}
+	.profit-by-month{
+		background-color:rgba(48, 164, 255, 0.2) !important;
+	}
 }
 
 .phuclocbao .notification-table .fixed-table-body{
@@ -351,4 +381,8 @@ a.mute-link-style:hover {
     height: 10px;
     border: solid 1px rgba(228, 163, 58,0.8);
     background-color: rgba(228, 163, 58,0.5);
+}
+
+.cost-by-month-normal{
+	margin-left:0px;
 }

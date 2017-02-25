@@ -24,7 +24,7 @@
 			<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("companyProfit")%>
 			<%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getStateClass("mngUser")%> ">
 				<a href="#">
-					<span data-toggle="collapse" href="#sub-item-1"><svg class="glyph stroked chevron-down"><use xlink:href="#stroked-chevron-down"></use></svg></span> Công ty <%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getCurrentCompany().getName() %> 
+					<span data-toggle="collapse" href="#sub-item-1"><svg id="adminMenu" class="glyph stroked chevron-down"><use xlink:href="#stroked-chevron-down"></use></svg></span> <span id="companyNameMenu">Công ty <%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getCurrentCompany().getName() %></span> 
 				</a>
 				<c:if test="${sessionScope.isUserAdmin == 'Y'}">
 					<ul class="children collapse <%=((PLBSession)request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY)).getMenuBean().getCompanyMenuCollapseState()%>" id="sub-item-1">
@@ -57,3 +57,11 @@
 		<div class="divider"></div>
 		<div class="text-center"><label class="normal-text-weight">Phúc Lộc Bảo &copy;&nbsp;<script>document.write(new Date().getFullYear())</script></label></div>
 	</div><!--/.sidebar-->
+	
+	<script>
+	$( document ).ready(function() {
+		$("#companyNameMenu").on("click", function(){
+			$("#adminMenu").trigger("click");
+		})
+	});
+	</script>

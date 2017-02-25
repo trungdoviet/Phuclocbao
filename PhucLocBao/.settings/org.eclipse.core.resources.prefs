@@ -13,6 +13,7 @@ encoding//src/main/resources/messages.properties=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/badContracts.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/companyBranch.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/companyFinancial.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/pages/companyProfit.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/contract.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/dailyWork.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/history.jsp=UTF-8

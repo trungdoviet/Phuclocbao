@@ -18,6 +18,8 @@
 	<link href="<c:url value='/resources/css/styles.css'/> " rel="stylesheet"></link>
 	<script src="<c:url value='/resources/js/lumino.glyphs.js' />"><!-- comment --></script>
 	<script src="<c:url value="/resources/js/jquery-3.1.1.js" />"><!-- comment --></script>
+	<script src="<c:url value='/resources/js/bootstrap.min.js' />"><!-- comment --></script>
+	<script src="<c:url value='/resources/js/bootstrap-table.js' />"><!-- comment --></script>
 	<!--[if lt IE 9]>
 	<script src="<c:url value='/resources/js/html5shiv.js' />"></script>
 	<script src="<c:url value='/resources/js/respond.min.js' />"></script>
@@ -41,7 +43,7 @@
 			<tiles:insertAttribute name="footer" />
 		</footer>
 		
-		<script src="<c:url value='/resources/js/bootstrap.min.js' />"><!-- comment --></script>
+		
 	 	<script src="<c:url value='/resources/js/inputmask/inputmask.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/inputmask/inputmask.numeric.extensions.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/inputmask/inputmask.regex.extensions.js' />"><!-- comment --></script>
@@ -50,7 +52,7 @@
 		<script src="<c:url value='/resources/js/date.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/autoNumeric.js' />"><!-- comment --></script>
 		<script src="<c:url value='/resources/js/jquery-ui.min.js' />"><!-- comment --></script>
-		<script src="<c:url value='/resources/js/bootstrap-table.js' />"><!-- comment --></script>
+		
 		<script src="<c:url value='/resources/js/phuclocbao.js' />"><!-- comment --></script>
 		<script>
 				!function ($) {

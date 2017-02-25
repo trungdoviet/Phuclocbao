@@ -12,7 +12,7 @@ public class ManageUserBean {
 	private List<CompanyDto> companies;
 	public ManageUserBean(){
 		this.user = new UserAccountDto();
-		this.user.setIsAdmin(ConstantVariable.NO_OPTION);
+		this.user.setIsAdmin(ConstantVariable.YES_OPTION);
 	}
 	public List<UserAccountDto> getUsers() {
 		return users;

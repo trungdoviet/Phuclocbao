@@ -1,4 +1,5 @@
 package vn.com.phuclocbao.controller;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import vn.com.phuclocbao.bean.PLBSession;
+import vn.com.phuclocbao.bean.StatisticInfo;
 import vn.com.phuclocbao.delegator.LoginDelegator;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.CompanyTypeDto;
@@ -36,6 +38,7 @@ import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.viewbean.CompanyBranchBean;
 import vn.com.phuclocbao.viewbean.CompanyFinancialBean;
+import vn.com.phuclocbao.viewbean.CompanyProfitBean;
 import vn.com.phuclocbao.viewbean.ContractBean;
 import vn.com.phuclocbao.viewbean.GeneralView;
 import vn.com.phuclocbao.viewbean.ManageContractBean;
@@ -292,6 +295,25 @@ public class NavigationController extends BaseController {
 			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
 		}
 		model.addObject("cbBean", cbBean);
+		return model;
+	}
+	
+	@RequestMapping(value = { "/companyProfit"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView openCompanyProfit(HttpServletRequest request, HttpServletResponse response, CompanyProfitBean cpBean) {
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		plbSession.getMenuBean().makeActive(MenuDefinition.COMPANY_PROFIT);
+		ModelAndView model = new ModelAndView(MenuDefinition.COMPANY_PROFIT.getName());
+		try {
+			List<CompanyDto> companies = companyService.findAll();
+			List<StatisticInfo> stats = contractService.collectAllProfitStatistic(LocalDate.now().getYear());
+			cpBean = paymentHistoryService.buildProfitStatistic(companies, stats);
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
+		}
+		
+		model.addObject("cpBean", cpBean);
 		return model;
 	}
 	

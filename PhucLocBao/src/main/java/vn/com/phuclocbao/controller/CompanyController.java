@@ -1,4 +1,7 @@
 package vn.com.phuclocbao.controller;
+import java.time.LocalDate;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,14 +19,18 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import vn.com.phuclocbao.bean.PLBSession;
+import vn.com.phuclocbao.bean.StatisticInfo;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.CompanyService;
+import vn.com.phuclocbao.service.ContractService;
+import vn.com.phuclocbao.service.PaymentHistoryService;
 import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.validator.CompanyFinancialValidator;
 import vn.com.phuclocbao.viewbean.CompanyBranchBean;
 import vn.com.phuclocbao.viewbean.CompanyFinancialBean;
+import vn.com.phuclocbao.viewbean.CompanyProfitBean;
 import vn.com.phuclocbao.vo.UserActionParamVO.UserActionParamVOBuilder;
 
 
@@ -35,6 +42,11 @@ public class CompanyController extends BaseController{
 	private static final String MSG_CREATE_COMPANY_SUCCESS = "msg.createCompanySuccess";
 	private static final String MSG_UPDATE_COMPANY_FINANCIAL_SUCCESS = "msg.updateCompanyFinancialSuccess";
 	private static final String MSG_UPDATE_COMPANY_FINANCIAL_FAILED = "msg.updateCompanyFinancialFailed";
+	@Autowired
+	@Qualifier(value="contractService")
+	ContractService contractService;
+	@Autowired
+	PaymentHistoryService paymentHistoryService;
 	@Autowired
 	@Qualifier(value="companyService")
 	CompanyService companyService;
@@ -111,6 +123,27 @@ public class CompanyController extends BaseController{
 			e.printStackTrace();
 			showErrorAlert(redirectAttributes, MSG_CREATE_COMPANY_FAILED);
 		}
+		return model;
+	}
+	
+	@RequestMapping(value = { "/filterProfit"}, method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView filterProfitByYear(HttpServletRequest request, HttpServletResponse response, CompanyProfitBean cpBean) {
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		plbSession.getMenuBean().makeActive(MenuDefinition.COMPANY_PROFIT);
+		ModelAndView model = new ModelAndView(MenuDefinition.COMPANY_PROFIT.getName());
+		try {
+			List<CompanyDto> companies = companyService.findAll();
+			int selectedYear = cpBean.getYear();
+			List<StatisticInfo> stats = contractService.collectAllProfitStatistic(selectedYear);
+			cpBean = paymentHistoryService.buildProfitStatistic(companies, stats);
+			cpBean.setYear(selectedYear);
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
+		}
+		
+		model.addObject("cpBean", cpBean);
 		return model;
 	}
 
