@@ -13,7 +13,6 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		logger.info("handle interceptor");
 		// Avoid a redirect loop for some urls
 		if (!request.getRequestURI().equals("/PhucLocBao/") && !request.getRequestURI().equals("/PhucLocBao/index")
 				&& !request.getRequestURI().equals("/PhucLocBao/login")) {

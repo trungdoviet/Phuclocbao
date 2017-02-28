@@ -21,7 +21,7 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading text-center"><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>Quản lý hợp đồng xấu</div>
-				<div class="panel-body">
+				<div class="panel-body bad-contract">
 					<div class="col-md-6">
 						<div class="row">
 							<div class="col-md-8 text-right"><strong class="bottom-line">Tổng HĐ khách hàng xấu:</strong></div>
@@ -66,6 +66,11 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-body">
+					 <div>
+						<a href="javascript:window.print();" class="noprint pull-right">
+						<span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+						In trang</a>
+					</div> 
 					<table data-toggle="table" data-pagination="true" >
 					    <thead>
 					    <tr>

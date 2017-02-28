@@ -28,6 +28,7 @@ import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.enums.ProcessStaging;
 import vn.com.phuclocbao.exception.BusinessException;
+import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.CompanyService;
 import vn.com.phuclocbao.service.CompanyTypeService;
 import vn.com.phuclocbao.service.ContractService;
@@ -35,6 +36,7 @@ import vn.com.phuclocbao.service.PaymentHistoryService;
 import vn.com.phuclocbao.service.UserHistoryService;
 import vn.com.phuclocbao.service.UserService;
 import vn.com.phuclocbao.service.VietnamCityService;
+import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.viewbean.CompanyBranchBean;
 import vn.com.phuclocbao.viewbean.CompanyFinancialBean;
@@ -259,8 +261,21 @@ public class NavigationController extends BaseController {
 		return model;
 	}
 	
+	private boolean isAdmin(HttpServletRequest request){
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		return plbSession.getUserAccount().getIsAdmin().equalsIgnoreCase(ConstantVariable.YES_OPTION);
+	}
+	
+	private boolean isHeadOffice(HttpServletRequest request){
+		return request.getSession().getAttribute(LoginController.SESSION_IS_HEAD_OFFICE) != null 
+				&& request.getSession().getAttribute(LoginController.SESSION_IS_HEAD_OFFICE).toString().equalsIgnoreCase(ConstantVariable.YES_OPTION);
+	}
+	
 	@RequestMapping(value = { "/companyFinancial"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public ModelAndView openCompanyFinancial(HttpServletRequest request, HttpServletResponse response, CompanyFinancialBean cfBean) {
+	public ModelAndView openCompanyFinancial(HttpServletRequest request, HttpServletResponse response, CompanyFinancialBean cfBean) throws BusinessException {
+		if(!isAdmin(request)){
+			throw new BusinessException(PLBErrorCode.USER_NOT_AUTHORIZED.name());
+		}
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.COMPANY_FINANCIAL);
 		
@@ -276,7 +291,10 @@ public class NavigationController extends BaseController {
 	}
 	
 	@RequestMapping(value = { "/companyBranch"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public ModelAndView openCompanyBranch(HttpServletRequest request, HttpServletResponse response, CompanyBranchBean cbBean) {
+	public ModelAndView openCompanyBranch(HttpServletRequest request, HttpServletResponse response, CompanyBranchBean cbBean) throws BusinessException {
+		if(!isAdmin(request) || !isHeadOffice(request)){
+			throw new BusinessException(PLBErrorCode.USER_NOT_AUTHORIZED.name());
+		}
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.COMPANY_BRANCH);
 		ModelAndView model = new ModelAndView(MenuDefinition.COMPANY_BRANCH.getName());
@@ -299,7 +317,10 @@ public class NavigationController extends BaseController {
 	}
 	
 	@RequestMapping(value = { "/companyProfit"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public ModelAndView openCompanyProfit(HttpServletRequest request, HttpServletResponse response, CompanyProfitBean cpBean) {
+	public ModelAndView openCompanyProfit(HttpServletRequest request, HttpServletResponse response, CompanyProfitBean cpBean) throws BusinessException {
+		if(!isAdmin(request) || !isHeadOffice(request)){
+			throw new BusinessException(PLBErrorCode.USER_NOT_AUTHORIZED.name());
+		}
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.COMPANY_PROFIT);
 		ModelAndView model = new ModelAndView(MenuDefinition.COMPANY_PROFIT.getName());
@@ -318,7 +339,10 @@ public class NavigationController extends BaseController {
 	}
 	
 	@RequestMapping(value = { "/mngUser"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public ModelAndView openManageUser(HttpServletRequest request, HttpServletResponse response, ManageUserBean muBean) {
+	public ModelAndView openManageUser(HttpServletRequest request, HttpServletResponse response, ManageUserBean muBean) throws BusinessException {
+		if(!isAdmin(request) || !isHeadOffice(request)){
+			throw new BusinessException(PLBErrorCode.USER_NOT_AUTHORIZED.name());
+		}
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.MANAGE_USER);
 		ModelAndView model = new ModelAndView(MenuDefinition.MANAGE_USER.getName());

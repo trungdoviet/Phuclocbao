@@ -3,14 +3,14 @@
 @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
 
 body{
-	margin: 0;
+	 margin: 0;
 	padding: 0;
-	background: #fff;
+	/*background: #fff;
 
-	color: #fff;
+	color: #fff; */
 	font-family: Arial;
 	font-size: 12px;
-}
+} 
 
 .body{
 	position: absolute;

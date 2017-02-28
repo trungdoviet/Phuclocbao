@@ -360,6 +360,9 @@ a.mute-link-style:hover {
 	.profit-by-month{
 		background-color:rgba(48, 164, 255, 0.2) !important;
 	}
+	.panel-body.bad-contract{
+		width: 97%;
+	}
 }
 
 .phuclocbao .notification-table .fixed-table-body{

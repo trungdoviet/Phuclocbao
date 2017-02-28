@@ -27,7 +27,7 @@ import vn.com.phuclocbao.viewbean.LoginBean;
 
 @Controller
 public class LoginController {
-		private static final String SESSION_IS_HEAD_OFFICE = "isHeadOffice";
+	    public static final String SESSION_IS_HEAD_OFFICE = "isHeadOffice";
 		private static final String SESSION_IS_USER_ADMIN = "isUserAdmin";
 		private static final String ERROR_USER_LOGIN_FAILED = "error.userLoginFailed";
 		private static final String MSG_WELCOME_LOGIN = "msg.welcomeLogin";

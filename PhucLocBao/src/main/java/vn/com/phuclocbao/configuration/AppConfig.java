@@ -23,7 +23,7 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 	    TilesConfigurer tilesConfigurer = new TilesConfigurer();
 	    tilesConfigurer.setDefinitions(new String[] {"/WEB-INF/tiles.xml"});
 	    tilesConfigurer.setCheckRefresh(true);
-	    System.out.println("=====================Configurate tiles");
+	    //System.out.println("=====================Configurate tiles");
 	    return tilesConfigurer;
 	}
 
@@ -34,7 +34,7 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 	public void configureViewResolvers(ViewResolverRegistry registry) {
 		TilesViewResolver viewResolver = new TilesViewResolver();
 		registry.viewResolver(viewResolver);
-		 System.out.println("=====================Configurate tiles 2");
+		// System.out.println("=====================Configurate tiles 2");
 	}
     
 }
