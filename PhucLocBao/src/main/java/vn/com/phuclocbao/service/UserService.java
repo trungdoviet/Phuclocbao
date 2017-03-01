@@ -13,4 +13,5 @@ public interface UserService {
 	public List<UserAccountDto> findAll() throws BusinessException;
 	public boolean addNewUser(UserAccountDto dto) throws BusinessException;
 	public boolean isUserExist(String username) throws BusinessException;
+	public Boolean updatePassword(Integer id, String newPassword) throws BusinessException;
 }

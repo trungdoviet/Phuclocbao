@@ -19,7 +19,7 @@ import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.util.PasswordHashing;
 @Repository
 @Transactional
-public class DefaultUserDao extends BaseDaoJpaImpl<UserAccount, Long> implements UserDao
+public class DefaultUserDao extends BaseDaoJpaImpl<UserAccount, Integer> implements UserDao
 {
 	@PersistenceContext
 	private EntityManager manager;

@@ -9,6 +9,7 @@ import vn.com.phuclocbao.exception.BusinessException;
 
 public interface UserDao
 {
+		public UserAccount findById(Integer id) throws BusinessException;
 		public boolean isValidUser(String username, String password) throws BusinessException;
 		public UserAccount merge(UserAccount entity) throws BusinessException;
 		public UserAccount getUserByUsername(String username) throws PersistenceException;

@@ -136,5 +136,23 @@ public class DefaultUserService extends BaseService implements UserService {
 			}
 		});
 	}
+	
+	@Transactional
+	@Override
+	public Boolean updatePassword(Integer id, String newPassword) throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<Boolean>() {
+			@Override
+			public Boolean execute() throws BusinessException, ClassNotFoundException, IOException {
+				UserAccount entity = userDao.findById(id);
+				if(entity == null){
+					throw new BusinessException(PLBErrorCode.USER_CAN_NOT_BE_FOUND.name());
+				}
+				String hashingPassword = PasswordHashing.hashMD5(newPassword);
+				entity.setPassword(hashingPassword);
+				userDao.merge(entity);
+				return true;
+			}
+		});
+	}
 
 }

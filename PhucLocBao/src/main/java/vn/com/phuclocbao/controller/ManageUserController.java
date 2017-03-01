@@ -18,6 +18,7 @@ import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.UserService;
 import vn.com.phuclocbao.viewbean.ManageUserBean;
+import vn.com.phuclocbao.viewbean.UserPasswordBean;
 
 
 
@@ -26,19 +27,19 @@ import vn.com.phuclocbao.viewbean.ManageUserBean;
 public class ManageUserController extends BaseController {
 	private static final String MSG_CREATE_USER_FAILED = "msg.createUserFailed";
 	private static final String MSG_CREATE_USER_SUCESS = "msg.createUserSucess";
+	private static final String MSG_CHANGE_PASS_USER_FAILED = "msg.changePassUserFailed";
+	private static final String MSG_CHANGE_PASS_USER_SUCESS = "msg.changePassUserSucess";
 	private static org.apache.log4j.Logger logger = Logger.getLogger(ManageUserController.class);
 	
 	@Autowired
 	UserService userService;
 	
 	@RequestMapping(value = { "/addUser"}, params="save", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public ModelAndView saveUserSetting(HttpServletRequest request, HttpServletResponse response, 
+	public ModelAndView addUser(HttpServletRequest request, HttpServletResponse response, 
 			@ModelAttribute("muBean")  ManageUserBean muBean,  final RedirectAttributes redirectAttributes,
 			BindingResult result, SessionStatus status) {
-		
 		ModelAndView model = null;
 		model = new ModelAndView(MenuDefinition.MANAGE_USER.getRedirectCommand());
-		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		try {
 			boolean isOk = userService.addNewUser(muBean.getUser());
 			if(isOk){
@@ -50,6 +51,28 @@ public class ManageUserController extends BaseController {
 			logger.error(e);
 			e.printStackTrace();
 			showErrorAlert(redirectAttributes, MSG_CREATE_USER_FAILED);
+		}
+		return model;
+	}
+	
+	@RequestMapping(value = { "/changePassword"}, params="save", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView changePassword(HttpServletRequest request, HttpServletResponse response, 
+			@ModelAttribute("cpBean")  UserPasswordBean cpBean,  final RedirectAttributes redirectAttributes,
+			BindingResult result, SessionStatus status) {
+		ModelAndView model = null;
+		model = new ModelAndView(MenuDefinition.MANAGE_USER.getRedirectCommand());
+		try {
+			
+			boolean isOk = userService.updatePassword(Integer.valueOf(cpBean.getUserid()), cpBean.getNewPassword());
+			if(isOk){
+				showSucessAlert(redirectAttributes, MSG_CHANGE_PASS_USER_SUCESS);
+			} else {
+				showErrorAlert(redirectAttributes, MSG_CHANGE_PASS_USER_FAILED);
+			}
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(redirectAttributes, MSG_CHANGE_PASS_USER_FAILED);
 		}
 		return model;
 	}

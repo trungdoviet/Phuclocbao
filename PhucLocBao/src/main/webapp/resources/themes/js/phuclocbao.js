@@ -980,7 +980,6 @@ function home_init(){
 			dataType : 'json',
 			timeout : 100000,
 			success : function(data) {
-				console.log(data);
 				if(data.code == "200" && barChartData.datasets.length == 2){
 					barChartData.datasets[0].data = data.statistic.profitByMonth;
 					barChartData.datasets[1].data = data.statistic.rentingCostByMonth;
@@ -994,8 +993,31 @@ function home_init(){
 				
 			},
 			done : function(e) {
-				console.log("DONE");
+				//console.log("DONE");
 			}
 		});
 	});
+}
+
+function cp_init(){
+	try{
+		$.validator.addMethod("passwordMatch", function(value, element) {
+			console.log("run pass:" + value);
+		  return this.optional(element) || false;
+		},"Mật khẩu không trùng khớp");
+		jQuery.validator.classRuleSettings.passwordMatch = { passwordMatch: true };
+		$("#changePassForm").validate({
+			 rules : {
+				 retypePassword : { passwordMatch : true }
+			    }
+		});
+	} catch(err) {
+	    console.log(err.message);
+	}
+}
+function cp_openDialog(username, id){
+	$('#usernameLabel').text(username);	
+	$('#userId').val(id);	
+	
+	$('#changePassword').modal("show");	
 }

@@ -48,6 +48,7 @@ import vn.com.phuclocbao.viewbean.ManageUserBean;
 import vn.com.phuclocbao.viewbean.NotificationPage;
 import vn.com.phuclocbao.viewbean.PaymentHistoryView;
 import vn.com.phuclocbao.viewbean.UserActionHistoryView;
+import vn.com.phuclocbao.viewbean.UserPasswordBean;
 import vn.com.phuclocbao.viewbean.UserSettingBean;
 
 
@@ -339,7 +340,7 @@ public class NavigationController extends BaseController {
 	}
 	
 	@RequestMapping(value = { "/mngUser"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
-	public ModelAndView openManageUser(HttpServletRequest request, HttpServletResponse response, ManageUserBean muBean) throws BusinessException {
+	public ModelAndView openManageUser(HttpServletRequest request, HttpServletResponse response, ManageUserBean muBean, UserPasswordBean upBean) throws BusinessException {
 		if(!isAdmin(request) || !isHeadOffice(request)){
 			throw new BusinessException(PLBErrorCode.USER_NOT_AUTHORIZED.name());
 		}
@@ -348,6 +349,9 @@ public class NavigationController extends BaseController {
 		ModelAndView model = new ModelAndView(MenuDefinition.MANAGE_USER.getName());
 		if(muBean == null){
 			muBean = new ManageUserBean();
+		}
+		if(upBean == null){
+			upBean = new UserPasswordBean();
 		}
 		try {
 			List<UserAccountDto> users = userService.findAll();
@@ -360,6 +364,7 @@ public class NavigationController extends BaseController {
 			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
 		}
 		model.addObject("muBean", muBean);
+		model.addObject("upBean", upBean);
 		return model;
 	}
 	

@@ -70,7 +70,7 @@
 												${user.companyEntity.name}
 											</td>
 											<td>
-												
+												<button class="btn btn-danger btn-xs" onclick="cp_openDialog('${user.username}','${user.id}' )">Đổi mật khẩu</button>
 											</td>
 								    	</tr>
 							    	</c:forEach>
@@ -83,12 +83,13 @@
 		</div>
 	</div>
 	<jsp:include page="includes/addUser.jsp"></jsp:include>
-	
+	<jsp:include page="includes/changeUserPassword.jsp"></jsp:include>
 </div>
 <script src="<c:url value='/resources/js/jquery.validate.min.js' />"><!-- comment --></script>
 <script type="text/javascript">
 $( document ).ready(function() {
 	hideAlert("muAlert");
 	mu_init();
+	cp_init();
 });
 </script>
