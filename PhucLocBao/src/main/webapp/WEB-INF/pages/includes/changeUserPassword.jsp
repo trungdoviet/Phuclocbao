@@ -38,7 +38,6 @@
 										<form:input id="retypePassword" class="form-control form-input passwordMatch"
 											name="retypePassword" type="password"
 											path="retypePassword" required="true" />
-											<input class="form-control form-input passwordMatch" >
 									</div>
 							</div>
 						</div>

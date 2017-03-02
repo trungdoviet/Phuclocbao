@@ -1002,7 +1002,6 @@ function home_init(){
 function cp_init(){
 	try{
 		$.validator.addMethod("passwordMatch", function(value, element) {
-			console.log("run pass:" + value);
 		  return this.optional(element) || false;
 		},"Mật khẩu không trùng khớp");
 		jQuery.validator.classRuleSettings.passwordMatch = { passwordMatch: true };
