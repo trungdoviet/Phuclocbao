@@ -22,6 +22,25 @@
 			<div class="panel panel-default">
 				<div class="panel-heading text-center"><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>Quản lý hợp đồng xấu</div>
 				<div class="panel-body bad-contract">
+					<div class="col-md-6 noprint">
+						<form:form role="form" id="badContractForm" method="post" action="filterBadContract" modelAttribute="csBean">
+								<spring:bind path="name">
+									<div class="form-group ${status.error ? 'has-error' : ''} pull-left" >
+										<form:input id="customerName" class="form-control"
+											placeholder="Họ tên khách hàng" name="customerName"
+											path="name" />
+										<form:errors path="name" cssClass="error" />
+									</div>
+								</spring:bind>
+								<button id="btnSearch" type="submit" class="btn btn-primary pull-left stay-left" name="search">
+									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+									Tìm
+								</button>
+						</form:form>
+					</div>
+					<div class="col-md-6 noprint">
+						<div style="height:50px"></div>
+					</div>
 					<div class="col-md-6">
 						<div class="row">
 							<div class="col-md-8 text-right"><strong class="bottom-line">Tổng HĐ khách hàng xấu:</strong></div>

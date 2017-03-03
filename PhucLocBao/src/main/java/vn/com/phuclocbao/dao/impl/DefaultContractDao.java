@@ -77,4 +77,13 @@ public class DefaultContractDao extends BaseDaoJpaImpl<Contract, Integer> implem
 		query.setParameter(1, companyId);
 		return query.executeUpdate();
 	}
+	@Override
+	public List<Contract> getContractByStateAndCompanyAndCustomerName(ContractStatusType state, Integer id,
+			String customerName) throws BusinessException {
+		TypedQuery<Contract> query = getEm().createNamedQuery("Contract_countContractByStatusAndCompanyAndCustomerName", Contract.class);
+		query.setParameter("contractState", state.getName());
+		query.setParameter("companyId", id);
+		query.setParameter("customerName", "%" + customerName +"%");
+		return query.getResultList();
+	}
 }

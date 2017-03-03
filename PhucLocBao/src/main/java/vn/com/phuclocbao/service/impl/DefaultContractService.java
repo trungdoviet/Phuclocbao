@@ -213,7 +213,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 			mcb.setTotalContract(dtos.size());
 			mcb.setTotalFeeADay(dtos.stream().map(item ->item.getFeeADay()).reduce(0D, Double::sum));
 			mcb.setTotalPayoffAmmount(dtos.stream().map(item -> item.getTotalAmount()).reduce(0D, (x,y) -> x + y));
-			logger.info("total:" + mcb.getTotalPayoffAmmount() + "-feeADay:" + mcb.getTotalFeeADay());
+			//logger.info("total:" + mcb.getTotalPayoffAmmount() + "-feeADay:" + mcb.getTotalFeeADay());
 		}
 		return mcb;
 	}
@@ -634,6 +634,22 @@ public class DefaultContractService extends BaseService implements ContractServi
 					});
 				}
 				return result;
+			}
+		});
+	}
+
+	@Override
+	public List<ContractDto> findContractsByStateAndIdAndCustomerName(ContractStatusType state, Integer companyId,
+			String customerName) throws BusinessException {
+		return methodWrapper(new PersistenceExecutable<List<ContractDto>>() {
+			@Override
+			public List<ContractDto> execute() throws BusinessException, ClassNotFoundException, IOException {
+				List<Contract> contracts = contractDao.getContractByStateAndCompanyAndCustomerName(state, companyId, customerName);
+				if(CollectionUtils.isNotEmpty(contracts)) {
+					List<ContractDto> result = ContractConverter.getInstance().toDtosWithCustomer(contracts);
+					return result.stream().sorted((o1,o2) -> o2.getStartDate().compareTo(o1.getStartDate())).collect(Collectors.toList());
+				}
+				return null;
 			}
 		});
 	}

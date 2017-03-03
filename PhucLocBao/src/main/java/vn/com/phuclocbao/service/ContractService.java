@@ -17,6 +17,7 @@ public interface ContractService {
 	public boolean saveNewContract(ContractDto contractDto, UserActionParamVO userActionParam) throws BusinessException;
 	public ContractView findContractById(Integer id) throws BusinessException;
 	public List<ContractDto> findContractsByStateAndId(ContractStatusType state, Integer companyId) throws BusinessException;
+	public List<ContractDto> findContractsByStateAndIdAndCustomerName(ContractStatusType state, Integer companyId, String customerName) throws BusinessException;
 	public ManageContractBean buildManageContractBean(List<ContractDto> dtos);
 	public ManageContractBean buildManageOldContractBean(List<ContractDto> dtos);
 	public ManageContractBean buildManageBadContractBean(List<ContractDto> dtos);

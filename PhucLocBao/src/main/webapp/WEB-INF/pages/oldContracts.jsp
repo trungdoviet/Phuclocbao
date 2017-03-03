@@ -23,6 +23,25 @@
 				<div class="panel-heading text-center"><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>Quản lý thông tin hợp đồng cũ</div>
 				<div class="panel-body">
 					<div class="col-md-6">
+						<form:form role="form" id="finishContractForm" method="post" action="filterFinishContract" modelAttribute="csBean">
+								<spring:bind path="name">
+									<div class="form-group ${status.error ? 'has-error' : ''} pull-left" >
+										<form:input id="customerName" class="form-control"
+											placeholder="Họ tên khách hàng" name="customerName"
+											path="name" />
+										<form:errors path="name" cssClass="error" />
+									</div>
+								</spring:bind>
+								<button id="btnSearch" type="submit" class="btn btn-primary pull-left stay-left" name="search">
+									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+									Tìm
+								</button>
+						</form:form>
+					</div>
+					<div class="col-md-6">
+						<div style="height:50px"></div>
+					</div>
+					<div class="col-md-6">
 						<div class="row">
 							<div class="col-md-8 text-right"><strong class="bottom-line">Tổng số hợp đồng đã thanh lý:</strong></div>
 							<div id="ocFinishContract" class="col-md-4 text-left">${oldContract.finishContract}</div>

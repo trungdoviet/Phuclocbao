@@ -111,7 +111,6 @@ public class ContractController {
 			contractBean.getContractDto().getCompany().setId(plbSession.getCompanyId());
 			try {
 				String paymentInfo =  contractBean.getPaidInfo();
-				logger.info("payment schedule:" + contractBean.getPaidInfo());
 				contractBean.getContractDto().setPaymentSchedules(PaymentScheduleParser.parsePaymentSchedule(paymentInfo));
 				boolean isSuccess = contractService.saveNewContract(contractBean.getContractDto(), UserActionParamVOBuilder.createBuilder()
 																															.setUsername(plbSession.getUserAccount().getUsername())
@@ -184,7 +183,6 @@ public class ContractController {
 	@RequestMapping(value = "/contract/{id}/paid", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView showPaidContractForm(HttpServletRequest request, @PathVariable("id") int id, Model model, ContractBean contractBean) {
 		ModelAndView modelView = new ModelAndView("contract");
-		logger.info("open Form : {}" + id);
 		try {
 			populateContractForm(request, id, contractBean, ProcessStaging.PAID.getName());
 			model.addAttribute("contractBean", contractBean);
@@ -201,7 +199,6 @@ public class ContractController {
 		@RequestMapping(value = "/contract/{id}/update", method = {RequestMethod.GET, RequestMethod.POST})
 		public ModelAndView showUpdateContractForm(HttpServletRequest request, @PathVariable("id") int id, Model model, ContractBean contractBean) {
 			ModelAndView modelView = new ModelAndView("contract");
-			logger.info("open Form : {}" + id);
 			try {
 				populateContractForm(request, id, contractBean, ProcessStaging.UPDATE.getName());
 				model.addAttribute("contractBean", contractBean);
@@ -218,7 +215,6 @@ public class ContractController {
 	@RequestMapping(value = "/contract/{id}/payoff", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView showPayoffContractForm(HttpServletRequest request, @PathVariable("id") int id, Model model, ContractBean contractBean) {
 		ModelAndView modelView = new ModelAndView("contract");
-		logger.info("open Form : {}" + id);
 		try {
 			populateContractForm(request, id, contractBean,ProcessStaging.PAYOFF.getName());
 			contractBean.getContractDto().setPayoffDate(DateTimeUtil.getCurrentDate());
@@ -242,8 +238,6 @@ public class ContractController {
 		if (result.hasErrors()) {
 			model = reloadUpdateContractPage(request, id, contractBean,ProcessStaging.PAID);
 		} else {
-			logger.info("phone==" + contractBean.getContractDto().getCustomer().getPhone());
-			
 			PLBSession plbSession = PlbUtil.getPlbSession(request);
 			model = new ModelAndView(plbSession.getMenuBean().getDefActiveMenu().getRedirectCommand());
 			contractBean.setProcessStaging(ProcessStaging.PAID.getName());
@@ -275,7 +269,6 @@ public class ContractController {
 		if (result.hasErrors()) {
 			model = reloadUpdateContractPage(request, id, contractBean,ProcessStaging.PAYOFF);
 		} else {
-			logger.info("phone==" + contractBean.getContractDto().getCustomer().getPhone());
 			PLBSession plbSession = PlbUtil.getPlbSession(request);
 			model = new ModelAndView(plbSession.getMenuBean().getDefActiveMenu().getRedirectCommand());
 			contractBean.setProcessStaging(ProcessStaging.PAYOFF.getName());
@@ -307,7 +300,6 @@ public class ContractController {
 		if (result.hasErrors()) {
 			model = reloadUpdateContractPage(request, id, contractBean, ProcessStaging.PAYOFF);
 		} else {
-			logger.info("phone==" + contractBean.getContractDto().getCustomer().getPhone());
 			PLBSession plbSession = PlbUtil.getPlbSession(request);
 			model = new ModelAndView(plbSession.getMenuBean().getDefActiveMenu().getRedirectCommand());
 			contractBean.setProcessStaging(ProcessStaging.PAYOFF.getName());

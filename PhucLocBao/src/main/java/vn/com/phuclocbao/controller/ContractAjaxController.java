@@ -51,7 +51,6 @@ public class ContractAjaxController {
 				result = customerService.buildContractResponse(dtos);
 				PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 				plbSession.setContractResponseBody(result);
-				logger.info("Search size:"+dtos.size());
 			} catch (BusinessException e) {
 				logger.error(e);
 				e.printStackTrace();

@@ -42,6 +42,7 @@ import vn.com.phuclocbao.viewbean.CompanyBranchBean;
 import vn.com.phuclocbao.viewbean.CompanyFinancialBean;
 import vn.com.phuclocbao.viewbean.CompanyProfitBean;
 import vn.com.phuclocbao.viewbean.ContractBean;
+import vn.com.phuclocbao.viewbean.CustomerSearchBean;
 import vn.com.phuclocbao.viewbean.GeneralView;
 import vn.com.phuclocbao.viewbean.ManageContractBean;
 import vn.com.phuclocbao.viewbean.ManageUserBean;
@@ -122,8 +123,9 @@ public class NavigationController extends BaseController {
 		try {
 			List<ContractDto> contracts = contractService.findContractsByStateAndId(ContractStatusType.IN_PROGRESS, plbSession.getCompanyId());
 			ManageContractBean mcb = contractService.buildManageContractBean(contracts);
-			logger.info("Contract Found:" + mcb.getTotalContract());
 			model.addObject("mngContract", mcb);
+			CustomerSearchBean customerSearchBean = new CustomerSearchBean();
+			model.addObject("csBean", customerSearchBean);
 		} catch (BusinessException e) {
 			logger.error(e);
 			e.printStackTrace();
@@ -142,8 +144,9 @@ public class NavigationController extends BaseController {
 		try {
 			List<ContractDto> contracts = contractService.findContractsByStateAndId(ContractStatusType.FINISH, plbSession.getCompanyId());
 			ManageContractBean mcb = contractService.buildManageOldContractBean(contracts);
-			logger.info("Contract Found:" + mcb.getTotalContract());
 			model.addObject("oldContract", mcb);
+			CustomerSearchBean customerSearchBean = new CustomerSearchBean();
+			model.addObject("csBean", customerSearchBean);
 		} catch (BusinessException e) {
 			logger.error(e);
 			e.printStackTrace();
@@ -254,6 +257,8 @@ public class NavigationController extends BaseController {
 			List<ContractDto> contracts = contractService.findContractsByStateAndId(ContractStatusType.BAD, plbSession.getCompanyId());
 			ManageContractBean mcb = contractService.buildManageBadContractBean(contracts);
 			model.addObject("badContract", mcb);
+			CustomerSearchBean customerSearchBean = new CustomerSearchBean();
+			model.addObject("csBean", customerSearchBean);
 		} catch (BusinessException e) {
 			logger.error(e);
 			e.printStackTrace();
