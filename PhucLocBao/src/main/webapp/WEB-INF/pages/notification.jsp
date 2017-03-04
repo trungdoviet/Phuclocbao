@@ -82,9 +82,16 @@
 											${ncBean.contract.customer.phone}
 										</td>
 										<td class="text-right">
-											<fmt:formatNumber  currencySymbol=" "  value="${ncBean.contract.totalAmount}" type="currency" maxFractionDigits="0" var="totalAmount"/>
-											${fn:replace(totalAmount, ",", ".")}
-											VNĐ
+											<c:if test="${ncBean.stage=='paid' }">
+												<fmt:formatNumber  currencySymbol=" "  value="${ncBean.contract.totalFeeOnePeriod}" type="currency" maxFractionDigits="0" var="totalFeeOnePeriod"/>
+												${fn:replace(totalFeeOnePeriod, ",", ".")}
+												VNĐ
+											</c:if>
+											<c:if test="${ncBean.stage=='payoff' }">
+												<fmt:formatNumber  currencySymbol=" "  value="${ncBean.contract.totalAmount}" type="currency" maxFractionDigits="0" var="totalAmount"/>
+												${fn:replace(totalAmount, ",", ".")}
+												VNĐ
+											</c:if>
 										</td>
 										<td class="text-center">
 											<c:if test="${ncBean.stage=='paid' }">

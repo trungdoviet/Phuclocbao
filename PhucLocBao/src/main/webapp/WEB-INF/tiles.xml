@@ -68,6 +68,12 @@
        <put-attribute name="body" value="/WEB-INF/pages/history.jsp" />  
    </definition>  
     
+     <!--Customer Search Page -->
+   <definition name="customerSearch" extends="base-definition">  
+       <put-attribute name="title" value="Tìm khách hàng - Phúc Lộc Bảo" />  
+       <put-attribute name="body" value="/WEB-INF/pages/customerSearch.jsp" />  
+   </definition> 
+   
     <!-- Company Financial -->
      <definition name="companyFinancial" extends="base-definition">  
        <put-attribute name="title" value="Quản lý Tài chính - Phúc Lộc Bảo" />  

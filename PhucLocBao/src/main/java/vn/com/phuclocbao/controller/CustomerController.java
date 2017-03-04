@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.dto.ContractDto;
+import vn.com.phuclocbao.dto.CustomerDto;
 import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.exception.BusinessException;
@@ -100,6 +101,36 @@ public class CustomerController extends BaseController {
 			List<ContractDto> contracts = contractService.findContractsByStateAndIdAndCustomerName(ContractStatusType.BAD, plbSession.getCompanyId(), customerSearchBean.getName());
 			ManageContractBean mcb = contractService.buildManageBadContractBean(contracts);
 			model.addObject("badContract", mcb);
+			model.addObject("csBean", customerSearchBean);
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
+		}
+		return model;
+	}
+	
+	@RequestMapping(value = { "/searchCustomer"}, method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView searchbyNameOrIdNo(HttpServletRequest request, HttpServletResponse response, 
+			@ModelAttribute("csBean") @Validated CustomerSearchBean customerSearchBean, 
+			BindingResult result, SessionStatus status) {
+		if(StringUtils.isEmpty(customerSearchBean.getName())){
+			return new ModelAndView(MenuDefinition.CUSTOMER_SEARCH.getRedirectCommand());
+		}
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		ModelAndView model = new ModelAndView(MenuDefinition.CUSTOMER_SEARCH.getName());
+		try {
+			Integer companyId = plbSession.getCompanyId();
+			if(customerSearchBean.isSearchAllCompany()){
+				companyId = null;
+			}
+			List<CustomerDto> allDtos = customerService.getCustomersByIdNoOrName(customerSearchBean.getName(), companyId);
+			if(customerSearchBean.isSearchAllCompany()){
+				customerSearchBean.setCustomers(customerService.filterCustomerDtoInCompany(allDtos, plbSession.getCompanyId()));
+				customerSearchBean.setCustomersInOtherCompany(customerService.filterCustomerDtoInOtherCompany(allDtos, plbSession.getCompanyId()));
+			} else {
+				customerSearchBean.setCustomers(allDtos);
+			}
 			model.addObject("csBean", customerSearchBean);
 		} catch (BusinessException e) {
 			logger.error(e);

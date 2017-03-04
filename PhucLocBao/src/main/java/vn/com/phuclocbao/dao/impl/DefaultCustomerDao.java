@@ -31,7 +31,20 @@ public class DefaultCustomerDao extends BaseDaoJpaImpl<Customer, Integer> implem
 		query.setParameter("customerIdNo", "%" + idNo +"%");
 		return query.getResultList();
 	}
-
+	public List<Customer> getCustomerContainNameOrIdNo(String nameOrIdNo, Integer companyId) throws PersistenceException {
+		if(companyId != null && companyId > 0){
+			TypedQuery<Customer> query = getEm().createNamedQuery("Customer_getCustomerByContainingNameOrIdInCompany", Customer.class);
+			query.setParameter("customerIdNoOrName", "%" + nameOrIdNo +"%");
+			query.setParameter("companyId", companyId);
+			return query.getResultList();
+		} else {
+			TypedQuery<Customer> query = getEm().createNamedQuery("Customer_getCustomerByContainingNameOrId", Customer.class);
+			query.setParameter("customerIdNoOrName", "%" + nameOrIdNo +"%");
+			return query.getResultList();
+			
+		}
+		
+	}
 
 		
 }

@@ -11,7 +11,9 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
 @javax.persistence.Entity
 @javax.persistence.Table(name="tblCustomer")
 @NamedQueries({
-	@NamedQuery(name = "Customer_getCustomerByContainingId", query = "SELECT customer FROM Customer customer WHERE customer.idNo LIKE :customerIdNo")
+	@NamedQuery(name = "Customer_getCustomerByContainingId", query = "SELECT customer FROM Customer customer WHERE customer.idNo LIKE :customerIdNo"),
+	@NamedQuery(name = "Customer_getCustomerByContainingNameOrId", query = "SELECT DISTINCT customer FROM Customer customer WHERE customer.name LIKE :customerIdNoOrName OR customer.idNo LIKE :customerIdNoOrName ORDER BY customer.name ASC"),
+	@NamedQuery(name = "Customer_getCustomerByContainingNameOrIdInCompany", query = "SELECT DISTINCT customer FROM Customer customer WHERE customer.contract.company.id = :companyId AND ( customer.name LIKE :customerIdNoOrName OR customer.idNo LIKE :customerIdNoOrName) ORDER BY customer.name ASC")
 })
 public class Customer implements IBaseEntity
 {

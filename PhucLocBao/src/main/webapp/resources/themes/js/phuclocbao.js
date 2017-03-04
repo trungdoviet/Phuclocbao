@@ -848,7 +848,7 @@ function general_formatTotalFunding(){
 		        aDec: ',', 
 		        pSign: 's',
 		        aSign: ' VNĐ',
-		        vMin: 0, 
+		        vMin: -999999999999, 
 		        vMax: 999999999999
 		    };
 		$("#companyTotalAmount").text($.fn.autoFormat(totalFund,numberConf)); 

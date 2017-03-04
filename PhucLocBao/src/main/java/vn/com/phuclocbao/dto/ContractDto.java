@@ -42,6 +42,7 @@ public class ContractDto implements IBaseDTO {
 	private transient Long totalLateDays;
 	private transient Double totalUnpaidFee;
 	private transient Date lastPaidDate;
+	private transient Double totalFeeOnePeriod;
 	
 	public String returnTotalAmountAsPlainString(){
 		  DecimalFormat df = new DecimalFormat("#");
@@ -52,7 +53,12 @@ public class ContractDto implements IBaseDTO {
 		return histories;
 	}
 	
-
+	public Double getTotalFeeOnePeriod() {
+		return totalFeeOnePeriod;
+	}
+	public void setTotalFeeOnePeriod(Double totalFeeOnePeriod) {
+		this.totalFeeOnePeriod = totalFeeOnePeriod;
+	}
 	public Long getTotalLateDays() {
 		return totalLateDays;
 	}

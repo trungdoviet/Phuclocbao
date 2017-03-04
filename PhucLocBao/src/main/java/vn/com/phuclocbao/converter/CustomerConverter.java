@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.CustomerDto;
 import vn.com.phuclocbao.entity.Customer;
@@ -35,6 +36,20 @@ public class CustomerConverter extends BaseConverter<CustomerDto, Customer>{
 				CustomerDto dto = new CustomerDto();
 				this.toDto(customer, dto);
 				dto.setContract(ContractConverter.getInstance().toDto(customer.getContract(), new ContractDto()));
+				dtos.add(dto);
+			}
+		}
+		return  dtos;
+	}
+
+	public List<CustomerDto> toDtosOnSearchingCustomerInAllCompanies(List<Customer> entities) throws BusinessException{
+		List<CustomerDto> dtos = new ArrayList<>();
+		if(CollectionUtils.isNotEmpty(entities)){
+			for (Customer customer : entities) {
+				CustomerDto dto = new CustomerDto();
+				this.toDto(customer, dto);
+				dto.setContract(ContractConverter.getInstance().toDto(customer.getContract(), new ContractDto()));
+				dto.getContract().setCompany(CompanyConverter.getInstance().toDto(customer.getContract().getCompany(), new CompanyDto()));
 				dtos.add(dto);
 			}
 		}

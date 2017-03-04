@@ -11,7 +11,7 @@
 	    </layout>
 	</appender>
 
-	<logger name="vn.com.phuclocbao.controller" level="debug"
+	<logger name="vn.com.phuclocbao.controller" level="error"
 		additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>

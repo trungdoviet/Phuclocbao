@@ -42,7 +42,6 @@ public class UserHistoryController extends BaseController {
 		
 		ModelAndView model = new ModelAndView(MenuDefinition.HISTORY.getName());
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
-		plbSession.getMenuBean().makeActive(MenuDefinition.NOTIFICATION);
 		try {
 			List<UserHistoryDto> paymentDtos = userHistoryService.getHistories(plbSession.getCompanyId(), userHistoryView.getStartDate(), userHistoryView.getEndDate());
 			userHistoryView.setUserHistories(paymentDtos);

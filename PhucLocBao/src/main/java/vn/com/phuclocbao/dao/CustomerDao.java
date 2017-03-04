@@ -8,4 +8,6 @@ import vn.com.phuclocbao.entity.Customer;
 
 public interface CustomerDao{
 		public List<Customer> getCustomerContainIdNo(String idNo) throws PersistenceException;
+		public List<Customer> getCustomerContainNameOrIdNo(String nameOrIdNo, Integer companyId) throws PersistenceException;
+		
 }

@@ -31,6 +31,15 @@ public class CustomerDto implements IBaseDTO {
 	private ContractDto contract;
 	@JsonView(Views.Public.class)
 	private Integer birthYear;
+	private transient String provinceInString;
+	
+	public String getProvinceInString() {
+		return provinceInString;
+	}
+
+	public void setProvinceInString(String provinceInString) {
+		this.provinceInString = provinceInString;
+	}
 
 	public Integer getBirthYear() {
 		return birthYear;

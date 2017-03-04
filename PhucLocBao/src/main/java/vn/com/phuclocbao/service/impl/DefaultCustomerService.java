@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,6 +30,7 @@ import vn.com.phuclocbao.entity.Customer;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.BaseService;
 import vn.com.phuclocbao.service.CustomerService;
+import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.util.DateTimeUtil;
 @Service
 public class DefaultCustomerService extends BaseService implements CustomerService {
@@ -61,6 +63,49 @@ public class DefaultCustomerService extends BaseService implements CustomerServi
 			}
 			
 		});
+	}
+	public List<CustomerDto> getCustomersByIdNoOrName(String idNoOrName, Integer companyId) throws BusinessException{
+		return methodWrapper(new PersistenceExecutable<List<CustomerDto>>() {
+
+			@Override
+			public List<CustomerDto> execute() throws BusinessException, ClassNotFoundException, IOException {
+				List<Customer> customers = customerDao.getCustomerContainNameOrIdNo(idNoOrName, companyId);
+				List<CustomerDto> dtos = null;
+				if(companyId != null && companyId > 0){
+					dtos = CustomerConverter.getInstance().toDtosOnSearchingCustomer(customers);
+				} else {
+					dtos = CustomerConverter.getInstance().toDtosOnSearchingCustomerInAllCompanies(customers);
+				}
+				
+				if(CollectionUtils.isNotEmpty(dtos)){
+					 List<CustomerDto> filterDtos = dtos.stream()
+													.collect(Collectors.groupingBy(CustomerDto::getIdNo))
+													.entrySet()
+													.stream()
+													.map(entry-> getLatestCustomer(entry.getValue()))
+													.sorted((o1,o2) -> o1.getName().compareTo(o2.getName()))
+													.collect(Collectors.toList());
+					 filterDtos.forEach(item -> item.setProvinceInString(VietnamCityService.getProvinceName(item.getProvince())));
+					 return filterDtos;
+				}
+				return dtos;
+			}
+
+			private CustomerDto getLatestCustomer(List<CustomerDto> value) {
+				Integer maxId = value.stream().map(item-> item.getId()).max(Integer::compare).get();
+				return value.stream().filter(item -> item.getId()== maxId).findFirst().get();
+			}
+			
+		});
+	}
+	public List<CustomerDto> filterCustomerDtoInOtherCompany(List<CustomerDto> customers, Integer companyId) throws BusinessException{
+		if(CollectionUtils.isNotEmpty(customers)){
+			return customers.stream()
+					.filter(item -> !item.getContract().getCompany().getId().equals(companyId))
+					.sorted((o1,o2) -> o1.getName().compareTo(o2.getName()))
+					.collect(Collectors.toList());
+		}
+		return null;
 	}
 	@Override
 	public ContractResponseBody buildContractResponse(List<CustomerDto> dtos) {
@@ -126,5 +171,15 @@ public class DefaultCustomerService extends BaseService implements CustomerServi
 			return cucon;
 		}
 		return null;
+	}
+	@Override
+	public List<CustomerDto> filterCustomerDtoInCompany(List<CustomerDto> customers, Integer companyId){
+		if(CollectionUtils.isNotEmpty(customers)){
+			return customers.stream()
+					.filter(item -> item.getContract().getCompany().getId().equals(companyId))
+					.sorted((o1,o2) -> o1.getName().compareTo(o2.getName()))
+					.collect(Collectors.toList());
+		}
+		return new ArrayList<>();
 	}
 }

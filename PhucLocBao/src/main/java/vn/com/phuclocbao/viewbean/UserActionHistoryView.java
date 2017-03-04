@@ -11,8 +11,9 @@ import vn.com.phuclocbao.util.DateTimeUtil;
 
 public class UserActionHistoryView {
 	public UserActionHistoryView(){
-		startDate = DateTimeUtil.getCurrentDateWithoutTime();
-		endDate = DateTimeUtil.addMoreDate(startDate, 7);
+		endDate = DateTimeUtil.getCurrentDateWithoutTime();
+		endDate = DateTimeUtil.addMoreDate(endDate, 1);
+		startDate = DateTimeUtil.addMoreDate(endDate, -7);
 	}
 	private CompanyDto currentCompany;
 	@DateTimeFormat(pattern = "dd/MM/yyyy")

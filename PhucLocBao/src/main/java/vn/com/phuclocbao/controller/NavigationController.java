@@ -1,5 +1,6 @@
 package vn.com.phuclocbao.controller;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -116,11 +117,13 @@ public class NavigationController extends BaseController {
 	
 	@RequestMapping(value = { "/mngContracts"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView openManageContract(HttpServletRequest request, HttpServletResponse response) {
+		long startTime = System.currentTimeMillis();
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.MANAGE_CONTRACT);
 		ModelAndView model = new ModelAndView("mngContracts");
 		reloadCompanySession(model, request);
 		try {
+			
 			List<ContractDto> contracts = contractService.findContractsByStateAndId(ContractStatusType.IN_PROGRESS, plbSession.getCompanyId());
 			ManageContractBean mcb = contractService.buildManageContractBean(contracts);
 			model.addObject("mngContract", mcb);
@@ -130,6 +133,7 @@ public class NavigationController extends BaseController {
 			logger.error(e);
 			e.printStackTrace();
 		}
+		System.out.println("Total time=:" + (System.currentTimeMillis() - startTime)/1000);
 		return model;
 	}
 	
@@ -292,6 +296,9 @@ public class NavigationController extends BaseController {
 		cfBean.setCities(VietnamCityService.loadCities());
 		reloadCompanySession(model, request);
 		cfBean.setCompany(plbSession.getCurrentCompany());
+		if(cfBean.getCompany().getStartDate() == null){
+			cfBean.getCompany().setStartDate(DateTimeUtil.getCurrentDate());
+		}
 		model.addObject("cfBean", cfBean);
 		return model;
 	}
@@ -390,6 +397,19 @@ public class NavigationController extends BaseController {
 			showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
 		}
 		model.addObject("usBean", usBean);
+		return model;
+	}
+	
+	@RequestMapping(value = { "/customerSearch"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView openCustomerSearch(HttpServletRequest request, HttpServletResponse response, CustomerSearchBean csBean) {
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		ModelAndView model = new ModelAndView(MenuDefinition.CUSTOMER_SEARCH.getName());
+		plbSession.getMenuBean().makeActive(MenuDefinition.CUSTOMER_SEARCH);
+		if(csBean == null){
+			csBean = new CustomerSearchBean();
+		}
+		csBean.setCustomers(new ArrayList<>());
+		model.addObject("csBean", csBean);
 		return model;
 	}
 }

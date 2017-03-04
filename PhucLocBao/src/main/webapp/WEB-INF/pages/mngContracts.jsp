@@ -85,7 +85,8 @@
 			<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<table data-toggle="table" data-pagination="true" >
+						<table data-toggle="table" data-pagination="true" 
+						>
 						    <thead>
 						    <tr>
 						        <th data-field="customerName" data-sortable="true">Tên khách hàng</th>

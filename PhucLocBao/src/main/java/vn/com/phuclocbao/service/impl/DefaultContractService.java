@@ -505,6 +505,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 				bean.setStage(ProcessStaging.PAID.getName());
 				bean.setAmountDays(DateTimeUtil.daysBetweenDates(calculatedDate, selectedDate));
 				bean.setPaidDate(calculatedDate);
+				bean.getContract().setTotalFeeOnePeriod(bean.getContract().getFeeADay() * bean.getContract().getPeriodOfPayment());
 			} else {
 				bean.setStage(ProcessStaging.PAYOFF.getName());
 				bean.setAmountDays(DateTimeUtil.daysBetweenDates(item.getExpireDate(), selectedDate));

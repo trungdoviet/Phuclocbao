@@ -11,8 +11,9 @@ import vn.com.phuclocbao.util.DateTimeUtil;
 
 public class PaymentHistoryView {
 	public PaymentHistoryView(){
-		startDate = DateTimeUtil.getCurrentDateWithoutTime();
-		endDate = DateTimeUtil.addMoreDate(startDate, 30);
+		endDate = DateTimeUtil.getCurrentDateWithoutTime();
+		endDate = DateTimeUtil.addMoreDate(endDate, 1);
+		startDate = DateTimeUtil.addMoreDate(endDate, -15);
 	}
 	private CompanyDto currentCompany;
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
