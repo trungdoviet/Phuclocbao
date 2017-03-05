@@ -527,17 +527,17 @@ public class DefaultContractService extends BaseService implements ContractServi
 			@Override
 			public GeneralView execute() throws BusinessException, ClassNotFoundException, IOException {
 				GeneralView view = new GeneralView();
-				Long totalContract = 0L;
 				Long totalInProgressContract = 0L;
 				Long totalBadContract = 0L;
 				Long totalNotificationToDay = 0L;
-				totalContract = contractDao.countContractByCompanyId(companyId);
+				Long totalFinishContract = 0L;
+				totalFinishContract = contractDao.countContractByStatusAndCompanyId(ContractStatusType.FINISH, companyId);
 				totalInProgressContract = contractDao.countContractByStatusAndCompanyId(ContractStatusType.IN_PROGRESS, companyId);
 				totalNotificationToDay = contractDao.countNotifiedContractBySpecificDateAndCompanyId(DateTimeUtil.getCurrentDate(), companyId);
 				totalBadContract = contractDao.countContractByStatusAndCompanyId(ContractStatusType.BAD, companyId);
 				
 				view.setTotalBadContract(totalBadContract);
-				view.setTotalContractOfCompany(totalContract);
+				view.setTotalFinishContract(totalFinishContract);
 				view.setTotalInProgressContract(totalInProgressContract);
 				view.setTotalNotification(totalNotificationToDay);
 				view.setStatistic(new StatisticInfo());

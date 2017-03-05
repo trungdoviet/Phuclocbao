@@ -4,22 +4,23 @@ import vn.com.phuclocbao.bean.StatisticInfo;
 
 public class GeneralView {
 	private Long totalNotification;
-	private Long totalContractOfCompany;
+	private Long totalFinishContract;
 	private Long totalInProgressContract;
 	private Long totalBadContract;
 	private StatisticInfo statistic;
 	
+	
+	public Long getTotalFinishContract() {
+		return totalFinishContract;
+	}
+	public void setTotalFinishContract(Long totalFinishContract) {
+		this.totalFinishContract = totalFinishContract;
+	}
 	public Long getTotalNotification() {
 		return totalNotification;
 	}
 	public void setTotalNotification(Long totalNotification) {
 		this.totalNotification = totalNotification;
-	}
-	public Long getTotalContractOfCompany() {
-		return totalContractOfCompany;
-	}
-	public void setTotalContractOfCompany(Long totalContractOfCompany) {
-		this.totalContractOfCompany = totalContractOfCompany;
 	}
 	public Long getTotalInProgressContract() {
 		return totalInProgressContract;

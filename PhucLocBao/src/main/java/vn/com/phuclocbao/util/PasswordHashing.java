@@ -27,7 +27,6 @@ public class PasswordHashing {
 			// Get complete hashed password in hex format
 			generatedPassword = sb.toString();
 	
-			System.out.println(generatedPassword);
 		} catch (NoSuchAlgorithmException e) {
 			throw new BusinessException(PLBErrorCode.CAN_NOT_HASHING_PASSWORD.name());
 		}

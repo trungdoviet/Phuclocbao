@@ -118,7 +118,7 @@
 	<script type="text/javascript">
 		$( document ).ready(function() {
 			hideAlert("generalAlert");
-			cp_init();
+			companyProfit_init();
 		});
 	</script>
 </div>

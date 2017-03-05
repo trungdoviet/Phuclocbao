@@ -40,8 +40,8 @@
 							</a>
 						</div>
 						<div class="col-sm-9 col-lg-7 widget-right">
-							<div class="large">${generalView.totalContractOfCompany}</div>
-							<div class="text-muted">Hợp đồng</div>
+							<div class="large">${generalView.totalFinishContract}</div>
+							<div class="text-muted">HĐ thanh lý</div>
 						</div>
 					</div>
 				</div>
