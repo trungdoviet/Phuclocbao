@@ -105,6 +105,9 @@
 														(nợ phí từ <fmt:formatDate pattern="dd/MM/yyyy" value="${ncBean.contract.lastPaidDate}" />)
 													</span>
 												</c:if>
+												<c:if test="${ncBean.contract.lastPaidDate == null}">
+													(chưa đóng phí)
+												</c:if>
 											</c:if>
 										</td>
 										
