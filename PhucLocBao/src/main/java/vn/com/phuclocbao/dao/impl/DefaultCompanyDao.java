@@ -10,7 +10,6 @@ import vn.com.phuclocbao.dao.BaseDaoJpaImpl;
 import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.entity.CompanyEntity;
 @Repository
-@Transactional
 public class DefaultCompanyDao extends BaseDaoJpaImpl<CompanyEntity, Integer> implements CompanyDao
 {
 	@PersistenceContext

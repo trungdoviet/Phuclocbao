@@ -56,6 +56,8 @@ import vn.com.phuclocbao.vo.UserActionParamVO.UserActionParamVOBuilder;
 @RequestMapping("/")
 public class ContractController {
 	
+	private static final String MSG_DEBT_IS_NOT_OVER = "msg.debtIsNotOver";
+
 	private static final String MSG_CONTRACT_UPDATE_SUCCESS = "msg.contractUpdateSuccess";
 
 	private static final String MSG_CONTRACT_UPDATE_FAILED = "msg.contractUpdateFailed";
@@ -268,7 +270,7 @@ public class ContractController {
 		ModelAndView model = null;
 		if (result.hasErrors()) {
 			model = reloadUpdateContractPage(request, id, contractBean,ProcessStaging.PAYOFF);
-		} else {
+		}  else {
 			PLBSession plbSession = PlbUtil.getPlbSession(request);
 			model = new ModelAndView(plbSession.getMenuBean().getDefActiveMenu().getRedirectCommand());
 			contractBean.setProcessStaging(ProcessStaging.PAYOFF.getName());
@@ -290,6 +292,10 @@ public class ContractController {
 		}
 		return model;
 	}
+
+	private boolean isDebtOver(ContractBean contractBean) {
+		return (contractBean.getContractDto().getCustomerDebt() != null && contractBean.getContractDto().getCustomerDebt() != 0) || (contractBean.getContractDto().getCompanyDebt() != null && contractBean.getContractDto().getCompanyDebt() != 0);
+	}
 	
 	@RequestMapping(value = { "/contract/{id}/saveContract"}, params="payoff", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView payOffContract(HttpServletRequest request,  @PathVariable("id") int id, HttpServletResponse response, 
@@ -299,6 +305,10 @@ public class ContractController {
 		ModelAndView model = null;
 		if (result.hasErrors()) {
 			model = reloadUpdateContractPage(request, id, contractBean, ProcessStaging.PAYOFF);
+		} else if(isDebtOver(contractBean)){
+			model = reloadUpdateContractPage(request, id, contractBean,ProcessStaging.PAYOFF);
+			model.addObject(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(MSG_DEBT_IS_NOT_OVER));
+			model.addObject(ConstantVariable.ATTR_FLASH_MSG_CSS, AlertType.DANGER.getName());
 		} else {
 			PLBSession plbSession = PlbUtil.getPlbSession(request);
 			model = new ModelAndView(plbSession.getMenuBean().getDefActiveMenu().getRedirectCommand());

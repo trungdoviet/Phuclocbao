@@ -10,6 +10,8 @@ import vn.com.phuclocbao.enums.PaymentHistoryType;
 
 public class PaymentHistoryUtil {
 	private static final String MSG_PAYOFF_CONTRACT = "Thanh lý hợp đồng số: HDCT{0}-{1} .Khách {2} {3}. Ngày thanh lý: {4}";
+	private static final String MSG_REFUNDING_FOR_CUSTOMER = "Trả thừa phí cho khách khi thanh lý hợp đồng số: HDCT{0}-{1} .Khách {2} {3}. Ngày thanh lý: {4}";
+	private static final String MSG_REFUNDING_FOR_COMPANY = "Trả lại phí cho công ty khi thanh lý hợp đồng số: HDCT{0}-{1} .Khách {2} {3}. Ngày thanh lý: {4}";
 	private static final String MSG_RENTING_NEW_CONTRACT = "Đăng ký hợp đồng mới ngày {1} .Khách hàng: {2} {3}";
 	private static final String MSG_CUSTOMER_DEBT = "Khách nợ phí hợp đồng số: HDCT{0} - {1} .Khách hàng: {2} {3}";
 	private static final String MSG_CUSTOMER_PAY_DEBT = "Khách trả nợ phí hợp đồng số: HDCT{0} - {1} .Khách hàng: {2} {3}";
@@ -30,6 +32,9 @@ public class PaymentHistoryUtil {
 		String msg =  StringUtils.EMPTY;
 		switch (type) {
 		case CUSTOMER_DEBT:
+			if(fee < 0){
+				fee = fee * -1;
+			}
 			history.setFee(fee);
 			startDate = DateTimeUtil.date2String(contract.getStartDate());
 			msg = MessageFormat.format(MSG_CUSTOMER_DEBT, contract.getId(), startDate, contract.getCustomer().getName(), 
@@ -37,6 +42,9 @@ public class PaymentHistoryUtil {
 			history.setDetail(msg);
 			break;
 		case COMPANY_DEBT:
+			if(fee < 0){
+				fee = fee * -1;
+			}
 			history.setFee(fee);
 			startDate = DateTimeUtil.date2String(contract.getStartDate());
 			msg = MessageFormat.format(MSG_COMPANY_DEBT, contract.getId(), startDate, contract.getCustomer().getName(), 
@@ -44,6 +52,9 @@ public class PaymentHistoryUtil {
 			history.setDetail(msg);
 			break;
 		case CUSTOMER_PAY_DEBT:
+			if(fee < 0){
+				fee = fee * -1;
+			}
 			history.setFee(fee);
 			startDate = DateTimeUtil.date2String(contract.getStartDate());
 			msg = MessageFormat.format(MSG_CUSTOMER_PAY_DEBT, contract.getId(), startDate, contract.getCustomer().getName(), 
@@ -51,6 +62,9 @@ public class PaymentHistoryUtil {
 			history.setDetail(msg);
 			break;
 		case COMPANY_PAY_DEBT:
+			if(fee < 0){
+				fee = fee * -1;
+			}
 			history.setFee(fee);
 			startDate = DateTimeUtil.date2String(contract.getStartDate());
 			msg = MessageFormat.format(MSG_COMPANY_PAY_DEBT, contract.getId(), startDate, contract.getCustomer().getName(), 
@@ -61,6 +75,9 @@ public class PaymentHistoryUtil {
 			history.setFee(fee);
 			break;
 		case OTHER:
+			if(fee < 0){
+				fee = fee * -1;
+			}
 			history.setFee(fee);
 			history.setDetail(customMessage);
 			break;
@@ -84,6 +101,28 @@ public class PaymentHistoryUtil {
 			startDate = DateTimeUtil.date2String(contract.getStartDate());
 			msg = MessageFormat.format(MSG_RENTING_NEW_CONTRACT, contract.getId(), startDate, contract.getCustomer().getName(), 
 																String.valueOf(contract.getCustomer().getBirthYear()));
+			history.setDetail(msg);
+			break;
+		case REFUNDING_FOR_COMPANY:
+			if(fee < 0){
+				fee = fee * -1;
+			}
+			history.setFee(fee);
+			startDate = DateTimeUtil.date2String(contract.getStartDate());
+			payoffDate = DateTimeUtil.date2String(contract.getPayoffDate());
+			msg = MessageFormat.format(MSG_REFUNDING_FOR_COMPANY, contract.getId(), startDate, contract.getCustomer().getName(), 
+														String.valueOf(contract.getCustomer().getBirthYear()), payoffDate);
+			history.setDetail(msg);
+			break;
+		case REFUNDING_FOR_CUSTOMER:
+			if(fee < 0){
+				fee = fee * -1;
+			}
+			history.setFee(fee);
+			startDate = DateTimeUtil.date2String(contract.getStartDate());
+			payoffDate = DateTimeUtil.date2String(contract.getPayoffDate());
+			msg = MessageFormat.format(MSG_REFUNDING_FOR_CUSTOMER, contract.getId(), startDate, contract.getCustomer().getName(), 
+														String.valueOf(contract.getCustomer().getBirthYear()), payoffDate);
 			history.setDetail(msg);
 			break;
 		default:

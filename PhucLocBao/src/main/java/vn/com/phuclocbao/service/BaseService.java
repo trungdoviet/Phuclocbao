@@ -7,6 +7,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
 
 import vn.com.phuclocbao.dao.PersistenceExecutable;
 import vn.com.phuclocbao.dto.base.IBaseDTO;
@@ -45,6 +46,27 @@ public abstract class BaseService {
 		try {
 			result = executable.execute();
 		} catch (Exception ex) {
+//			getEm().getTransaction().rollback();
+			if (ex instanceof BusinessException) {
+				throw ((BusinessException) ex);
+			}
+			throw new PersistenceException("Failed to excecute service \""
+					+ this.getClass().getName() + "\" for persistence unit plb_unit \""
+					+  "\".", ex);
+        } finally {
+            getEm().close();
+            
+        }		
+	    return result; 
+	}
+	
+	@Transactional(rollbackFor={Exception.class, PersistenceException.class, BusinessException.class})
+	public <T>  T transactionWrapper( PersistenceExecutable<T> executable ) throws BusinessException {
+		T result;
+		try {
+			result = executable.execute();
+		} catch (Exception ex) {
+//			getEm().getTransaction().rollback();
 			if (ex instanceof BusinessException) {
 				throw ((BusinessException) ex);
 			}

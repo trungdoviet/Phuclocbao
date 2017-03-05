@@ -15,7 +15,6 @@ import vn.com.phuclocbao.dao.PaymentHistoryDao;
 import vn.com.phuclocbao.entity.PaymentHistory;
 import vn.com.phuclocbao.exception.BusinessException;
 @Repository
-@Transactional
 public class DefaultPaymentHistoryDao extends BaseDaoJpaImpl<PaymentHistory, Integer> implements PaymentHistoryDao {
 	@PersistenceContext
 	private EntityManager manager;

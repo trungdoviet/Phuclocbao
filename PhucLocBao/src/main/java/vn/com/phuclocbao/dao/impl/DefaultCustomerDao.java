@@ -14,7 +14,6 @@ import vn.com.phuclocbao.dao.BaseDaoJpaImpl;
 import vn.com.phuclocbao.dao.CustomerDao;
 import vn.com.phuclocbao.entity.Customer;
 @Repository
-@Transactional
 public class DefaultCustomerDao extends BaseDaoJpaImpl<Customer, Integer> implements CustomerDao
 {
 	@PersistenceContext

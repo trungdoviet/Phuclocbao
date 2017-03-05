@@ -15,7 +15,6 @@ import vn.com.phuclocbao.dao.UserHistoryDao;
 import vn.com.phuclocbao.entity.UserHistory;
 import vn.com.phuclocbao.exception.BusinessException;
 @Repository
-@Transactional
 public class DefaultUserHistoryDao extends BaseDaoJpaImpl<UserHistory, Integer> implements UserHistoryDao {
 	@PersistenceContext
 	private EntityManager manager;

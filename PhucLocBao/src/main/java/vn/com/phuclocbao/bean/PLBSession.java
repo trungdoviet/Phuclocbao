@@ -13,9 +13,14 @@ public class PLBSession {
 	private ContractResponseBody contractResponseBody;
 	private CompanyDto currentCompany;
 	
+	private CompanyDto workingCompany;
+	
 	public Integer getCompanyId() {
 		return currentCompany.getId();
 	}
+	public Integer getWorkingCompanyId() {
+		return workingCompany.getId();
+	} 
 	
 	public static String getSessionAttributeKey() {
 		return SESSION_ATTRIBUTE_KEY;
@@ -27,6 +32,12 @@ public class PLBSession {
 		return userAccount;
 	}
 
+	public CompanyDto getWorkingCompany() {
+		return workingCompany;
+	}
+	public void setWorkingCompany(CompanyDto workingCompany) {
+		this.workingCompany = workingCompany;
+	}
 	public void setUserAccount(UserAccountDto userAccount) {
 		this.userAccount = userAccount;
 	}

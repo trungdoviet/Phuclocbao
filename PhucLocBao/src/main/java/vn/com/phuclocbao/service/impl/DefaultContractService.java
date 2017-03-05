@@ -31,6 +31,7 @@ import vn.com.phuclocbao.dto.PaymentScheduleDto;
 import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.entity.Contract;
 import vn.com.phuclocbao.entity.PaymentHistory;
+import vn.com.phuclocbao.entity.PaymentSchedule;
 import vn.com.phuclocbao.entity.UserHistory;
 import vn.com.phuclocbao.enums.ContractSeverity;
 import vn.com.phuclocbao.enums.ContractStatusType;
@@ -53,6 +54,7 @@ import vn.com.phuclocbao.viewbean.NotificationContractBean;
 import vn.com.phuclocbao.vo.UserActionParamVO;
 @Service
 public class DefaultContractService extends BaseService implements ContractService {
+	private static final int EXTRA_LACK_OF_PAYMENT_CONTRACT = 10;
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DefaultContractService.class);
 	@Autowired
 	private CompanyDao companyDao;
@@ -65,10 +67,10 @@ public class DefaultContractService extends BaseService implements ContractServi
 	@Autowired
 	private UserHistoryDao userHistoryDao;
 	
-	@Transactional
+	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public boolean saveNewContract(ContractDto contractDto, UserActionParamVO userActionParam) throws BusinessException {
-	  Long id = methodWrapper(new PersistenceExecutable<Long>() {
+	  Long id = transactionWrapper(new PersistenceExecutable<Long>() {
 
 		@Override
 		public Long execute() throws BusinessException, ClassNotFoundException, IOException {
@@ -198,7 +200,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 			public List<ContractDto> execute() throws BusinessException, ClassNotFoundException, IOException {
 				List<Contract> contracts = contractDao.getContractByStatusAndCompanyId(state, companyId);
 				if(CollectionUtils.isNotEmpty(contracts)) {
-					List<ContractDto> result = ContractConverter.getInstance().toDtosWithCustomer(contracts);
+					List<ContractDto> result = ContractConverter.getInstance().toDtosWithCustomerAndPayments(contracts);
 					return result.stream().sorted((o1,o2) -> o2.getStartDate().compareTo(o1.getStartDate())).collect(Collectors.toList());
 				}
 				return null;
@@ -234,7 +236,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 			dtos.stream().forEach(item -> {
 				PaymentScheduleDto lastPayment = PlbUtil.getLatestPaid(item.getPaymentSchedules());
 				if(lastPayment != null){
-					item.setLastPaidDate(lastPayment.getPayDate());
+					item.setLastPaidDate(lastPayment.getExpectedPayDate());
 					item.setTotalLateDays(DateTimeUtil.daysBetweenDates(item.getLastPaidDate(), DateTimeUtil.getCurrentDateWithoutTime()));
 				} else {
 					item.setLastPaidDate(null);
@@ -269,17 +271,17 @@ public class DefaultContractService extends BaseService implements ContractServi
 		
 		});
 	}
-	@Transactional
+	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public ContractDto updateContractInPaidTime(ContractDto dto, UserActionParamVO userActionParam) throws BusinessException {
-		return methodWrapper(new PersistenceExecutable<ContractDto>() {
+		return transactionWrapper(new PersistenceExecutable<ContractDto>() {
 
 			@Override
 			public ContractDto execute() throws BusinessException, ClassNotFoundException, IOException {
 				try {
 					Contract contract = contractDao.findById(dto.getId(), dto.getCompany().getId());
 					
-					 Double totalPaidCost = 0D;
+					Double totalPaidCost = 0D;
 					 long numberOfOldPaidTime = contract.getPaymentSchedules().stream().filter(item-> item.getFinish().equalsIgnoreCase(ConstantVariable.YES_OPTION)).count();
 					 long numberOfNewPaidTime  = dto.getPaymentSchedules().stream().filter(item-> item.getFinish().equalsIgnoreCase(ConstantVariable.YES_OPTION)).count();
 					 totalPaidCost = (numberOfNewPaidTime - numberOfOldPaidTime) * contract.getPeriodOfPayment() * contract.getFeeADay();
@@ -318,34 +320,97 @@ public class DefaultContractService extends BaseService implements ContractServi
 		
 		});
 	}
-	@Transactional
+	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public ContractDto updateContractInPayOffTime(ContractDto dto, UserActionParamVO userActionParam) throws BusinessException {
-		return methodWrapper(new PersistenceExecutable<ContractDto>() {
+		return transactionWrapper(new PersistenceExecutable<ContractDto>() {
 			@Override
 			public ContractDto execute() throws BusinessException, ClassNotFoundException, IOException {
 				try {
 					Contract contract = contractDao.findById(dto.getId(), dto.getCompany().getId());
+					Double customerDebt = dto.getCustomerDebt() - contract.getCustomerDebt();
+					Double companyDebt = dto.getCompanyDebt() - contract.getCompanyDebt();
+					Double profitToCompany = 0D;
+					Double totalRefunding = 0D;
+					List<PaymentHistory> paymentHistories = new ArrayList<>();
+					List<UserHistory> userHistories = new ArrayList<>();
 					
 					 ContractConverter.getInstance().updateContractInPayOffTime(dto, contract);
 					 PaymentHistory paidHistory = PaymentHistoryUtil.createNewHistory(contract,dto.getCompany().getId(), PaymentHistoryType.PAYOFF, 0D, StringUtils.EMPTY);
+					 paymentHistories.add(paidHistory);
+					 
 					 ContractDto updatedContract = ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
 					 if(updatedContract != null){
 						 CompanyEntity company = companyDao.findById(dto.getCompany().getId());
 						 if(company != null){
-								Double totalFunding = company.getTotalFund() + contract.getTotalAmount();
-								company.setTotalFund(totalFunding);
-								companyDao.merge(company);
+								profitToCompany = contract.getTotalAmount();
+								totalRefunding = calculateRefundWhenPayoff(updatedContract);
+								profitToCompany -= totalRefunding;
+								if(totalRefunding > 0 ){
+									PaymentHistory refundingToCustomer = PaymentHistoryUtil.createNewHistory(contract,dto.getCompany().getId(), PaymentHistoryType.REFUNDING_FOR_CUSTOMER, totalRefunding, StringUtils.EMPTY);
+									paymentHistories.add(refundingToCustomer);
+								} else if(totalRefunding < 0){
+									PaymentHistory refundingToCompany = PaymentHistoryUtil.createNewHistory(contract,dto.getCompany().getId(), PaymentHistoryType.REFUNDING_FOR_COMPANY, totalRefunding, StringUtils.EMPTY);
+									paymentHistories.add(refundingToCompany);
+								}
 						} else {
 							logger.error("Can not update contract to company because company not found: " + dto.getId());
 							throw new BusinessException(PLBErrorCode.CAN_NOT_UPDATE_DATA.name());
 						}
-						paymentHistoryDao.persist(paidHistory);
+						 
+						 if(isIncreasingDebt(customerDebt)){
+								PaymentHistory customerDebtHistory = PaymentHistoryUtil.createNewHistory(contract, 
+																						dto.getCompany().getId(), PaymentHistoryType.CUSTOMER_DEBT, 
+																						customerDebt, StringUtils.EMPTY);
+								paymentHistories.add(customerDebtHistory);
+								UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+																			dto.getCompany().getName(), userActionParam.getUsername(), 
+																			UserActionHistoryType.CUSTOMER_DEBT, StringUtils.EMPTY);
+								userHistories.add(userHistory);
+								profitToCompany += customerDebt;
+							} else if(isDecreasingDebt(customerDebt)){
+								PaymentHistory customerDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.CUSTOMER_PAY_DEBT, customerDebt, StringUtils.EMPTY);
+								paymentHistories.add(customerDebtHistory);
+								UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+										dto.getCompany().getName(), userActionParam.getUsername(), 
+										UserActionHistoryType.CUSTOMER_PAY_DEBT, StringUtils.EMPTY);
+								userHistories.add(userHistory);
+								profitToCompany -= customerDebt;
+							} 
+							
+							if(isIncreasingDebt(companyDebt)){
+								PaymentHistory companyDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.COMPANY_DEBT, companyDebt, StringUtils.EMPTY);
+								paymentHistories.add(companyDebtHistory);
+								UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+										dto.getCompany().getName(), userActionParam.getUsername(), 
+										UserActionHistoryType.COMPANY_DEBT, StringUtils.EMPTY);
+								userHistories.add(userHistory);
+								profitToCompany -= companyDebt;
+							} else if(isDecreasingDebt(companyDebt)){
+								PaymentHistory companyDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.COMPANY_PAY_DEBT, companyDebt, StringUtils.EMPTY);
+								paymentHistories.add(companyDebtHistory);
+								UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+										dto.getCompany().getName(), userActionParam.getUsername(), 
+										UserActionHistoryType.COMPANY_PAY_DEBT, StringUtils.EMPTY);
+								userHistories.add(userHistory);
+								profitToCompany += companyDebt;
+							}
+							if(profitToCompany != 0){
+								Double totalFunding = company.getTotalFund() + profitToCompany;
+								company.setTotalFund(totalFunding);
+								companyDao.merge(company);
+							}
 						UserActionHistoryType actionType = UserActionHistoryType.PAYOFF_CONTRACT;
 						UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, company.getId(), 
 								company.getName(), userActionParam.getUsername(), 
 								actionType, StringUtils.EMPTY);
-						userHistoryDao.persist(userHistory);
+						userHistories.add(userHistory);
+						 if(updatedContract != null && CollectionUtils.isNotEmpty(paymentHistories)){
+							 paymentHistoryDao.persistList(paymentHistories);
+						 }
+						 if(updatedContract != null && CollectionUtils.isNotEmpty(userHistories)){
+							 userHistoryDao.persistList(userHistories);
+						 }
 					 }
 					 return updatedContract;
 					
@@ -358,10 +423,26 @@ public class DefaultContractService extends BaseService implements ContractServi
 		
 		});
 	}
-	@Transactional
+	
+	private Double calculateRefundWhenPayoff( ContractDto dto) {
+		Double totalRefunding = 0D;
+		PaymentScheduleDto latestPaid = PlbUtil.getLatestPaid(dto.getPaymentSchedules());
+		Date targetDate = null;
+		Date today = DateTimeUtil.getCurrentDateWithoutTime();
+		if(latestPaid != null){
+			targetDate = latestPaid.getExpectedPayDate();
+		} else {
+			targetDate = dto.getStartDate();
+		}
+		long substractionDays = DateTimeUtil.daysBetweenDates(today, targetDate);
+		totalRefunding = (substractionDays * dto.getFeeADay());
+		return totalRefunding;
+	}
+	
+	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public ContractDto updateAsDraftContractInPayOffTime(ContractDto dto, UserActionParamVO userActionParam) throws BusinessException {
-		return methodWrapper(new PersistenceExecutable<ContractDto>() {
+		return transactionWrapper(new PersistenceExecutable<ContractDto>() {
 			@Override
 			public ContractDto execute() throws BusinessException, ClassNotFoundException, IOException {
 				try {
@@ -375,6 +456,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 					if(company != null){
 						dto.getCompany().setName(company.getName());
 					}
+					Double profitToCompany = 0D;
 					if(isIncreasingDebt(customerDebt)){
 						PaymentHistory customerDebtHistory = PaymentHistoryUtil.createNewHistory(contract, 
 																				dto.getCompany().getId(), PaymentHistoryType.CUSTOMER_DEBT, 
@@ -384,6 +466,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 																	dto.getCompany().getName(), userActionParam.getUsername(), 
 																	UserActionHistoryType.CUSTOMER_DEBT, StringUtils.EMPTY);
 						userHistories.add(userHistory);
+						profitToCompany -= customerDebt;
 					} else if(isDecreasingDebt(customerDebt)){
 						PaymentHistory customerDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.CUSTOMER_PAY_DEBT, customerDebt, StringUtils.EMPTY);
 						paymentHistories.add(customerDebtHistory);
@@ -391,6 +474,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 								dto.getCompany().getName(), userActionParam.getUsername(), 
 								UserActionHistoryType.CUSTOMER_PAY_DEBT, StringUtils.EMPTY);
 						userHistories.add(userHistory);
+						profitToCompany += customerDebt;
 					} 
 					
 					if(isIncreasingDebt(companyDebt)){
@@ -400,6 +484,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 								dto.getCompany().getName(), userActionParam.getUsername(), 
 								UserActionHistoryType.COMPANY_DEBT, StringUtils.EMPTY);
 						userHistories.add(userHistory);
+						profitToCompany += companyDebt;
 					} else if(isDecreasingDebt(companyDebt)){
 						PaymentHistory companyDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.COMPANY_PAY_DEBT, companyDebt, StringUtils.EMPTY);
 						paymentHistories.add(companyDebtHistory);
@@ -407,6 +492,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 								dto.getCompany().getName(), userActionParam.getUsername(), 
 								UserActionHistoryType.COMPANY_PAY_DEBT, StringUtils.EMPTY);
 						userHistories.add(userHistory);
+						profitToCompany -= companyDebt;
 					}
 					
 					if(isKeepDebt(companyDebt) && isKeepDebt(customerDebt)){
@@ -414,6 +500,15 @@ public class DefaultContractService extends BaseService implements ContractServi
 								dto.getCompany().getName(), userActionParam.getUsername(), 
 								UserActionHistoryType.UPDATE_CONTRACT, StringUtils.EMPTY);
 						userHistories.add(userHistory);
+					} else if(profitToCompany != 0){
+						 if(company != null){
+								Double totalFunding = company.getTotalFund() + profitToCompany;
+								company.setTotalFund(totalFunding);
+								companyDao.merge(company);
+						} else {
+							logger.error("Can not update contract to company because company not found: " + dto.getId());
+							throw new BusinessException(PLBErrorCode.CAN_NOT_UPDATE_DATA.name());
+						}
 					}
 					
 					 ContractDto updatedContract = ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
@@ -432,25 +527,25 @@ public class DefaultContractService extends BaseService implements ContractServi
 				}
 			}
 
-			private boolean isDecreasingDebt(Double debt) {
-				return debt < 0;
-			}
-
-			private boolean isIncreasingDebt(Double debt) {
-				return debt > 0;
-			}
 			
-			private boolean isKeepDebt(Double debt){
-				return debt == 0;
-			}
 		
 		});
 	}
+	private boolean isDecreasingDebt(Double debt) {
+		return debt < 0;
+	}
+
+	private boolean isIncreasingDebt(Double debt) {
+		return debt > 0;
+	}
 	
-	@Transactional
+	private boolean isKeepDebt(Double debt){
+		return debt == 0;
+	}
+	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public ContractDto updateOldContract(ContractDto dto, UserActionParamVO userActionParam) throws BusinessException {
-		return methodWrapper(new PersistenceExecutable<ContractDto>() {
+		return transactionWrapper(new PersistenceExecutable<ContractDto>() {
 			@Override
 			public ContractDto execute() throws BusinessException, ClassNotFoundException, IOException {
 				try {
@@ -510,6 +605,10 @@ public class DefaultContractService extends BaseService implements ContractServi
 				bean.setStage(ProcessStaging.PAYOFF.getName());
 				bean.setAmountDays(DateTimeUtil.daysBetweenDates(item.getExpireDate(), selectedDate));
 				bean.setPaidDate(item.getExpireDate());
+				PaymentScheduleDto lastPaid = PlbUtil.getLatestPaid(item.getPaymentSchedules());
+				if(lastPaid != null){
+					bean.getContract().setLastPaidDate(lastPaid.getExpectedPayDate());
+				}
 			}
 			if(bean.getAmountDays() <0){
 				bean.setAmountDays(bean.getAmountDays() * -1);
@@ -607,6 +706,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 			
 		});
 	}
+	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public int updateBadContract(Integer companyId) throws BusinessException {
 		return methodWrapper(new PersistenceExecutable<Integer>() {
@@ -614,6 +714,51 @@ public class DefaultContractService extends BaseService implements ContractServi
 			@Override
 			public Integer execute() throws BusinessException, ClassNotFoundException, IOException {
 				return contractDao.updateBadContract(companyId);
+			}
+		});
+	}
+	@Transactional(rollbackFor=BusinessException.class)
+	@Override
+	public int updateBadContractBaseOnPaymentDate(Integer companyId) throws BusinessException{
+		return methodWrapper(new PersistenceExecutable<Integer>() {
+
+			@Override
+			public Integer execute() throws BusinessException, ClassNotFoundException, IOException {
+				List<Contract> allProgressContracts = contractDao.getContractByStatusAndCompanyId(ContractStatusType.IN_PROGRESS, companyId);
+				if(CollectionUtils.isNotEmpty(allProgressContracts)){
+					Date currentDate = DateTimeUtil.getCurrentDate();
+					List<Contract> badContracts = allProgressContracts.stream()
+																	.filter(item -> !isAllPaymentsFinish(item))
+																	.filter(item -> {
+																		PaymentSchedule latestPaid = PlbUtil.getLatestPaid(item.getPaymentSchedules());
+																		if(latestPaid != null){
+																		  int periodPaymentDay = item.getPeriodOfPayment();
+																		  Date dateToMarkAsBadContract = DateTimeUtil.addMoreDate(latestPaid.getExpectedPayDate(), periodPaymentDay + ((int)(periodPaymentDay / 2)));
+																		  if(dateToMarkAsBadContract.compareTo(currentDate) <= 0){
+																			  item.setState(ContractStatusType.BAD.getName());
+																			return true;  
+																		  }
+																		}
+																		return false;
+																	})
+																	.collect(Collectors.toList());;
+					if(CollectionUtils.isNotEmpty(badContracts)){
+						contractDao.mergeList(badContracts);
+						return badContracts.size();
+					}
+				}
+				return 0;
+			}
+
+			private boolean isAllPaymentsFinish(Contract item) {
+				if(CollectionUtils.isNotEmpty(item.getPaymentSchedules())){
+					return !item.getPaymentSchedules().stream()
+							.filter(pay -> pay.getFinish().equalsIgnoreCase(ConstantVariable.NO_OPTION))
+							.findFirst()
+							.isPresent();
+					
+				}
+				return true;
 			}
 		});
 	}

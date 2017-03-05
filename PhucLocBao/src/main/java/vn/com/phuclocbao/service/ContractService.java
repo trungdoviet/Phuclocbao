@@ -32,4 +32,5 @@ public interface ContractService {
 	public StatisticInfo collectProfitStatistic(Integer companyId, int year) throws BusinessException;
 	public List<StatisticInfo> collectAllProfitStatistic(int year) throws BusinessException;
 	public int updateBadContract(Integer companyId) throws BusinessException;
+	public int updateBadContractBaseOnPaymentDate(Integer companyId) throws BusinessException;
 }

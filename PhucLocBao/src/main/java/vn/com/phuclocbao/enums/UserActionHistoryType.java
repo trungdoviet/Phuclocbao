@@ -13,6 +13,7 @@ public enum UserActionHistoryType {
 	COMPANY_DEBT("COMPANY_DEBT","Công ty nợ phí"),
 	COMPANY_PAY_DEBT("COMPANY_DEBT","Công ty trả nợ phí"),
 	UPDATE_COMPANY_FINANCIAL("UPDATE_COMPANY_FINANCIAL","Cập nhật tài chính công ty"),
+	UPDATE_COMPANY_INFO("UPDATE_COMPANY_INFO","Cập nhật thông tin công ty"),
 	UPDATE_COMPANY_BRANCH("UPDATE_COMPANY_BRANCH","Cập nhật chi nhánh công ty"),
 	CREATE_COMPANY_BRANCH("CREATE_COMPANY_BRANCH","Tạo công ty"),
 	OTHER("OTHER","Chi khác...")

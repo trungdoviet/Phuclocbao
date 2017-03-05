@@ -63,12 +63,11 @@ public class DefaultUserService extends BaseService implements UserService {
 		}
 		return UserAccountConverter.getInstance().toDtoExtraObject(entity, new UserAccountDto());
 	}
-	
-	@Transactional
+	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public UserAccountDto saveUser(UserAccountDto dto) throws BusinessException {
 		
-		return methodWrapper(new PersistenceExecutable<UserAccountDto>() {
+		return transactionWrapper(new PersistenceExecutable<UserAccountDto>() {
 			@Override
 			public UserAccountDto execute() throws BusinessException, ClassNotFoundException, IOException {
 				UserAccount user = userDao.getUserByUsername(dto.getUsername());
@@ -105,10 +104,10 @@ public class DefaultUserService extends BaseService implements UserService {
 		});
 	}
 
-	@Transactional
+	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public boolean addNewUser(UserAccountDto dto) throws BusinessException {
-		return methodWrapper(new PersistenceExecutable<Boolean>() {
+		return transactionWrapper(new PersistenceExecutable<Boolean>() {
 			@Override
 			public Boolean execute() throws BusinessException, ClassNotFoundException, IOException {
 				if(userDao.isUserExist(dto.getUsername())){
@@ -136,11 +135,10 @@ public class DefaultUserService extends BaseService implements UserService {
 			}
 		});
 	}
-	
-	@Transactional
+	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public Boolean updatePassword(Integer id, String newPassword) throws BusinessException {
-		return methodWrapper(new PersistenceExecutable<Boolean>() {
+		return transactionWrapper(new PersistenceExecutable<Boolean>() {
 			@Override
 			public Boolean execute() throws BusinessException, ClassNotFoundException, IOException {
 				UserAccount entity = userDao.findById(id);

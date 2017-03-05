@@ -10,6 +10,7 @@ import vn.com.phuclocbao.exception.BusinessException;
 public interface ContractDao {
 	public Contract persist( Contract entity) throws BusinessException;
 	public Contract merge( Contract entity) throws BusinessException;
+	public List<Contract> mergeList( List<Contract> entity) throws BusinessException;
 	public Contract findById(Integer id) throws BusinessException;
 	public List<Contract> getContractByStatusAndCompanyId(ContractStatusType state, Integer id) throws BusinessException;
 	public List<Contract> getNotifiedContractBySpecificDateAndCompanyId(Date targetDate, Integer companyId) throws BusinessException;

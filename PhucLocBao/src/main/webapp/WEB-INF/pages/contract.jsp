@@ -30,10 +30,15 @@
 				</c:if>
 				
 				<c:if test="${contractBean.processStaging == 'payoff' }">
-					<button  id="btnPayoffContract" type="submit" class="btn btn-danger" name="payoff">
+					<button  id="btnPayoffContractOk" type="button" class="btn btn-danger" name="payoff">
 						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 						Thanh lý hợp đồng
 					</button>
+					<button  id="btnPayoffContract" type="submit" class="btn btn-danger" name="payoff" style="display:none">
+						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+						Thanh lý hợp đồng
+					</button>
+					<jsp:include page="includes/payoffPopup.jsp"></jsp:include>
 					<button  id="btnSaveAsDraftContract" type="submit" class="btn btn-primary" name="savedraft">
 						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 						Lưu hợp đồng

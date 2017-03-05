@@ -36,6 +36,7 @@ public class UserHistoryUtil {
 			break;
 		case UPDATE_COMPANY_BRANCH:
 		case UPDATE_COMPANY_FINANCIAL:
+		case UPDATE_COMPANY_INFO:
 			history.setDetail(type.getName());
 			break;
 		case CREATE_COMPANY_BRANCH:

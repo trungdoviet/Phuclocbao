@@ -9,7 +9,6 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import vn.com.phuclocbao.converter.CompanyTypeConverter;
 import vn.com.phuclocbao.dao.CompanyTypeDao;
@@ -31,7 +30,6 @@ public class DefaultCompanyTypeService extends BaseService implements CompanyTyp
 	public EntityManager getEm() {
 		return manager;
 	}
-	@Transactional
 	@Override
 	public CompanyTypeDto findById(Integer id) throws BusinessException{
 		return methodWrapper(new PersistenceExecutable<CompanyTypeDto>() {

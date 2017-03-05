@@ -24,7 +24,7 @@ public class DefaultUserHistoryService extends BaseService implements UserHistor
 	@Autowired
 	private UserHistoryDao userHistoryDao;
 
-	@Transactional
+	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public List<UserHistoryDto> getHistories(Integer companyId, Date startDate, Date endDate) throws BusinessException {
 		

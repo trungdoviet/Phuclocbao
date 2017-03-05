@@ -154,7 +154,9 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 	public List<ContractDto> toDtosWithCustomer(List<Contract> contracts){
 		List<ContractDto> dtos = new ArrayList<>();
 		if(CollectionUtils.isNotEmpty(contracts)){
-			dtos = contracts.stream().map(LambdaExceptionUtil.rethrowFunction(item -> this.toDtoWithCustomer(item, new ContractDto()))).collect(Collectors.toList());
+			dtos = contracts.stream()
+					.map(LambdaExceptionUtil.rethrowFunction(item -> this.toDtoWithCustomer(item, new ContractDto())))
+					.collect(Collectors.toList());
 		}
 		return dtos;
 	}

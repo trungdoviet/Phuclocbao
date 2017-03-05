@@ -89,6 +89,7 @@ public class LoginController {
 								
 								System.out.println("User Login Successful with username:" + userAccount.getFullname());
 								int numberOfBadContract = contractService.updateBadContract(plbSession.getCompanyId());
+								numberOfBadContract += contractService.updateBadContractBaseOnPaymentDate(plbSession.getCompanyId());
 								System.out.println("Update " + numberOfBadContract +" contract as BAD contract");
 								model = new ModelAndView(MenuDefinition.HOME.getRedirectCommand());
 								redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(MSG_WELCOME_LOGIN) + userAccount.getFullname());

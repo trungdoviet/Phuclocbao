@@ -347,6 +347,26 @@ function initContractPageButtons(){
 		 $("#feeADay").val(feeAday);
 		 collectPaymentSchedule();
 	});
+	var btnPayoffContractOk = $("#btnPayoffContractOk");
+	if(btnPayoffContractOk != null && btnPayoffContractOk != undefined){
+		btnPayoffContractOk.off( "click");
+		btnPayoffContractOk.on( "click", function() {
+			var totalMoneyRefundingAmount = parseFloat($("#totalMoneyRefundingAmount").attr("refunding"))
+			if(totalMoneyRefundingAmount < 0){
+				$("#payOffCustomerMsg").show();
+				$("#payOffCompanyMsg").hide();
+			} else {
+				$("#payOffCompanyMsg").show();
+				$("#payOffCustomerMsg").hide();
+			}
+			$("#totalRefundAmount").text($("#totalMoneyRefundingAmount").text().replace("-",""));
+			$("#payOffOk").off("click");
+			$("#payOffOk").on("click", function(){
+				$("#btnPayoffContract").trigger("click");
+			});
+			$("#payOffModal").modal("show");
+		});
+	}
 	var processStage = $("#processStagingHidden").val();
 	if(processStage == "payoff"){
 		$( "#btnPayoffContract" ).off( "click");

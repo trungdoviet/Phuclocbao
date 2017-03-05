@@ -84,6 +84,7 @@ public class UserSettingController extends BaseController {
 			} catch (BusinessException e) {
 				logger.error(e);
 				e.printStackTrace();
+				model = new ModelAndView(MenuDefinition.HOME.getName());
 				showErrorAlert(model, MSG_ERROR_WHEN_OPEN);
 			}
 		}

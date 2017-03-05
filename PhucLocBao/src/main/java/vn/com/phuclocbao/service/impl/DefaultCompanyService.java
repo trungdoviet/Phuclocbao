@@ -82,11 +82,10 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 	public void setCompanyTypeDao(CompanyTypeDao companyTypeDao) {
 		this.companyTypeDao = companyTypeDao;
 	}
-
-	@Transactional
+	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public CompanyDto mergeFinancial(CompanyDto dto, UserActionParamVO userActionParam) throws BusinessException {
-		 return methodWrapper(new PersistenceExecutable<CompanyDto>() {
+		 return transactionWrapper(new PersistenceExecutable<CompanyDto>() {
 			@Override
 			public CompanyDto execute() throws BusinessException, ClassNotFoundException, IOException {
 				CompanyEntity entity = companyDao.findById(dto.getId());
@@ -96,20 +95,27 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 					
 				}
 				Double investFunding = dto.getTotalFund();
+				Double oldInvestFunding = entity.getTotalFund();
 				CompanyEntity updatedCompany = CompanyConverter.getInstance().updateEntity(entity, dto);
 				CompanyDto updatedCompanyDto = CompanyConverter.getInstance().toDto(companyDao.merge(updatedCompany), new CompanyDto());
 				if(updatedCompany != null){
-					paymentHistoryDao.persist(PaymentHistoryUtil.createNewHistory(null, dto.getId(), PaymentHistoryType.INVEST_FUNDING, investFunding, null));
-					UserHistory userHistory = UserHistoryUtil.createNewHistory(null, dto.getId(), 
-							dto.getName(), userActionParam.getUsername(), 
-							UserActionHistoryType.UPDATE_COMPANY_FINANCIAL, StringUtils.EMPTY);
-					userHistoryDao.persist(userHistory);
+					if(investFunding.equals(oldInvestFunding)){
+						UserHistory userHistory = UserHistoryUtil.createNewHistory(null, dto.getId(), 
+								dto.getName(), userActionParam.getUsername(), 
+								UserActionHistoryType.UPDATE_COMPANY_INFO, StringUtils.EMPTY);
+						userHistoryDao.persist(userHistory);
+					}else {
+						paymentHistoryDao.persist(PaymentHistoryUtil.createNewHistory(null, dto.getId(), PaymentHistoryType.INVEST_FUNDING, investFunding, null));
+						UserHistory userHistory = UserHistoryUtil.createNewHistory(null, dto.getId(), 
+								dto.getName(), userActionParam.getUsername(), 
+								UserActionHistoryType.UPDATE_COMPANY_FINANCIAL, StringUtils.EMPTY);
+						userHistoryDao.persist(userHistory);
+					}
 				}
 				return updatedCompanyDto;
 			}
 		 });
 	}
-	@Transactional
 	@Override
 	public CompanyDto findById(Integer id) throws BusinessException{
 		return methodWrapper(new PersistenceExecutable<CompanyDto>() {
@@ -121,7 +127,7 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 						throw new BusinessException(PLBErrorCode.OBJECT_NOT_FOUND.name());
 					}
 					
-					return CompanyConverter.getInstance().toDto(companyDao.merge(entity), new CompanyDto());
+					return CompanyConverter.getInstance().toDto(entity, new CompanyDto());
 				}
 			});
 	}
@@ -163,12 +169,11 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 			}
 		});
 	}
-
-	@Transactional
+	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public CompanyDto persist(CompanyDto dto, UserActionParamVO userActionParam) throws BusinessException {
 		
-		return methodWrapper(new PersistenceExecutable<CompanyDto>() {
+		return transactionWrapper(new PersistenceExecutable<CompanyDto>() {
 
 			@Override
 			public CompanyDto execute() throws BusinessException, ClassNotFoundException, IOException {

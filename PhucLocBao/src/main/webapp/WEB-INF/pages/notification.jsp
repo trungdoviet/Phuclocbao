@@ -100,6 +100,11 @@
 											</c:if>
 											<c:if test="${ncBean.stage=='payoff' }">
 												Thanh lý
+												<c:if test="${ncBean.contract.lastPaidDate != null}">
+													<span class="as-block">
+														(nợ phí từ <fmt:formatDate pattern="dd/MM/yyyy" value="${ncBean.contract.lastPaidDate}" />)
+													</span>
+												</c:if>
 											</c:if>
 										</td>
 										

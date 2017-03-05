@@ -5,6 +5,8 @@ import java.util.Optional;
 
 public enum PaymentHistoryType {
 	INVEST_FUNDING("INVEST_FUNDING","Nhập vốn"),
+	UPDATE_FUNDING("UPDATE_FUNDING","Sửa vốn"),
+	TAKE_OUT_FUNDING("TAKE_OUT_FUNDING","Xuất vốn"),
 	RENTING_NEW_MOTOBIKE("RENTING_NEW_MOTOBIKE","Cho thuê xe"),
 	RENTING_COST("RENTING_COST","Phí thuê xe"),
 	PAYOFF("PAYOFF","Thanh lý thuê xe"),
@@ -12,6 +14,9 @@ public enum PaymentHistoryType {
 	CUSTOMER_PAY_DEBT("CUSTOMER_PAY_DEBT","Khách trả nợ phí"),
 	COMPANY_DEBT("COMPANY_DEBT","Công ty nợ phí"),
 	COMPANY_PAY_DEBT("COMPANY_DEBT","Công ty trả nợ phí"),
+	REFUNDING_FOR_CUSTOMER("REFUNDING_FOR_CUSTOMER","Trả thừa phí khách"),
+	REFUNDING_FOR_COMPANY("REFUNDING_FOR_COMPANY","Khách trả phí thanh lý"),
+	
 	OTHER("OTHER","Chi khác...")
 	;
 	private String type;

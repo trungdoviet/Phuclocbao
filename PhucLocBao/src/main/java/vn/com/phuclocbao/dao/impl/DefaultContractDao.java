@@ -17,7 +17,6 @@ import vn.com.phuclocbao.entity.Contract;
 import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.exception.BusinessException;
 @Repository
-@Transactional
 public class DefaultContractDao extends BaseDaoJpaImpl<Contract, Integer> implements ContractDao {
 	@PersistenceContext
 	private EntityManager manager;
@@ -73,7 +72,7 @@ public class DefaultContractDao extends BaseDaoJpaImpl<Contract, Integer> implem
 	}
 	@Override
 	public int updateBadContract(Integer companyId) throws BusinessException {
-		Query query = getEm().createNativeQuery("UPDATE tblContract SET state='BAD' WHERE company_id=? AND state != 'FINISH' AND datediff(now(), expireDate) >= 10");
+		Query query = getEm().createNativeQuery("UPDATE tblContract SET state='BAD' WHERE company_id=? AND state != 'FINISH' AND state != 'BAD' AND datediff(now(), expireDate) >= 10");
 		query.setParameter(1, companyId);
 		return query.executeUpdate();
 	}
