@@ -13,5 +13,5 @@ import vn.com.phuclocbao.viewbean.CompanyProfitBean;
 public interface PaymentHistoryService {
 	public List<PaymentHistoryDto> getHistories(Integer companyId, Date startDate, Date endDate) throws BusinessException;
 	public CompanyProfitBean buildProfitStatistic(List<CompanyDto> company, List<StatisticInfo> statitics) throws BusinessException;
-	public PaymentHistoryDto saveNewPayment(Integer companyId, PaymentHistoryType type, Double amount, String description) throws BusinessException;
+	public PaymentHistoryDto saveNewPayment(Integer companyId, PaymentHistoryType type, Double amount, String description, String username) throws BusinessException;
 }

@@ -34,7 +34,7 @@
 							<div class="col-md-12">
 								<spring:bind path="paymentAmount">
 									<div class="form-group ${status.error ? 'has-error' : ''}">
-										<label>Số tiền:</label>
+										<label>Số tiền(<span class="state_alert">*</span>):</label>
 										<form:input id="paymentAmount" class="form-control form-input" required="true" min="1"
 											style="text-align: right;" placeholder="VNĐ" name="paymentAmount" 
 											path="paymentAmount" />
@@ -56,7 +56,7 @@
 							<div class="col-md-12">
 								<spring:bind path="additionalInfo">
 									<div class="form-group ${status.error ? 'has-error' : ''}">
-										<label>Ghi chú:</label>
+										<label>Ghi chú(<span class="state_alert">*</span>):</label>
 										<form:textarea class="form-control form-input" maxlength="1000" placeholder="thông tin thêm" required="true"
 											rows="6" name="additionalInfo" path="additionalInfo" />
 										<form:errors path="additionalInfo" cssClass="error" />

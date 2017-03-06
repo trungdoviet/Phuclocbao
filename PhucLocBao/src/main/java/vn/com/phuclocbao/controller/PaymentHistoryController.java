@@ -71,7 +71,7 @@ public class PaymentHistoryController extends BaseController {
 		try {
 			PaymentHistoryDto paymentDto = paymentHistoryService.saveNewPayment(plbSession.getWorkingCompanyId(), 
 					PaymentHistoryType.getByType(paymentHistory.getPaymentType()), 
-					paymentHistory.getPaymentAmount(), paymentHistory.getAdditionalInfo());
+					paymentHistory.getPaymentAmount(), paymentHistory.getAdditionalInfo(), plbSession.getUserAccount().getUsername());
 			if(paymentDto != null){
 				showSucessAlert(redirectAttributes, MSG_CREATE_PAYMENT_SUCESS);
 			} else {

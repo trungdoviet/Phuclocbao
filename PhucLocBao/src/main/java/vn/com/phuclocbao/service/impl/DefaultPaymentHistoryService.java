@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,16 +20,20 @@ import vn.com.phuclocbao.converter.PaymentHistoryConverter;
 import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.dao.PaymentHistoryDao;
 import vn.com.phuclocbao.dao.PersistenceExecutable;
+import vn.com.phuclocbao.dao.UserHistoryDao;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.PaymentHistoryDto;
 import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.entity.PaymentHistory;
+import vn.com.phuclocbao.entity.UserHistory;
 import vn.com.phuclocbao.enums.PaymentHistoryType;
+import vn.com.phuclocbao.enums.UserActionHistoryType;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.BaseService;
 import vn.com.phuclocbao.service.PaymentHistoryService;
 import vn.com.phuclocbao.util.DateTimeUtil;
+import vn.com.phuclocbao.util.UserHistoryUtil;
 import vn.com.phuclocbao.viewbean.CompanyProfitBean;
 @Service
 public class DefaultPaymentHistoryService extends BaseService implements PaymentHistoryService {
@@ -67,7 +72,17 @@ public class DefaultPaymentHistoryService extends BaseService implements Payment
 	}
 
 
+	public UserHistoryDao getUserHistoryDao() {
+		return userHistoryDao;
+	}
 
+	public void setUserHistoryDao(UserHistoryDao userHistoryDao) {
+		this.userHistoryDao = userHistoryDao;
+	}
+
+
+	@Autowired
+	private UserHistoryDao userHistoryDao;
 	@PersistenceContext
 	private EntityManager manager;
 	@Override
@@ -109,7 +124,7 @@ public class DefaultPaymentHistoryService extends BaseService implements Payment
 	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public PaymentHistoryDto saveNewPayment(Integer companyId, PaymentHistoryType type, Double amount,
-			String description) throws BusinessException {
+			String description, String username) throws BusinessException {
 		return transactionWrapper(new PersistenceExecutable<PaymentHistoryDto>() {
 			@Override
 			public PaymentHistoryDto execute() throws BusinessException, ClassNotFoundException, IOException {
@@ -125,6 +140,10 @@ public class DefaultPaymentHistoryService extends BaseService implements Payment
 						company.setTotalFund(company.getTotalFund() - amount);
 					}
 					companyDao.merge(company);
+					UserHistory userHistory = UserHistoryUtil.createNewHistory(null, companyId, 
+							company.getName(), username, 
+							UserActionHistoryType.UPDATE_COMPANY_FINANCIAL, StringUtils.EMPTY);
+					userHistoryDao.persist(userHistory);
 				}
 				PaymentHistory history = new PaymentHistory();
 				history.setLogDate(DateTimeUtil.getCurrentDate());

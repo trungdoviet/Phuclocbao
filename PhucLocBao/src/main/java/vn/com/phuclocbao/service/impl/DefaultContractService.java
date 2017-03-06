@@ -674,6 +674,15 @@ public class DefaultContractService extends BaseService implements ContractServi
 							Double totalValue = statistic.getRentingCostByMonth().get(item.getKey()) + item.getValue();
 							statistic.getRentingCostByMonth().set(item.getKey(),totalValue);
 				});
+				
+				payments.stream()
+					.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.CUSTOMER_DEBT.getType()))
+					.collect(Collectors.groupingBy(
+						PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getFee)	
+					)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
+						Double totalValue = statistic.getRentingCostByMonth().get(item.getKey()) + item.getValue();
+						statistic.getRentingCostByMonth().set(item.getKey(),totalValue);
+				});
 					
 				//collect profit
 				payments.stream()
@@ -701,6 +710,18 @@ public class DefaultContractService extends BaseService implements ContractServi
 					Double totalValue = statistic.getProfitByMonth().get(item.getKey()) + item.getValue();
 					statistic.getProfitByMonth().set(item.getKey(), totalValue);
 			    });
+				
+				payments.stream()
+					.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.CUSTOMER_PAY_DEBT.getType()) )
+					.collect(Collectors.groupingBy(
+							PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getFee)	
+				)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
+					Double totalValue = statistic.getProfitByMonth().get(item.getKey()) + item.getValue();
+					statistic.getProfitByMonth().set(item.getKey(), totalValue);
+			    });
+				
+
+				
 				
 				 List<Double> effectiveRentingCost = statistic.getRentingCostByMonth().stream().map(item -> Math.round( (item /1000000) * 100.0 ) / 100.0).collect(Collectors.toList());
 				 List<Double> effectiveProfitCost = statistic.getProfitByMonth().stream().map(item -> Math.round( (item /1000000) * 100.0 ) / 100.0).collect(Collectors.toList());
