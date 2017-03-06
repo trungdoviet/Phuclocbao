@@ -17,7 +17,9 @@ public enum PaymentHistoryType {
 	REFUNDING_FOR_CUSTOMER("REFUNDING_FOR_CUSTOMER","Trả thừa phí khách"),
 	REFUNDING_FOR_COMPANY("REFUNDING_FOR_COMPANY","Khách trả phí thanh lý"),
 	
-	OTHER("OTHER","Chi khác...")
+	OTHER_PAY("OTHER_PAY","Chi khác..."),
+	OTHER_PROFIT("OTHER_INCOME","Thu khác..."),
+	OTHER("OTHER","Loại khác")
 	;
 	private String type;
 	private PaymentHistoryType(String type, String name){

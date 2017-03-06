@@ -38,6 +38,9 @@
 .company-branch .modal-dialog{
 	width: 370px;
 }
+.add-payment .modal-dialog{
+	width: 400px;
+}
 .color-check-day{
 	color: #30a5ff;
 	padding-left: 3px;
@@ -312,7 +315,7 @@ a.mute-link-style:hover {
 }
 @media print
 {
-	@page {size: landscape}
+	/* @page {size: landscape} */
 	.noprint {display:none !important;}
 	.panel-default .panel-heading{
 	    border-bottom:none !important;

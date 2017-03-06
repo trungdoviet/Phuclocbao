@@ -20,6 +20,7 @@ encoding//src/main/webapp/WEB-INF/pages/dailyWork.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/history.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/home.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/includes/addCompanyBranch.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/pages/includes/addMorePaymentPopup.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/includes/addUser.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/includes/changeUserPassword.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/pages/includes/contractContentPage.jsp=UTF-8

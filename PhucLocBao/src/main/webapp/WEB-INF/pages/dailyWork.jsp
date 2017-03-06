@@ -65,67 +65,82 @@
 			<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<table data-toggle="table" data-pagination="true" >
-						    <thead>
-						    <tr>
-						        <th data-field="historyType" data-sortable="true">Loại chi phí</th>
-						        <th data-field="fee" data-sortable="true">Số tiền</th>
-						        <th data-field="rentingAmount" data-sortable="true">Cho thuê</th>
-						        <th data-field="payoff" data-sortable="true">Thanh lý</th>
-						        <th data-field="logDate" data-sortable="true">Ngày tháng</th>
-						        <th data-field="detail" data-sortable="true">Thông tin thêm</th>
-						        <th data-sortable="true">Tham chiếu</th>
-						    </tr>
-						    </thead>
-						    <tbody>
-						    	<c:forEach var="history" items="${historyView.paymentHistories}">
-							    	<tr>
-							    		<td>
-							    			${history.historyName}
-							    		</td>
-										<td class="text-right">
-										<c:if test="${history.fee != 0 }">
-											<fmt:formatNumber  currencySymbol=" "  value="${history.fee}" type="currency" maxFractionDigits="0" var="fee"/>
-												${fn:replace(fee, ",", ".")}
-												VNĐ
-												</c:if>
-										</td>
-										<td class="text-right">
-											<c:if test="${history.rentingAmount != 0 }">
-												<fmt:formatNumber  currencySymbol=" "  value="${history.rentingAmount}" type="currency" maxFractionDigits="0" var="rentingAmount"/>
-													${fn:replace(rentingAmount, ",", ".")}
-													VNĐ
-												</c:if>
-										</td>
-										<td class="text-right">
-											<c:if test="${history.payoff != 0 }">
-												<fmt:formatNumber  currencySymbol=" "  value="${history.payoff}" type="currency" maxFractionDigits="0" var="payoff"/>
-												${fn:replace(payoff, ",", ".")}
-												VNĐ
-											</c:if>
-										</td>
-										<td class="text-center">
-											<fmt:formatDate pattern="dd/MM/yyyy" value="${history.logDate}" />
-										</td>
-										<td class="text-left" >
-										<div class="detail-message-table">
-											${history.detail}
-											</div>
-										</td>
-										<td>
-											<c:if test="${history.contractId != 0 }">
-												<a href="#" onclick="openContractDetail(${history.contractId})">Hợp đồng số HDTC<span>${history.contractId}</span></a>
-											</c:if>
-										</td>
-							    	</tr>
-						    	</c:forEach>
-						    </tbody>
-						</table>
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="pull-right">
+									<button id="btnNewPayment" type="button" class="btn btn-primary" name="new">
+										<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+										Tạo thêm
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-12">
+								<table data-toggle="table" data-pagination="true" >
+								    <thead>
+								    <tr>
+								        <th data-field="historyType" data-sortable="true">Loại chi phí</th>
+								        <th data-field="fee" data-sortable="true">Số tiền</th>
+								        <th data-field="rentingAmount" data-sortable="true">Cho thuê</th>
+								        <th data-field="payoff" data-sortable="true">Thanh lý</th>
+								        <th data-field="logDate" data-sortable="true">Ngày tháng</th>
+								        <th data-field="detail" data-sortable="true">Thông tin thêm</th>
+								        <th data-sortable="true">Tham chiếu</th>
+								    </tr>
+								    </thead>
+								    <tbody>
+								    	<c:forEach var="history" items="${historyView.paymentHistories}">
+									    	<tr>
+									    		<td>
+									    			${history.historyName}
+									    		</td>
+												<td class="text-right">
+												<c:if test="${history.fee != 0 }">
+													<fmt:formatNumber  currencySymbol=" "  value="${history.fee}" type="currency" maxFractionDigits="0" var="fee"/>
+														${fn:replace(fee, ",", ".")}
+														VNĐ
+														</c:if>
+												</td>
+												<td class="text-right">
+													<c:if test="${history.rentingAmount != 0 }">
+														<fmt:formatNumber  currencySymbol=" "  value="${history.rentingAmount}" type="currency" maxFractionDigits="0" var="rentingAmount"/>
+															${fn:replace(rentingAmount, ",", ".")}
+															VNĐ
+														</c:if>
+												</td>
+												<td class="text-right">
+													<c:if test="${history.payoff != 0 }">
+														<fmt:formatNumber  currencySymbol=" "  value="${history.payoff}" type="currency" maxFractionDigits="0" var="payoff"/>
+														${fn:replace(payoff, ",", ".")}
+														VNĐ
+													</c:if>
+												</td>
+												<td class="text-center">
+													<fmt:formatDate pattern="dd/MM/yyyy" value="${history.logDate}" />
+												</td>
+												<td class="text-left" >
+												<div class="detail-message-table">
+													${history.detail}
+													</div>
+												</td>
+												<td>
+													<c:if test="${history.contractId != 0 }">
+														<a href="#" onclick="openContractDetail(${history.contractId})">Hợp đồng số HDTC<span>${history.contractId}</span></a>
+													</c:if>
+												</td>
+									    	</tr>
+								    	</c:forEach>
+								    </tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<jsp:include page="includes/contractDetailDialog.jsp"></jsp:include>
+		<jsp:include page="includes/addMorePaymentPopup.jsp"></jsp:include>
 </div>
 <script type="text/javascript">
 $( document ).ready(function() {

@@ -64,7 +64,7 @@
 						    <thead>
 						    <tr>
 						        <th data-field="customerName" data-sortable="true">Tên khách hàng</th>
-						        <th data-field="contractType" data-sortable="true">Loại hình thuê</th>
+						        <th data-field="contractType" data-sortable="true" class="noprint" >Loại hình thuê</th>
 						        <th data-field="customerPhone" data-sortable="true" class="customer-phone">Số ĐT khách hàng</th>
 						        <th data-field="totalAmount" data-sortable="true">Giá trị HĐ/Phí</th>
 						        <th data-field="startDate" data-sortable="true">Thông báo</th>
@@ -77,7 +77,7 @@
 							    	<tr>
 							    		<td>
 							    			<a href="#" onclick="openContractDetail(${ncBean.contract.id})">${ncBean.contract.customer.name}&nbsp;${ncBean.contract.customer.birthYear}</a></td>
-										<td>Cho thuê xe</td>
+										<td  class="noprint">Cho thuê xe</td>
 										<td class="text-right customer-phone">
 											${ncBean.contract.customer.phone}
 										</td>

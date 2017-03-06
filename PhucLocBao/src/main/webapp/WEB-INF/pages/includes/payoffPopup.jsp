@@ -6,7 +6,8 @@
         <h4 class="modal-title">Xác nhận</h4>
       </div>
       <div class="modal-body">
-        <p>Xác nhận thanh lý hợp đồng. Vui lòng kiểm tra kỹ thông tin.</p>
+        <p>Xác nhận thanh lý hợp đồng. </p>
+         <p>Thao tác này không thể thay đổi.Vui lòng kiểm tra kỹ thông tin.</p>
         <p><span id="payOffCustomerMsg">Tổng số tiền đã nhận của khách </span><span id="payOffCompanyMsg">Tổng số tiền đã trả khách </span><b><span id="totalRefundAmount"></span>&nbsp;VNĐ</b></p>
       </div>
       <div class="modal-footer">

@@ -28,7 +28,7 @@
 									<div class="form-group">
 										<label>Mật khẩu mới(<span class="state_alert">*</span>):</label>
 										<form:input id="newPassword" class="form-control form-input"
-											name="newPassword" type="password"
+											name="newPassword" type="password" 
 											path="newPassword" required="true" minlength="6" maxLength="100"/>
 									</div>
 							</div>
@@ -36,7 +36,7 @@
 									<div class="form-group ">
 										<label>Nhập lại mật khẩu mới(<span class="state_alert">*</span>):</label>
 										<form:input id="retypePassword" class="form-control form-input passwordMatch"
-											name="retypePassword" type="password"
+											name="retypePassword" type="password"  equalTo="#newPassword"
 											path="retypePassword" required="true" />
 									</div>
 							</div>

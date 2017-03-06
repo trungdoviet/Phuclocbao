@@ -1,5 +1,7 @@
 package vn.com.phuclocbao.bean;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import vn.com.phuclocbao.dto.CompanyDto;
@@ -12,13 +14,22 @@ public class PLBSession {
 	private MenuBean menuBean;
 	private ContractResponseBody contractResponseBody;
 	private CompanyDto currentCompany;
-	
+	private List<CompanyDto> availableCompanies;
 	private CompanyDto workingCompany;
 	
+	public List<CompanyDto> getAvailableCompanies() {
+		return availableCompanies;
+	}
+	public void setAvailableCompanies(List<CompanyDto> availableCompanies) {
+		this.availableCompanies = availableCompanies;
+	}
 	public Integer getCompanyId() {
 		return currentCompany.getId();
 	}
 	public Integer getWorkingCompanyId() {
+		if(workingCompany == null){
+			return getCompanyId();
+		}
 		return workingCompany.getId();
 	} 
 	
@@ -33,6 +44,9 @@ public class PLBSession {
 	}
 
 	public CompanyDto getWorkingCompany() {
+		if(workingCompany == null){
+			return getCurrentCompany();
+		}
 		return workingCompany;
 	}
 	public void setWorkingCompany(CompanyDto workingCompany) {

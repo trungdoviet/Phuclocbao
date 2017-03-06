@@ -11,6 +11,15 @@ Phuclocbao.GlobalVar.Enums.ContractState = {
 		BAD:"BAD"
 };
 
+var defaultNumberConf =  {
+        aSep: '.',
+        aDec: ',', 
+        pSign: 's',
+        aSign: ' VNĐ',
+        vMin: 0, 
+        vMax: 9999999999
+    };
+
 function initDateLocally(){
 	$.fn.datepicker.dates['vi'] = {
 		    days: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
@@ -776,8 +785,42 @@ function ph_initPage(){
 			    autoclose:true,
 			    language: 'vi'
 			};
+	 
 	$( "#startDateHistory" ).datepicker(dateConf);
 	$( "#endDateHistory" ).datepicker(dateConf);
+	$( "#createdPaymentDate").datepicker(dateConf);
+	var unExponentialAmount = parseFloat($("#paymentAmount").attr("value"));
+	 $("#paymentAmount").attr("value", unExponentialAmount);
+	 $("#paymentAmount").autoNumeric("init",defaultNumberConf);
+	 
+	 try{
+			$("#newPaymentForm").validate();
+		} catch(err) {
+		    console.log(err.message);
+		}
+	$("#paymentAmount").change(function(){
+		var totalAmount = $("#paymentAmount").autoNumeric("get");
+	     if(totalAmount == 0){
+	    	 $("#addMorePaymentOK").prop("disabled",true);
+	     } else {
+	    	 $("#addMorePaymentOK").prop("disabled",false);
+	     }
+		
+	});
+	$( "#btnNewPayment" ).off( "click");
+	$( "#btnNewPayment" ).on( "click", function() {
+			 $("#newPaymentForm .form-input").val("");
+			 $( "#addMorePaymentOK" ).off( "click");
+			 $( "#addMorePaymentOK" ).on( "click", function() {
+			     var totalAmount = $("#paymentAmount").autoNumeric("get");
+			     if(totalAmount == 0){
+			    	 $("#paymentAmount").val("");
+			     } else {
+			    	 $("#paymentAmount").val(totalAmount);
+			     }
+			  });
+			$('#addPayment').modal("show");
+		});
 }
 
 function uh_initPage(){

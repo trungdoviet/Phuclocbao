@@ -9,27 +9,34 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import vn.com.phuclocbao.bean.StatisticInfo;
 import vn.com.phuclocbao.converter.PaymentHistoryConverter;
+import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.dao.PaymentHistoryDao;
 import vn.com.phuclocbao.dao.PersistenceExecutable;
 import vn.com.phuclocbao.dto.CompanyDto;
-import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.PaymentHistoryDto;
+import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.entity.PaymentHistory;
+import vn.com.phuclocbao.enums.PaymentHistoryType;
 import vn.com.phuclocbao.exception.BusinessException;
+import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.BaseService;
 import vn.com.phuclocbao.service.PaymentHistoryService;
+import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.viewbean.CompanyProfitBean;
 @Service
 public class DefaultPaymentHistoryService extends BaseService implements PaymentHistoryService {
+	private static org.apache.log4j.Logger logger = Logger.getLogger(DefaultPaymentHistoryService.class);
 	@Autowired
 	private PaymentHistoryDao paymentHistoryDao;
-
+	@Autowired
+	private CompanyDao companyDao;
 	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public List<PaymentHistoryDto> getHistories(Integer companyId, Date startDate, Date endDate) throws BusinessException {
@@ -50,6 +57,16 @@ public class DefaultPaymentHistoryService extends BaseService implements Payment
 	public void setPaymentHistoryDao(PaymentHistoryDao paymentHistoryDao) {
 		this.paymentHistoryDao = paymentHistoryDao;
 	}
+	
+	public CompanyDao getCompanyDao() {
+		return companyDao;
+	}
+
+	public void setCompanyDao(CompanyDao companyDao) {
+		this.companyDao = companyDao;
+	}
+
+
 
 	@PersistenceContext
 	private EntityManager manager;
@@ -87,6 +104,37 @@ public class DefaultPaymentHistoryService extends BaseService implements Payment
 			 }
 		}
 		return null;
+	}
+
+	@Transactional(rollbackFor=BusinessException.class)
+	@Override
+	public PaymentHistoryDto saveNewPayment(Integer companyId, PaymentHistoryType type, Double amount,
+			String description) throws BusinessException {
+		return transactionWrapper(new PersistenceExecutable<PaymentHistoryDto>() {
+			@Override
+			public PaymentHistoryDto execute() throws BusinessException, ClassNotFoundException, IOException {
+				if(type == PaymentHistoryType.INVEST_FUNDING || type == PaymentHistoryType.TAKE_OUT_FUNDING) {
+					CompanyEntity company = companyDao.findById(companyId);
+					if(company == null){
+						logger.error("can not find company with id " + companyId);
+						throw new BusinessException(PLBErrorCode.OBJECT_NOT_FOUND.name());
+					}
+					if(type == PaymentHistoryType.INVEST_FUNDING){
+						company.setTotalFund(company.getTotalFund() + amount);
+					} else {
+						company.setTotalFund(company.getTotalFund() - amount);
+					}
+					companyDao.merge(company);
+				}
+				PaymentHistory history = new PaymentHistory();
+				history.setLogDate(DateTimeUtil.getCurrentDate());
+				history.setDetail(description);
+				history.setFee(amount);
+				history.setHistoryType(type.getType());
+				history.setCompanyId(companyId);
+				return PaymentHistoryConverter.getInstance().toDto(paymentHistoryDao.persist(history), new PaymentHistoryDto());
+			}
+		});
 	}
 	
 }

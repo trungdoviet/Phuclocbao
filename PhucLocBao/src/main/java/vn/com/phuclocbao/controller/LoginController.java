@@ -1,10 +1,13 @@
 package vn.com.phuclocbao.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,9 +19,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.delegator.LoginDelegator;
+import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.UserAccountDto;
 import vn.com.phuclocbao.enums.AlertType;
 import vn.com.phuclocbao.enums.MenuDefinition;
+import vn.com.phuclocbao.service.CompanyService;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.MessageBundleUtil;
@@ -36,7 +41,9 @@ public class LoginController {
 		private LoginDelegator loginDelegate;
 		@Autowired
 		LoginUserValidator validator;
-	
+		@Autowired
+		@Qualifier(value="companyService")
+		CompanyService companyService;
 		@Autowired
 		ContractService contractService;
 		
@@ -83,9 +90,15 @@ public class LoginController {
 								plbSession = new PLBSession();
 								plbSession.setUserAccount(userAccount);
 								plbSession.setCurrentCompany(userAccount.getCompanyEntity());
+								plbSession.setWorkingCompany(userAccount.getCompanyEntity());
 								request.getSession().setAttribute(PLBSession.SESSION_ATTRIBUTE_KEY, plbSession);
 								request.getSession().setAttribute(SESSION_IS_USER_ADMIN, userAccount.getIsAdmin());
-								request.getSession().setAttribute(SESSION_IS_HEAD_OFFICE, getCompanyTypeString(userAccount));
+								String isHeadOffice = getCompanyTypeString(userAccount);
+								request.getSession().setAttribute(SESSION_IS_HEAD_OFFICE, isHeadOffice);
+								if(userAccount.getIsAdmin().equalsIgnoreCase(ConstantVariable.YES_OPTION) && isHeadOffice.equalsIgnoreCase(ConstantVariable.YES_OPTION)){
+									List<CompanyDto> allCompanies = companyService.findAll();
+									plbSession.setAvailableCompanies(allCompanies);
+								}
 								
 								System.out.println("User Login Successful with username:" + userAccount.getFullname());
 								int numberOfBadContract = contractService.updateBadContract(plbSession.getCompanyId());
@@ -116,7 +129,6 @@ public class LoginController {
 			ModelAndView model = null;
 			request.getSession().removeAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 			request.getSession().removeAttribute(SESSION_IS_USER_ADMIN);
-			System.out.println("User logout");
 			model = new ModelAndView("redirect:/index");
 			return model;
 		}
