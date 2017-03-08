@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="includes/jstl.jsp"%>
-<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main phuclocbao">			
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main notification phuclocbao">			
 	<div class="row noprint">
 		<ol class="breadcrumb">
 			<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
@@ -60,65 +60,77 @@
 			<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<table data-toggle="table" data-pagination="true" >
+						<table data-toggle="table" data-pagination="true" data-page-list="[30, 60, 120, 240]" data-page-size="30">
 						    <thead>
 						    <tr>
-						        <th data-field="customerName" data-sortable="true">Tên khách hàng</th>
-						        <th data-field="contractType" data-sortable="true" class="noprint" >Loại hình thuê</th>
-						        <th data-field="customerPhone" data-sortable="true" class="customer-phone">Số ĐT khách hàng</th>
-						        <th data-field="totalAmount" data-sortable="true">Giá trị HĐ/Phí</th>
-						        <th data-field="startDate" data-sortable="true">Thông báo</th>
-						        <th data-field="expireDate" data-sortable="true">Ngày</th>
-						        <th data-field="action" class="noprint" >Thao tác</th>	 		
+						        <th data-field="customerName" data-sortable="true" class="text-print-wrapper">Tên khách hàng</th>
+						        <th data-field="contractType" data-sortable="true" class="noprint text-print-wrapper" >Loại hình thuê</th>
+						        <th data-field="customerPhone" data-sortable="true" class="customer-phone text-print-wrapper">Số ĐT khách hàng</th>
+						        <th data-field="totalAmount" data-sortable="true" class="text-print-wrapper">Giá trị HĐ/Phí</th>
+						        <th data-field="startDate" data-sortable="true" class="text-print-wrapper">Thông báo</th>
+						        <th data-field="expireDate" data-sortable="true" class="text-print-wrapper">Ngày</th>
+						        <th data-field="action" class="noprint text-print-wrapper" >Thao tác</th>
+						        <th class="text-print-wrapper screen-hide" >Xác nhận</th>	 		
 						    </tr>
 						    </thead>
 						    <tbody>
 						    	<c:forEach var="ncBean" items="${notificationPage.contracts}">
 							    	<tr>
 							    		<td>
-							    			<a href="#" onclick="openContractDetail(${ncBean.contract.id})">${ncBean.contract.customer.name}&nbsp;${ncBean.contract.customer.birthYear}</a></td>
+							    			<span class="text-print-wrapper">
+							    				<a href="#" onclick="openContractDetail(${ncBean.contract.id})">${ncBean.contract.customer.name}&nbsp;${ncBean.contract.customer.birthYear}</a>
+							    			</span>
+							    		</td>
 										<td  class="noprint">Cho thuê xe</td>
 										<td class="text-right customer-phone">
-											${ncBean.contract.customer.phone}
+											<span class="text-print-wrapper">
+												${ncBean.contract.customer.phone}
+											</span>
 										</td>
 										<td class="text-right">
-											<c:if test="${ncBean.stage=='paid' }">
-												<fmt:formatNumber  currencySymbol=" "  value="${ncBean.contract.totalFeeOnePeriod}" type="currency" maxFractionDigits="0" var="totalFeeOnePeriod"/>
-												${fn:replace(totalFeeOnePeriod, ",", ".")}
-												VNĐ
-											</c:if>
-											<c:if test="${ncBean.stage=='payoff' }">
-												<fmt:formatNumber  currencySymbol=" "  value="${ncBean.contract.totalAmount}" type="currency" maxFractionDigits="0" var="totalAmount"/>
-												${fn:replace(totalAmount, ",", ".")}
-												VNĐ
-											</c:if>
+											<span class="text-print-wrapper">
+												<c:if test="${ncBean.stage=='paid' }">
+													<fmt:formatNumber  currencySymbol=" "  value="${ncBean.contract.totalFeeOnePeriod}" type="currency" maxFractionDigits="0" var="totalFeeOnePeriod"/>
+													${fn:replace(totalFeeOnePeriod, ",", ".")}
+													VNĐ
+												</c:if>
+												<c:if test="${ncBean.stage=='payoff' }">
+													<fmt:formatNumber  currencySymbol=" "  value="${ncBean.contract.totalAmount}" type="currency" maxFractionDigits="0" var="totalAmount"/>
+													${fn:replace(totalAmount, ",", ".")}
+													VNĐ
+												</c:if>
+											</span>
 										</td>
 										<td class="text-center">
-											<c:if test="${ncBean.stage=='paid' }">
-												<span class="as-block">Trả phí</span>
-												<span class="as-block"> (trước ${ncBean.contract.periodOfPayment} ngày)</span>
-											</c:if>
-											<c:if test="${ncBean.stage=='payoff' }">
-												Thanh lý
-												<c:if test="${ncBean.contract.lastPaidDate != null}">
-													<span class="as-block">
-														(nợ phí từ <fmt:formatDate pattern="dd/MM/yyyy" value="${ncBean.contract.lastPaidDate}" />)
-													</span>
+											<span class="text-print-wrapper">
+												<c:if test="${ncBean.stage=='paid' }">
+													<span class="as-block">Trả phí</span>
+													<span class="as-block"> (trước ${ncBean.contract.periodOfPayment} ngày)</span>
 												</c:if>
-												<c:if test="${ncBean.contract.lastPaidDate == null}">
-													(chưa đóng phí)
+												<c:if test="${ncBean.stage=='payoff' }">
+													Thanh lý
+													<c:if test="${ncBean.contract.lastPaidDate != null}">
+														<span class="as-block">
+															(nợ phí từ <fmt:formatDate pattern="dd/MM/yyyy" value="${ncBean.contract.lastPaidDate}" />)
+														</span>
+													</c:if>
+													<c:if test="${ncBean.contract.lastPaidDate == null}">
+														(chưa đóng phí)
+													</c:if>
 												</c:if>
-											</c:if>
+											</span>
 										</td>
 										
 										<td class="text-center">
-											<span class="${ncBean.severity}">
-											<span class="as-block">
-												<fmt:formatDate pattern="dd/MM/yyyy" value="${ncBean.paidDate}" />
-											</span>
-											<span class="as-block">
-												(${ncBean.amountDays} Ngày)
-											</span>
+											<span class="text-print-wrapper">
+												<span class="${ncBean.severity}">
+												<span class="as-block">
+													<fmt:formatDate pattern="dd/MM/yyyy" value="${ncBean.paidDate}" />
+												</span>
+												<span class="as-block">
+													(${ncBean.amountDays} Ngày)
+												</span>
+												</span>
 											</span>
 										</td>
 										<td class="noprint">
@@ -130,6 +142,9 @@
 												<spring:url value="/contract/${ncBean.contract.id}/payoff" var="payOffUrl" />
 												<button class="btn btn-danger btn-xs noprint" onclick="location.href='${payOffUrl}'">Thanh lý</button>
 											</c:if>
+										</td>
+										<td class="screen-hide">
+											<div class="signature"> </div>
 										</td>
 							    	</tr>
 						    	</c:forEach>

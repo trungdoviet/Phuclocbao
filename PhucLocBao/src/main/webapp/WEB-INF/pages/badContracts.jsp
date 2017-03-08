@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="includes/jstl.jsp"%>
-<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main phuclocbao">			
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main badcontract phuclocbao">			
 	<div class="row">
 		<ol class="breadcrumb">
 			<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
@@ -22,57 +22,69 @@
 			<div class="panel panel-default">
 				<div class="panel-heading text-center"><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>Quản lý hợp đồng xấu</div>
 				<div class="panel-body bad-contract">
-					<div class="col-md-6 noprint">
-						<form:form role="form" id="badContractForm" method="post" action="filterBadContract" modelAttribute="csBean">
-								<spring:bind path="name">
-									<div class="form-group ${status.error ? 'has-error' : ''} pull-left" >
-										<form:input id="customerName" class="form-control"
-											placeholder="Họ tên khách hàng" name="customerName"
-											path="name" />
-										<form:errors path="name" cssClass="error" />
-									</div>
-								</spring:bind>
-								<button id="btnSearch" type="submit" class="btn btn-primary pull-left stay-left" name="search">
-									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-									Tìm
-								</button>
-						</form:form>
-					</div>
-					<div class="col-md-6 noprint">
-						<div style="height:50px"></div>
-					</div>
-					<div class="col-md-6">
+					<div class="col-lg-12 noprint">
 						<div class="row">
-							<div class="col-md-8 text-right"><strong class="bottom-line">Tổng HĐ khách hàng xấu:</strong></div>
-							<div id="ocFinishContract" class="col-md-4 text-left">${badContract.badContract}</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="row">
-							<div class="col-md-8 text-right"><strong class="bottom-line">Tổng giá trị HĐ xấu:</strong></div>
-							<div id="ocTotalUnpaidCost" class="col-md-4 text-right"><strong>
-								<span id="mcTotalUnpaidCostSpan">
-									<fmt:formatNumber  currencySymbol=" "  value="${badContract.totalAmountBadContract}" type="currency" maxFractionDigits="0" var="bcTotalAmmount"/>
-										${fn:replace(bcTotalAmmount, ",", ".")}
-										VNĐ
-								</span></strong>
+							<div class="col-md-6 noprint">
+								<form:form role="form" id="badContractForm" method="post" action="filterBadContract" modelAttribute="csBean">
+										<spring:bind path="name">
+											<div class="form-group ${status.error ? 'has-error' : ''} pull-left" >
+												<form:input id="customerName" class="form-control"
+													placeholder="Họ tên khách hàng" name="customerName"
+													path="name" />
+												<form:errors path="name" cssClass="error" />
+											</div>
+										</spring:bind>
+										<button id="btnSearch" type="submit" class="btn btn-primary pull-left stay-left" name="search">
+											<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+											Tìm
+										</button>
+								</form:form>
+							</div>
+							<div class="col-md-6 noprint">
+								<div style="height:50px"></div>
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-lg-12 noprint">
 						<div class="row">
-							<div></div>
+							<div class="col-md-6">
+								<div class="row">
+									<div class="col-md-8 text-right"><strong class="bottom-line">Tổng HĐ khách hàng xấu:</strong></div>
+									<div id="ocFinishContract" class="col-md-4 text-left">${badContract.badContract}</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="row">
+									<div class="col-md-8 text-right"><strong class="bottom-line">Tổng giá trị HĐ xấu:</strong></div>
+									<div id="ocTotalUnpaidCost" class="col-md-4 text-right"><strong>
+										<span id="mcTotalUnpaidCostSpan">
+											<fmt:formatNumber  currencySymbol=" "  value="${badContract.totalAmountBadContract}" type="currency" maxFractionDigits="0" var="bcTotalAmmount"/>
+												${fn:replace(bcTotalAmmount, ",", ".")}
+												VNĐ
+										</span></strong>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-lg-12 noprint">
 						<div class="row">
-							<div class="col-md-8 text-right"><strong class="bottom-line">Tổng nợ phí:</strong></div>
-							<div id="ocTotalUnpaidCost" class="col-md-4 text-right"><strong>
-								<span id="mcTotalUnpaidCostSpan">
-									<fmt:formatNumber  currencySymbol=" "  value="${badContract.totalAmountFeeOfBadContract}" type="currency" maxFractionDigits="0" var="bcTotalUnpaid"/>
-										${fn:replace(bcTotalUnpaid, ",", ".")}
-										VNĐ
-								</span></strong>
+							<div class="col-md-6">
+								<div class="row">
+									<div></div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="row">
+									<div class="col-md-8 text-right"><strong class="bottom-line">Tổng nợ phí:</strong></div>
+									<div id="ocTotalUnpaidCost" class="col-md-4 text-right"><strong>
+										<span id="mcTotalUnpaidCostSpan">
+											<fmt:formatNumber  currencySymbol=" "  value="${badContract.totalAmountFeeOfBadContract}" type="currency" maxFractionDigits="0" var="bcTotalUnpaid"/>
+												${fn:replace(bcTotalUnpaid, ",", ".")}
+												VNĐ
+										</span></strong>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -90,17 +102,17 @@
 						<span class="glyphicon glyphicon-print" aria-hidden="true"></span>
 						In trang</a>
 					</div> 
-					<table data-toggle="table" data-pagination="true" >
+					<table data-toggle="table"  >
 					    <thead>
 					    <tr>
-					        <th data-field="customerName" data-sortable="true">Tên khách hàng</th>
-					        <th data-field="contractType" data-sortable="true">Loại hình thuê</th>
-					        <th data-field="totalAmount" data-sortable="true">Giá trị HĐ</th>
-					        <th data-field="feeAday" data-sortable="true">Phí/ngày</th>
-					        <th data-field="lastPaidDate" data-sortable="true">Đã trả phí hết ngày</th>
-					        <th data-field="totalLateDays" data-sortable="true">Số ngày chậm</th>
-					        <th data-field="totalUnpaidFee" data-sortable="true">Tổng tiền phí</th>		
-					         <th>Thao tác</th>
+					        <th data-field="customerName" data-sortable="true" class="text-print-wrapper">Tên khách hàng</th>
+					        <th data-field="contractType" data-sortable="true" class="noprint text-print-wrapper">Loại hình thuê</th>
+					        <th data-field="totalAmount" data-sortable="true" class="text-print-wrapper">Giá trị HĐ</th>
+					        <th data-field="feeAday" data-sortable="true" class="text-print-wrapper">Phí/ngày</th>
+					        <th data-field="lastPaidDate" data-sortable="true" class="text-print-wrapper">Đã trả phí tới</th>
+					        <th data-field="totalLateDays" data-sortable="true" class="text-print-wrapper">Số ngày chậm</th>
+					        <th data-field="totalUnpaidFee" data-sortable="true" class="text-print-wrapper">Tổng tiền phí</th>		
+					        <th class="text-print-wrapper"> <span class="noprint">Thao tác</span><span class="screen-hide">Xác nhận</span></th>
 					    </tr>
 					    </thead>
 					    <tbody>
@@ -108,7 +120,7 @@
 						    	<tr>
 						    		<td>
 						    			<a href="#" onclick="openContractDetail(${contract.id})">${contract.customer.name}&nbsp;${contract.customer.birthYear}</a></td>
-									<td>Cho thuê xe</td>
+									<td class="noprint">Cho thuê xe</td>
 									<td class="text-right">
 										<fmt:formatNumber  currencySymbol=" "  value="${contract.totalAmount}" type="currency" maxFractionDigits="0" var="totalAmount"/>
 										${fn:replace(totalAmount, ",", ".")}
@@ -136,7 +148,7 @@
 									</td>
 									<td>
 											<spring:url value="/contract/${contract.id}/payoff" var="payOffUrl" />
-											<button class="btn btn-danger btn-xs" onclick="location.href='${payOffUrl}'">Thanh lý</button>
+											<button class="btn btn-danger btn-xs noprint" onclick="location.href='${payOffUrl}'">Thanh lý</button>
 										
 									</td>
 						    	</tr>

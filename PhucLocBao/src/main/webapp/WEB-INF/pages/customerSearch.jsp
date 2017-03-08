@@ -62,7 +62,7 @@
 				<div class="panel panel-default">
 					<div class="panel-body">
 					<label>Khách hàng tại công ty này:</label>
-						<table data-toggle="table" data-pagination="true" >
+						<table data-toggle="table" >
 						    <thead>
 						    <tr>
 						        <th data-field="name" data-sortable="true">Tên khách hàng</th>
@@ -70,6 +70,7 @@
 						        <th data-field="idNo" data-sortable="true">CMND</th>
 						        <th data-field="address" data-sortable="true">Địa chỉ</th>
 						        <th data-field="provinceInString" data-sortable="true">Thành phố</th>
+						        <th data-field="contract">Hợp đồng</th>
 						    </tr>
 						    </thead>
 						    <tbody>
@@ -90,6 +91,35 @@
 							    		<td>
 							    			${customer.provinceInString}
 							    		</td>
+							    		<td>
+							    			<div id="plbCustomerContractPanel" class="list-group customer-search">
+												<c:if test="${customer.allContracts != null}">
+													<c:forEach var="contract"
+														items="${customer.allContracts}"
+														varStatus="loop">
+														<div class="group width-100p">
+															<c:if test="${contract.state == 'IN_PROGRESS'}">
+																<div class="list-group-item list-group-item-warning">HĐ
+																	Mới</div>
+															</c:if>
+															<c:if test="${contract.state == 'FINISH'}">
+																<div class="list-group-item list-group-item-success">HĐ
+																	Cũ</div>
+															</c:if>
+															<c:if test="${contract.state == 'BAD'}">
+																<div class="list-group-item list-group-item-bad">HĐ Xấu</div>
+															</c:if>
+															<div class="list-group-item-label">
+																<a class="list-group-link"
+																	onclick="openContractDetail(${contract.id})"
+																	data-id='${contract.id}' href="#">Hợp đồng ngày
+																	${contract.startDate}</a><br>
+															</div>
+														</div>
+													</c:forEach>
+												</c:if>
+											</div>
+							    		</td>
 							    	</tr>
 						    	</c:forEach>
 						    </tbody>
@@ -105,7 +135,7 @@
 					<div class="panel panel-default">
 						<div class="panel-body">
 						<label>Khách hàng tại các công ty khác:</label>
-							<table data-toggle="table" data-pagination="true" >
+							<table data-toggle="table" >
 							    <thead>
 							    <tr>
 							        <th data-field="name" data-sortable="true">Tên khách hàng</th>
@@ -114,6 +144,7 @@
 							        <th data-field="address" data-sortable="true">Địa chỉ</th>
 							        <th data-field="provinceInString" data-sortable="true">Thành phố</th>
 							        <th data-field="companyName" data-sortable="true">Thuộc chi nhánh</th>
+							        <th data-field="contract">Hợp đồng</th>
 							    </tr>
 							    </thead>
 							    <tbody>
@@ -137,6 +168,35 @@
 								    		<td>
 								    			${customer.contract.company.name}
 								    		</td>
+								    		<td style="width: 20%">
+								    			<div id="plbCustomerContractPanel" class="list-group customer-search">
+													<c:if test="${customer.allContracts != null}">
+														<c:forEach var="contract"
+															items="${customer.allContracts}"
+															varStatus="loop">
+															<div class="group width-100p">
+																<c:if test="${contract.state == 'IN_PROGRESS'}">
+																	<div class="list-group-item list-group-item-warning">HĐ
+																		Mới</div>
+																</c:if>
+																<c:if test="${contract.state == 'FINISH'}">
+																	<div class="list-group-item list-group-item-success">HĐ
+																		Cũ</div>
+																</c:if>
+																<c:if test="${contract.state == 'BAD'}">
+																	<div class="list-group-item list-group-item-bad">HĐ Xấu</div>
+																</c:if>
+																<div class="list-group-item-label">
+																	<a class="list-group-link"
+																		onclick="openContractDetail(${contract.id})"
+																		data-id='${contract.id}' href="#">Hợp đồng ngày
+																		${contract.startDate}</a><br>
+																</div>
+															</div>
+														</c:forEach>
+													</c:if>
+												</div>
+								    		</td>
 								    	</tr>
 							    	</c:forEach>
 							    </tbody>
@@ -146,6 +206,7 @@
 				</div>
 			</div>
 		</c:if>
+		<jsp:include page="includes/contractDetailDialog.jsp"></jsp:include>
 </div>
 <script type="text/javascript">
 $( document ).ready(function() {

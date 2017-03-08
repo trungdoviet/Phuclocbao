@@ -1,7 +1,10 @@
 package vn.com.phuclocbao.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonView;
 
+import vn.com.phuclocbao.bean.EffectiveContract;
 import vn.com.phuclocbao.bean.Views;
 import vn.com.phuclocbao.dto.base.IBaseDTO;
 
@@ -32,7 +35,16 @@ public class CustomerDto implements IBaseDTO {
 	@JsonView(Views.Public.class)
 	private Integer birthYear;
 	private transient String provinceInString;
+	private transient List<EffectiveContract> allContracts;
 	
+	public List<EffectiveContract> getAllContracts() {
+		return allContracts;
+	}
+
+	public void setAllContracts(List<EffectiveContract> allContracts) {
+		this.allContracts = allContracts;
+	}
+
 	public String getProvinceInString() {
 		return provinceInString;
 	}

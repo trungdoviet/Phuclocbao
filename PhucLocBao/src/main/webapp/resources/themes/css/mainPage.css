@@ -313,6 +313,13 @@ a.mute-link-style:hover {
 .year-profit{
 	display:none;
 }
+.screen-hide{
+	display:none;
+	padding:0px;
+}
+.signature{
+	height:32px; width:32px;
+}
 @media print
 {
 	/* @page {size: landscape} */
@@ -366,11 +373,34 @@ a.mute-link-style:hover {
 	.panel-body.bad-contract{
 		width: 97%;
 	}
+	.text-print-wrapper{
+		font-size:14px !important;
+	}
+	.notification .panel-heading {
+		height:22px;
+		
+	}
+	.notification .table > thead > tr > th, 
+	.notification .table > tbody > tr > th, 
+	.notification .table > tfoot > tr > th, 
+	.notification .table > thead > tr > td, 
+	.notification .table > tbody > tr > td, 
+	.notification .table > tfoot > tr > td {
+		padding: 2px;
+	}
+	
+	
+	.screen-hide{
+		display: table-cell;
+	}
+	body {
+		padding-top:10px !important;
+	}
 }
 
 .phuclocbao .notification-table .fixed-table-body{
 		height:auto !important;
-		width: 100%;
+		width: 99%;
 	}
 .profit-by-month{
 	display: inline-block;
@@ -395,4 +425,20 @@ a.mute-link-style:hover {
 .panel-body input.search-all[type=checkbox]:checked + label { 
 	text-decoration: none !important;
 	color: #777; 
+}
+/*customer search */
+/*contract*/
+.customer-search div.list-group-item{
+	width:14%;
+	float:left;
+	margin-left: 5px;
+	padding:1px 8px;
+	border-radius:4px;
+}
+.customer-search .list-group-item-label{
+	float:left;
+}
+
+.customer-search .list-group-link{
+	margin-left:5px;
 }

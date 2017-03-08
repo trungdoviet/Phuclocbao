@@ -93,7 +93,17 @@ public class DefaultCustomerService extends BaseService implements CustomerServi
 
 			private CustomerDto getLatestCustomer(List<CustomerDto> value) {
 				Integer maxId = value.stream().map(item-> item.getId()).max(Integer::compare).get();
-				return value.stream().filter(item -> item.getId()== maxId).findFirst().get();
+				CustomerDto dto = value.stream().filter(item -> item.getId()== maxId).findFirst().get();
+				List<EffectiveContract> allContracts = value.stream()
+						.sorted((o1,o2) -> o2.getContract().getStartDate().compareTo(o1.getContract().getStartDate()))
+						.map(item -> {
+							EffectiveContract ef = new EffectiveContract(item.getContract().getId());
+							ef.setState(item.getContract().getState());
+							ef.setStartDate(DateTimeUtil.date2String(item.getContract().getStartDate()));
+							return ef;	
+						}).collect(Collectors.toList());
+				dto.setAllContracts(allContracts);
+				return dto;
 			}
 			
 		});
