@@ -105,7 +105,7 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 								UserActionHistoryType.UPDATE_COMPANY_INFO, StringUtils.EMPTY);
 						userHistoryDao.persist(userHistory);
 					}else {
-						paymentHistoryDao.persist(PaymentHistoryUtil.createNewHistory(null, dto.getId(), PaymentHistoryType.INVEST_FUNDING, investFunding, null));
+						paymentHistoryDao.persist(PaymentHistoryUtil.createNewHistory(null, dto.getId(), PaymentHistoryType.UPDATE_FUNDING, investFunding, null));
 						UserHistory userHistory = UserHistoryUtil.createNewHistory(null, dto.getId(), 
 								dto.getName(), userActionParam.getUsername(), 
 								UserActionHistoryType.UPDATE_COMPANY_FINANCIAL, StringUtils.EMPTY);

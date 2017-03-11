@@ -95,6 +95,8 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 	
 	public Contract updateContractInPaidTime(ContractDto dto, Contract entity) throws BusinessException {
 		updateContract(dto, entity);
+		entity.setCustomerDebt(dto.getCustomerDebt());
+		entity.setCompanyDebt(dto.getCompanyDebt());
 		return entity;
 	}
 

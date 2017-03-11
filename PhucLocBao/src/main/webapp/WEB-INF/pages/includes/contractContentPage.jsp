@@ -241,7 +241,7 @@
 					<form:hidden path="processStaging" id="processStagingHidden" />
 				</div>
 			</div>
-			<c:if test="${contractBean.processStaging == 'payoff' }">
+			<c:if test="${contractBean.processStaging == 'payoff' || contractBean.processStaging == 'paid' }">
 				<div class="panel-body">
 					<div class="col-md-6">
 						<spring:bind path="contractDto.customerDebt">
@@ -265,30 +265,32 @@
 							</div>
 						</spring:bind>
 					</div>
-					<div class="col-md-6">
-						<spring:bind path="contractDto.payoffDate">
-							<div class="form-group ${status.error ? 'has-error' : ''}">
-								<label>Ngày thanh lý:</label>
-								<form:input id="payoffDate" class="form-control"
-								readonly="${contractBean.isReadOnly('contractDto.payoffDate')}"
-									placeholder="Ngày" name="payoffDate"  
-									path="contractDto.payoffDate" />
-								<form:errors path="contractDto.payoffDate" cssClass="error" />
+					<c:if test="${contractBean.processStaging == 'payoff'}">
+						<div class="col-md-6">
+							<spring:bind path="contractDto.payoffDate">
+								<div class="form-group ${status.error ? 'has-error' : ''}">
+									<label>Ngày thanh lý:</label>
+									<form:input id="payoffDate" class="form-control"
+									readonly="${contractBean.isReadOnly('contractDto.payoffDate')}"
+										placeholder="Ngày" name="payoffDate"  
+										path="contractDto.payoffDate" />
+									<form:errors path="contractDto.payoffDate" cssClass="error" />
+								</div>
+							</spring:bind>
+							<div class="form-group"> 
+								<label id="refundToCustomer">Số tiền thừa phí:</label>
+								<div id="totalMoneyPayBack" class=" text-center refunding-panel"  >
+									<span id="totalMoneyRefundingAmount" class="refunding-number" refunding="${contractBean.totalRefunding}">
+									<fmt:formatNumber  currencySymbol=" "  value="${contractBean.totalRefunding}" type="currency" maxFractionDigits="0" var="totalRefunding"/>
+										${fn:replace(totalRefunding, ",", ".")}
+										</span>
+										VNĐ
+								</div>
+								<div>Công thức: <code>(${contractBean.subtractionDays} ngày <c:if test="${contractBean.totalRefunding < 0 }">chưa đóng</c:if>
+								<c:if test="${contractBean.totalRefunding > 0 }">đã đóng </c:if> x Phí 1 ngày) - Khách nợ + Cty nợ </code></div>
 							</div>
-						</spring:bind>
-						<div class="form-group"> 
-							<label id="refundToCustomer">Số tiền thừa phí:</label>
-							<div id="totalMoneyPayBack" class=" text-center refunding-panel"  >
-								<span id="totalMoneyRefundingAmount" class="refunding-number" refunding="${contractBean.totalRefunding}">
-								<fmt:formatNumber  currencySymbol=" "  value="${contractBean.totalRefunding}" type="currency" maxFractionDigits="0" var="totalRefunding"/>
-									${fn:replace(totalRefunding, ",", ".")}
-									</span>
-									VNĐ
-							</div>
-							<div>Công thức: <code>(${contractBean.subtractionDays} ngày <c:if test="${contractBean.totalRefunding < 0 }">chưa đóng</c:if>
-							<c:if test="${contractBean.totalRefunding > 0 }">đã đóng </c:if> x Phí 1 ngày) - Khách nợ + Cty nợ </code></div>
 						</div>
-					</div>
+					</c:if>
 				</div>
 			</c:if>
 		</div>

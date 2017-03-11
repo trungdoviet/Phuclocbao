@@ -71,6 +71,7 @@ public class PaymentHistoryUtil {
 															String.valueOf(contract.getCustomer().getBirthYear()), payoffDate);
 			history.setDetail(msg);
 			break;
+		case UPDATE_FUNDING:
 		case INVEST_FUNDING:
 			history.setFee(fee);
 			break;

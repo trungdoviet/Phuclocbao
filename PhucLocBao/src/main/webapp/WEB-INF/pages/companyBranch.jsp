@@ -34,7 +34,7 @@
 					</div>
 					<div class="row">
 						<div class="col-lg-12">
-							<table data-toggle="table" data-pagination="true" >
+							<table data-toggle="table" >
 							    <thead>
 							    <tr>
 							        <th data-field="name" data-sortable="true">Tên chi nhánh</th>

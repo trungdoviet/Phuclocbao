@@ -19,6 +19,14 @@ var defaultNumberConf =  {
         vMin: 0, 
         vMax: 9999999999
     };
+var defaultAllRangeNumber = {
+        aSep: '.',
+        aDec: ',', 
+        pSign: 's',
+        aSign: ' VNĐ',
+        vMin: -9999999999, 
+        vMax: 9999999999
+    };
 
 function initDateLocally(){
 	$.fn.datepicker.dates['vi'] = {
@@ -48,14 +56,7 @@ function showhideAvailableContractPanel(){
 function initInput(){
 	 var unExponentialAmount = parseFloat($("#totalAmount").attr("value"));
 	 $("#totalAmount").attr("value", unExponentialAmount);
-	 $("#totalAmount").autoNumeric("init", {
-	        aSep: '.',
-	        aDec: ',', 
-	        pSign: 's',
-	        aSign: ' VNĐ',
-	        vMin: 0, 
-	        vMax: 9999999999
-	    });
+	 $("#totalAmount").autoNumeric("init",defaultNumberConf);
 		 $("#periodOfPayment").autoNumeric("init", {
 		        aSep: '.',
 		        aDec: ',', 
@@ -63,14 +64,7 @@ function initInput(){
 		        vMin: 0, 
 		        vMax: 30
 		    });
-		 $("#feeADay").autoNumeric("init", {
-		        aSep: '.',
-		        aDec: ',', 
-		        pSign: 's',
-		        aSign: ' VNĐ',
-		        vMin: 0, 
-		        vMax: 999999999
-		    });
+		 $("#feeADay").autoNumeric("init", defaultNumberConf);
 		 $("#customerBirthYear").autoNumeric("init", {
 		        aSep: '',
 		        aDec: '.', 
@@ -91,6 +85,10 @@ function initInput(){
 		});
 		
 		var processStage = $("#processStagingHidden").val();
+		if(processStage == "paid"){
+			 $("#customerDebt").autoNumeric("init", defaultAllRangeNumber);
+			 $("#companyDebt").autoNumeric("init", defaultAllRangeNumber);
+		}
 		if(processStage == "payoff"){
 			var payoffDate = $( "#payoffDate" );
 			if(payoffDate != undefined) {
@@ -101,22 +99,8 @@ function initInput(){
 							    language: 'vi'
 							});
 			}
-		 $("#customerDebt").autoNumeric("init", {
-		        aSep: '.',
-		        aDec: ',', 
-		        pSign: 's',
-		        aSign: ' VNĐ',
-		        vMin: -9999999999, 
-		        vMax: 9999999999
-		    });
-		 $("#companyDebt").autoNumeric("init", {
-		        aSep: '.',
-		        aDec: ',', 
-		        pSign: 's',
-		        aSign: ' VNĐ',
-		        vMin: -9999999999, 
-		        vMax: 9999999999
-		    });
+		 $("#customerDebt").autoNumeric("init",defaultAllRangeNumber);
+		 $("#companyDebt").autoNumeric("init", defaultAllRangeNumber);
 		}
 		$("#startDate").inputmask("99/99/9999",{ "oncomplete": function(){ console.log('inputmask complete'); } });
 		$("#customerIdNo").autocomplete({
@@ -349,11 +333,7 @@ function initNewContractPageButtons(){
 function initContractPageButtons(){
 	$( "#btnSaveContract" ).off( "click");
 	$( "#btnSaveContract" ).on( "click", function() {
-		 var totalAmount = $("#totalAmount").autoNumeric("get");
-		 $("#totalAmount").val(totalAmount);
-		 
-		 var feeAday =  $("#feeADay").autoNumeric("get");
-		 $("#feeADay").val(feeAday);
+		 ctr_updateNumber();
 		 collectPaymentSchedule();
 	});
 	var btnPayoffContractOk = $("#btnPayoffContractOk");
@@ -377,7 +357,7 @@ function initContractPageButtons(){
 		});
 	}
 	var processStage = $("#processStagingHidden").val();
-	if(processStage == "payoff"){
+   if(processStage == "payoff"){
 		$( "#btnPayoffContract" ).off( "click");
 		$( "#btnPayoffContract" ).on( "click", function() {
 			ctr_updateNumber();

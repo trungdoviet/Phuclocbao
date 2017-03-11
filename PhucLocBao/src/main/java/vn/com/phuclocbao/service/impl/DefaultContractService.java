@@ -280,18 +280,63 @@ public class DefaultContractService extends BaseService implements ContractServi
 			public ContractDto execute() throws BusinessException, ClassNotFoundException, IOException {
 				try {
 					Contract contract = contractDao.findById(dto.getId(), dto.getCompany().getId());
-					
+
 					Double totalPaidCost = 0D;
 					 long numberOfOldPaidTime = contract.getPaymentSchedules().stream().filter(item-> item.getFinish().equalsIgnoreCase(ConstantVariable.YES_OPTION)).count();
 					 long numberOfNewPaidTime  = dto.getPaymentSchedules().stream().filter(item-> item.getFinish().equalsIgnoreCase(ConstantVariable.YES_OPTION)).count();
 					 totalPaidCost = (numberOfNewPaidTime - numberOfOldPaidTime) * contract.getPeriodOfPayment() * contract.getFeeADay();
+					 Double customerDebt = dto.getCustomerDebt() - contract.getCustomerDebt();
+					 Double companyDebt = dto.getCompanyDebt() - contract.getCompanyDebt();
+					 Double profitToCompany = totalPaidCost;
+					 List<PaymentHistory> paymentHistories = new ArrayList<>();
+					 List<UserHistory> userHistories = new ArrayList<>();
+					 if(isIncreasingDebt(customerDebt)){
+						 profitToCompany = profitToCompany - customerDebt;
+						 PaymentHistory customerDebtHistory = PaymentHistoryUtil.createNewHistory(contract, 
+									dto.getCompany().getId(), PaymentHistoryType.CUSTOMER_DEBT, 
+									customerDebt, StringUtils.EMPTY);
+						paymentHistories.add(customerDebtHistory);
+						UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+												dto.getCompany().getName(), userActionParam.getUsername(), 
+												UserActionHistoryType.CUSTOMER_DEBT, StringUtils.EMPTY);
+						userHistories.add(userHistory);
+						 
+					 } else if(isDecreasingDebt(customerDebt)) {
+						 profitToCompany = profitToCompany - customerDebt;
+						 PaymentHistory customerDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.CUSTOMER_PAY_DEBT, customerDebt, StringUtils.EMPTY);
+							paymentHistories.add(customerDebtHistory);
+							UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+									dto.getCompany().getName(), userActionParam.getUsername(), 
+									UserActionHistoryType.CUSTOMER_PAY_DEBT, StringUtils.EMPTY);
+							userHistories.add(userHistory);
+					 }
+					 
+					 if(isIncreasingDebt(companyDebt)){
+						 profitToCompany = profitToCompany + customerDebt;
+						 PaymentHistory companyDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.COMPANY_DEBT, companyDebt, StringUtils.EMPTY);
+							paymentHistories.add(companyDebtHistory);
+							UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+									dto.getCompany().getName(), userActionParam.getUsername(), 
+									UserActionHistoryType.COMPANY_DEBT, StringUtils.EMPTY);
+							userHistories.add(userHistory);
+					 } else if(isDecreasingDebt(companyDebt)) {
+						 profitToCompany = profitToCompany + customerDebt;
+						 PaymentHistory companyDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.COMPANY_PAY_DEBT, companyDebt, StringUtils.EMPTY);
+							paymentHistories.add(companyDebtHistory);
+							UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
+									dto.getCompany().getName(), userActionParam.getUsername(), 
+									UserActionHistoryType.COMPANY_PAY_DEBT, StringUtils.EMPTY);
+							userHistories.add(userHistory);
+					 }
+					 
 					 ContractConverter.getInstance().updateContractInPaidTime(dto, contract);
 					 PaymentHistory paidHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.RENTING_COST, totalPaidCost, StringUtils.EMPTY);
+					 paymentHistories.add(paidHistory);
 					 ContractDto updatedContract= ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
 					 if(updatedContract != null){
 						 CompanyEntity company = companyDao.findById(dto.getCompany().getId());
 						 if(company != null){
-								Double totalFunding = company.getTotalFund() + totalPaidCost;
+								Double totalFunding = company.getTotalFund() + profitToCompany;
 								company.setTotalFund(totalFunding);
 								companyDao.merge(company);
 						} else {
@@ -299,7 +344,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 							throw new BusinessException(PLBErrorCode.CAN_NOT_UPDATE_DATA.name());
 						}
 						 
-						paymentHistoryDao.persist(paidHistory);
+						//paymentHistoryDao.persist(paidHistory);
 						UserActionHistoryType actionType = UserActionHistoryType.RENTING_COST;
 						if(totalPaidCost == 0D){
 							actionType = UserActionHistoryType.UPDATE_CONTRACT;
@@ -307,7 +352,14 @@ public class DefaultContractService extends BaseService implements ContractServi
 						UserHistory userHistory = UserHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), 
 								company.getName(), userActionParam.getUsername(), 
 								actionType, StringUtils.EMPTY);
-						userHistoryDao.persist(userHistory);
+						userHistories.add(userHistory);
+						//userHistoryDao.persist(userHistory);
+						if(updatedContract != null && CollectionUtils.isNotEmpty(paymentHistories)){
+							 paymentHistoryDao.persistList(paymentHistories);
+						 }
+						 if(updatedContract != null && CollectionUtils.isNotEmpty(userHistories)){
+							 userHistoryDao.persistList(userHistories);
+						 }
 					 }
 					 return updatedContract;
 					
@@ -367,7 +419,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 																			dto.getCompany().getName(), userActionParam.getUsername(), 
 																			UserActionHistoryType.CUSTOMER_DEBT, StringUtils.EMPTY);
 								userHistories.add(userHistory);
-								profitToCompany += customerDebt;
+								profitToCompany -= customerDebt;
 							} else if(isDecreasingDebt(customerDebt)){
 								PaymentHistory customerDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.CUSTOMER_PAY_DEBT, customerDebt, StringUtils.EMPTY);
 								paymentHistories.add(customerDebtHistory);
@@ -385,7 +437,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 										dto.getCompany().getName(), userActionParam.getUsername(), 
 										UserActionHistoryType.COMPANY_DEBT, StringUtils.EMPTY);
 								userHistories.add(userHistory);
-								profitToCompany -= companyDebt;
+								profitToCompany += companyDebt;
 							} else if(isDecreasingDebt(companyDebt)){
 								PaymentHistory companyDebtHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.COMPANY_PAY_DEBT, companyDebt, StringUtils.EMPTY);
 								paymentHistories.add(companyDebtHistory);
@@ -474,7 +526,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 								dto.getCompany().getName(), userActionParam.getUsername(), 
 								UserActionHistoryType.CUSTOMER_PAY_DEBT, StringUtils.EMPTY);
 						userHistories.add(userHistory);
-						profitToCompany += customerDebt;
+						profitToCompany -= customerDebt;
 					} 
 					
 					if(isIncreasingDebt(companyDebt)){
@@ -492,7 +544,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 								dto.getCompany().getName(), userActionParam.getUsername(), 
 								UserActionHistoryType.COMPANY_PAY_DEBT, StringUtils.EMPTY);
 						userHistories.add(userHistory);
-						profitToCompany -= companyDebt;
+						profitToCompany += companyDebt;
 					}
 					
 					if(isKeepDebt(companyDebt) && isKeepDebt(customerDebt)){

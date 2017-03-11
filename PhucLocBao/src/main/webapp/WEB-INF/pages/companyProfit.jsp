@@ -59,7 +59,7 @@
 						<div >
 								Thống kê thu chi <small>(triệu đồng)</small> <div class="profit-by-month"></div> <small>thu</small> <div class="cost-by-month"></div> <small>chi</small>
 						</div> 
-					<table data-toggle="table" data-pagination="true" >
+					<table data-toggle="table" >
 					    <thead>
 					    <tr>
 					        <th data-field="companyName"><span class="month-header-screen">Công ty</span><span class="month-header-print">Cty</span></th>
