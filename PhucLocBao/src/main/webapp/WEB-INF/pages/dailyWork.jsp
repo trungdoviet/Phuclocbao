@@ -77,7 +77,10 @@
 						</div>
 						<div class="row">
 							<div class="col-lg-12">
-								<table data-toggle="table" data-pagination="true" >
+							 <div id="filterBar">
+        					</div>
+								<table data-toggle="table" 
+									data-pagination="true"  data-page-list="[30, 60, 120, 240]" data-page-size="30">
 								    <thead>
 								    <tr>
 								        <th data-field="historyType" data-sortable="true">Loại chi phí</th>

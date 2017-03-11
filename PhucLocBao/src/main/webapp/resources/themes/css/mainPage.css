@@ -396,6 +396,12 @@ a.mute-link-style:hover {
 	body {
 		padding-top:10px !important;
 	}
+	#monthlyProfit{
+		background-color:#fff !important;
+	}
+	#monthlyProfit .modal-content, #monthlyProfit .modal-header, #monthlyProfit .modal-footer{
+		border:none !important;
+	}
 }
 
 .phuclocbao .notification-table .fixed-table-body{
@@ -441,4 +447,10 @@ a.mute-link-style:hover {
 
 .customer-search .list-group-link{
 	margin-left:5px;
+}
+.clickable{
+	cursor:hand;
+}
+.bg-white, tr.bg-white:hover, td.bg-white:hover{
+	background-color:#fff !important;
 }

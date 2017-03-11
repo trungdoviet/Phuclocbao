@@ -22,6 +22,7 @@ import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.enums.PaymentHistoryType;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.service.PaymentHistoryService;
+import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.viewbean.PaymentHistoryView;
 
 
@@ -47,7 +48,7 @@ public class PaymentHistoryController extends BaseController {
 		ModelAndView model = new ModelAndView(MenuDefinition.DAILY_WORK.getName());
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		try {
-			List<PaymentHistoryDto> paymentDtos = paymentHistoryService.getHistories(plbSession.getCompanyId(), paymentHistory.getStartDate(), paymentHistory.getEndDate());
+			List<PaymentHistoryDto> paymentDtos = paymentHistoryService.getHistories(plbSession.getCompanyId(), paymentHistory.getStartDate(), DateTimeUtil.addMoreDate(paymentHistory.getEndDate(), 1));
 			paymentHistory.setPaymentHistories(paymentDtos);
 			model.addObject("historyView", paymentHistory);
 		} catch (BusinessException e) {

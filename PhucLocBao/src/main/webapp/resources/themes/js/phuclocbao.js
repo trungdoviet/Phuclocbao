@@ -27,7 +27,7 @@ var defaultAllRangeNumber = {
         vMin: -9999999999, 
         vMax: 9999999999
     };
-
+var isProcessingRequest = false;
 function initDateLocally(){
 	$.fn.datepicker.dates['vi'] = {
 		    days: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
@@ -789,18 +789,18 @@ function ph_initPage(){
 	});
 	$( "#btnNewPayment" ).off( "click");
 	$( "#btnNewPayment" ).on( "click", function() {
-			 $("#newPaymentForm .form-input").val("");
-			 $( "#addMorePaymentOK" ).off( "click");
-			 $( "#addMorePaymentOK" ).on( "click", function() {
-			     var totalAmount = $("#paymentAmount").autoNumeric("get");
-			     if(totalAmount == 0){
-			    	 $("#paymentAmount").val("");
-			     } else {
-			    	 $("#paymentAmount").val(totalAmount);
-			     }
-			  });
-			$('#addPayment').modal("show");
-		});
+		 $("#newPaymentForm .form-input").val("");
+		 $( "#addMorePaymentOK" ).off( "click");
+		 $( "#addMorePaymentOK" ).on( "click", function() {
+		     var totalAmount = $("#paymentAmount").autoNumeric("get");
+		     if(totalAmount == 0){
+		    	 $("#paymentAmount").val("");
+		     } else {
+		    	 $("#paymentAmount").val(totalAmount);
+		     }
+		  });
+		$('#addPayment').modal("show");
+	});
 }
 
 function uh_initPage(){
@@ -822,6 +822,7 @@ function cf_init(){
 
 function companyProfit_init(){
 	$("td").not("[class*='valid']").remove();
+	$('[data-toggle="tooltip"]').tooltip(); 
 }
 
 function cf_initInputs(){
@@ -1063,4 +1064,144 @@ function cp_openDialog(username, id){
 	$('#userId').val(id);	
 	
 	$('#changePassword').modal("show");	
+}
+
+function openProfitDetail(companyName, companyId, month){
+	var year = $("#profitByYear").val();
+	
+	$("#profitCompanyName").text(companyName);
+	
+	companyProfit_setStateNavigator(parseInt(month),parseInt(year));
+	
+	$("#monthlyProfitBack").off("click");
+	$("#monthlyProfitBack").on("click", function(){
+		if(isProcessingRequest==true){
+			return;
+		}
+		var prevMonth = companyProfit_getPrevMonth($("#profitMonth").val());
+		companyProfit_setStateNavigator(prevMonth, parseInt($("#profitYear").val()));
+		if(prevMonth >= 1) {
+			$("#profitMonth").val(prevMonth);
+			var curMonth = $("#profitMonth").val();
+			var curYear = $("#profitYear").val();
+			var curComp = $("#profitCompany").val();
+			sendProfitDetailAjax(curComp, curYear, curMonth);
+		} 
+	});
+	
+	$("#monthlyProfitNext").off("click");
+	$("#monthlyProfitNext").on("click", function(){
+		if(isProcessingRequest==true){
+			return;
+		}
+		var nextMonth = companyProfit_getNextMonth($("#profitMonth").val());
+		companyProfit_setStateNavigator(nextMonth, parseInt($("#profitYear").val()));
+		if(nextMonth != -1) {
+			$("#profitMonth").val(nextMonth);
+			$("#monthlyProfitBack").attr("disabled", false);
+			var curMonth = $("#profitMonth").val();
+			var curYear = $("#profitYear").val();
+			var curComp = $("#profitCompany").val();
+			sendProfitDetailAjax(curComp, curYear, curMonth);
+		} 
+	});
+	
+	storeProfitKey(companyId, year, month);
+	sendProfitDetailAjax(companyId, year, month);
+}
+function companyProfit_setStateNavigator(curMonth, year){
+	if(curMonth == 1){
+		$("#btnProfitBack").text("Năm trước");
+		$("#btnProfitNext").text("Tháng " + (curMonth +1));
+		$("#monthlyProfitNext").attr("disabled", false);
+		$("#monthlyProfitBack").attr("disabled", true);
+		$("#profitTime").text("tháng "+ curMonth + "/" + year);
+	} else if(curMonth == 13){
+		$("#btnProfitBack").text("Tháng " + (curMonth -1));
+		$("#btnProfitNext").text("Năm sau");
+		$("#monthlyProfitNext").attr("disabled", true);
+		$("#monthlyProfitBack").attr("disabled", false);
+		$("#profitTime").text("năm "+year);
+	} else if(curMonth == 12) {
+		$("#btnProfitBack").text("Tháng " +(curMonth -1));
+		$("#btnProfitNext").text("Cả năm");
+		$("#monthlyProfitNext").attr("disabled", false);
+		$("#monthlyProfitBack").attr("disabled", false);
+		$("#profitTime").text("tháng "+ curMonth + "/" + year);
+	} else {
+		$("#btnProfitBack").text("Tháng " +(curMonth -1));
+		$("#btnProfitNext").text("Tháng " + (curMonth +1));
+		$("#monthlyProfitNext").attr("disabled", false);
+		$("#monthlyProfitBack").attr("disabled", false);
+		$("#profitTime").text("tháng "+ curMonth + "/" + year);
+	}
+	
+}
+function companyProfit_getPrevMonth(monthStr){
+	var month = parseInt(monthStr);
+	if(month - 1 <= 0){
+		return -1;
+	} else {
+		return month-1;
+	}
+}
+
+function companyProfit_getNextMonth(monthStr){
+	var month = parseInt(monthStr);
+	if(month + 1 > 13){
+		return -1;
+	} else {
+		return month+1;
+	}
+}
+
+function storeProfitKey(companyId, year, month){
+	$("#profitMonth").val(month);
+	$("#profitYear").val(year);
+	$("#profitCompany").val(companyId);
+}
+
+
+function sendProfitDetailAjax(companyId, year, month){
+	//send request
+	var search = {}
+	search["year"] = year;
+	search["companyId"] = companyId;
+	search["month"] = month;
+	isProcessingRequest = true;
+	$.ajax({
+		type : "POST",
+		contentType : "application/json",
+		url : "get/profitDetail",
+		data : JSON.stringify(search),
+		dataType : 'json',
+		timeout : 100000,
+		success : function(data) {
+			if(data.code == "200"){
+				$("#totalRunningContractAmount").text(ctr_formatNumeric(data.monthlyProfitDetail.totalInProgressContractAmount) +" VNĐ");
+				$("#totalFinishContractAmount").text(ctr_formatNumeric(data.monthlyProfitDetail.totalFinishContractAmount) +" VNĐ");
+				$("#totalBadContractAmount").text(ctr_formatNumeric(data.monthlyProfitDetail.totalBadContractAmount) +" VNĐ");
+				$("#totalContractAmount").text(ctr_formatNumeric(data.monthlyProfitDetail.totalContractAmount) +" VNĐ");
+				$("#totalRentingNew").text(ctr_formatNumeric(data.monthlyProfitDetail.totalRentingNew) +" VNĐ");
+				$("#totalPayoff").text(ctr_formatNumeric(data.monthlyProfitDetail.totalPayOff) +" VNĐ");
+				$("#totalRevenueContractAmount").text(ctr_formatNumeric(data.monthlyProfitDetail.totalRevenue) +" VNĐ");
+				$("#totalOtherCost").text(ctr_formatNumeric(data.monthlyProfitDetail.totalOtherCost) +" VNĐ");
+				$("#totalOtherIncome").text(ctr_formatNumeric(data.monthlyProfitDetail.totalOtherIncome) +" VNĐ");
+				$("#totalInvest").text(ctr_formatNumeric(data.monthlyProfitDetail.totalInvest) +" VNĐ");
+				$("#totalProfit").text(ctr_formatNumeric(data.monthlyProfitDetail.totalProfit) +" VNĐ");
+				$('#monthlyProfit').modal("show");	
+				
+			} else {
+				alert("Có lỗi xảy ra. Vui lòng thử lại sau:" + data.msg);
+			}
+			isProcessingRequest = false;
+		},
+		error : function(e) {
+			alert("Có lỗi xảy ra. Vui lòng thử lại sau" );
+			isProcessingRequest = false;
+		},
+		done : function(e) {
+			isProcessingRequest = false;
+		}
+	});
 }

@@ -3,6 +3,7 @@ package vn.com.phuclocbao.service;
 import java.util.Date;
 import java.util.List;
 
+import vn.com.phuclocbao.bean.MonthlyProfitDetail;
 import vn.com.phuclocbao.bean.StatisticInfo;
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.enums.ContractStatusType;
@@ -30,6 +31,7 @@ public interface ContractService {
 	public List<NotificationContractBean> convertToNotificationBeans(Date selectedDate, List<ContractDto> contracts) throws BusinessException;
 	public GeneralView collectStatistic(Integer companyId) throws BusinessException;
 	public StatisticInfo collectProfitStatistic(Integer companyId, int year) throws BusinessException;
+	public MonthlyProfitDetail collectMonthlyProfitStatistic(Integer companyId, int year, int month) throws BusinessException;
 	public List<StatisticInfo> collectAllProfitStatistic(int year) throws BusinessException;
 	public int updateBadContract(Integer companyId) throws BusinessException;
 	public int updateBadContractBaseOnPaymentDate(Integer companyId) throws BusinessException;

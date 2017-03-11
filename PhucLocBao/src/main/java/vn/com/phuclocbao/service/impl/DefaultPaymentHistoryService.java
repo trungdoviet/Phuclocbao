@@ -104,6 +104,8 @@ public class DefaultPaymentHistoryService extends BaseService implements Payment
 						} else {
 							StatisticInfo newStat = new StatisticInfo(item.getId());
 							newStat.setCompanyName(item.getName());
+							newStat.getRentingCostByMonth().add(0D);
+							newStat.getProfitByMonth().add(0D);
 							bean.getStatistics().add(newStat);
 						}
 					});
@@ -128,23 +130,24 @@ public class DefaultPaymentHistoryService extends BaseService implements Payment
 		return transactionWrapper(new PersistenceExecutable<PaymentHistoryDto>() {
 			@Override
 			public PaymentHistoryDto execute() throws BusinessException, ClassNotFoundException, IOException {
+				
+				CompanyEntity company = companyDao.findById(companyId);
+				if(company == null){
+					logger.error("can not find company with id " + companyId);
+					throw new BusinessException(PLBErrorCode.OBJECT_NOT_FOUND.name());
+				}
+				if(type == PaymentHistoryType.INVEST_FUNDING || type == PaymentHistoryType.OTHER_PROFIT){
+					company.setTotalFund(company.getTotalFund() + amount);
+				} else {
+					company.setTotalFund(company.getTotalFund() - amount);
+				}
+				companyDao.merge(company);
 				if(type == PaymentHistoryType.INVEST_FUNDING || type == PaymentHistoryType.TAKE_OUT_FUNDING) {
-					CompanyEntity company = companyDao.findById(companyId);
-					if(company == null){
-						logger.error("can not find company with id " + companyId);
-						throw new BusinessException(PLBErrorCode.OBJECT_NOT_FOUND.name());
-					}
-					if(type == PaymentHistoryType.INVEST_FUNDING){
-						company.setTotalFund(company.getTotalFund() + amount);
-					} else {
-						company.setTotalFund(company.getTotalFund() - amount);
-					}
-					companyDao.merge(company);
 					UserHistory userHistory = UserHistoryUtil.createNewHistory(null, companyId, 
 							company.getName(), username, 
 							UserActionHistoryType.UPDATE_COMPANY_FINANCIAL, StringUtils.EMPTY);
 					userHistoryDao.persist(userHistory);
-				}
+				} 
 				PaymentHistory history = new PaymentHistory();
 				history.setLogDate(DateTimeUtil.getCurrentDate());
 				history.setDetail(description);

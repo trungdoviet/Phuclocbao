@@ -11,13 +11,14 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
 @javax.persistence.Entity
 @javax.persistence.Table(name = "tblContract")
 @NamedQueries({
-		@NamedQuery(name = "Contract_getContractByStatusAndCompany", query = "SELECT DISTINCT contract FROM Contract contract, CompanyEntity company WHERE contract.state LIKE :contractState AND contract.company.id = :companyId"),
+		@NamedQuery(name = "Contract_getContractByStatusAndCompany", query = "SELECT DISTINCT contract FROM Contract contract WHERE contract.state LIKE :contractState AND contract.company.id = :companyId"),
 		@NamedQuery(name = "Contract_getContractByIdAndCompany", query = "SELECT DISTINCT contract FROM Contract contract WHERE contract.id = :contractId AND contract.company.id = :companyId"),
 		@NamedQuery(name = "Contract_countContractByStatusAndCompanyAndCustomerName", query = "SELECT DISTINCT contract FROM Contract contract WHERE contract.state LIKE :contractState AND contract.company.id = :companyId AND contract.customer.name LIKE :customerName"),
 		@NamedQuery(name = "Contract_getContractByDateAndcompanyId", query = "SELECT DISTINCT contract FROM Contract contract LEFT OUTER JOIN contract.paymentSchedules ps WHERE contract.company.id = :companyId and contract.state= :contractState AND ((ps.notifiedDate <= :inputDate AND ps.finish='N') OR contract.expireDate <= :inputDate)"),
 		@NamedQuery(name = "Contract_countContractByDateAndcompanyId", query = "SELECT COUNT(DISTINCT contract) FROM Contract contract LEFT OUTER JOIN contract.paymentSchedules ps WHERE contract.company.id = :companyId and contract.state= :contractState AND ((ps.notifiedDate <= :inputDate AND ps.finish='N') OR contract.expireDate <= :inputDate)"),
-		@NamedQuery(name = "Contract_countContractByStatusAndCompany", query = "SELECT COUNT(DISTINCT contract) FROM Contract contract, CompanyEntity company WHERE contract.state LIKE :contractState AND contract.company.id = :companyId"),
-		@NamedQuery(name = "Contract_countContractByCompany", query = "SELECT COUNT(DISTINCT contract) FROM Contract contract, CompanyEntity company WHERE contract.company.id = :companyId")
+		@NamedQuery(name = "Contract_countContractByStatusAndCompany", query = "SELECT COUNT(DISTINCT contract) FROM Contract contract WHERE contract.state LIKE :contractState AND contract.company.id = :companyId"),
+		@NamedQuery(name = "Contract_sumContractValueByStatusAndCompany", query = "SELECT SUM(contract.totalAmount) FROM Contract contract WHERE contract.state LIKE :contractState AND contract.company.id = :companyId"),
+		@NamedQuery(name = "Contract_countContractByCompany", query = "SELECT COUNT(DISTINCT contract) FROM Contract contract WHERE contract.company.id = :companyId")
 		
 })
 public class Contract implements IBaseEntity {

@@ -64,18 +64,19 @@
 					    <tr>
 					        <th data-field="companyName"><span class="month-header-screen">Công ty</span><span class="month-header-print">Cty</span></th>
 					        <th></th>
-					        <th ><span class="month-header-screen">Tháng 1</span><span class="month-header-print">Tg1</span></th>
-					        <th ><span class="month-header-screen">Tháng 2</span><span class="month-header-print">Tg2</span></th>
-					        <th ><span class="month-header-screen">Tháng 3</span><span class="month-header-print">Tg3</span></th>
-					        <th ><span class="month-header-screen">Tháng 4</span><span class="month-header-print">Tg4</span></th>
-					        <th ><span class="month-header-screen">Tháng 5</span><span class="month-header-print">Tg5</span></th>
-					        <th ><span class="month-header-screen">Tháng 6</span><span class="month-header-print">Tg6</span></th>
-					        <th ><span class="month-header-screen">Tháng 7</span><span class="month-header-print">Tg7</span></th>
-					        <th ><span class="month-header-screen">Tháng 8</span><span class="month-header-print">Tg8</span></th>
-					        <th ><span class="month-header-screen">Tháng 9</span><span class="month-header-print">Tg9</span></th>
-					        <th ><span class="month-header-screen">Tháng 10</span><span class="month-header-print">Tg10</span></th>
-					        <th ><span class="month-header-screen">Tháng 11</span><span class="month-header-print">Tg11</span></th>
-					        <th ><span class="month-header-screen">Tháng 12</span><span class="month-header-print">Tg12</span></th>
+					        <th ><span class="month-header-screen">Thg 1</span><span class="month-header-print">Tg1</span></th>
+					        <th ><span class="month-header-screen">Thg 2</span><span class="month-header-print">Tg2</span></th>
+					        <th ><span class="month-header-screen">Thg 3</span><span class="month-header-print">Tg3</span></th>
+					        <th ><span class="month-header-screen">Thg 4</span><span class="month-header-print">Tg4</span></th>
+					        <th ><span class="month-header-screen">Thg 5</span><span class="month-header-print">Tg5</span></th>
+					        <th ><span class="month-header-screen">Thg 6</span><span class="month-header-print">Tg6</span></th>
+					        <th ><span class="month-header-screen">Thg 7</span><span class="month-header-print">Tg7</span></th>
+					        <th ><span class="month-header-screen">Thg 8</span><span class="month-header-print">Tg8</span></th>
+					        <th ><span class="month-header-screen">Thg 9</span><span class="month-header-print">Tg9</span></th>
+					        <th ><span class="month-header-screen">Thg 10</span><span class="month-header-print">Tg10</span></th>
+					        <th ><span class="month-header-screen">Thg 11</span><span class="month-header-print">Tg11</span></th>
+					        <th ><span class="month-header-screen">Thg 12</span><span class="month-header-print">Tg12</span></th>
+					        <th ><span class="month-header-screen">Tổng</span><span class="month-header-print">Tc</span></th>
 					    </tr>
 					    </thead>
 					    <tbody>
@@ -87,22 +88,26 @@
 						    		<td class="valid">
 						    			<div class="profit-by-month"></div>
 						    		</td>
-						    		<c:forEach var="profit" items="${stat.profitByMonth}" >
+						    		<c:forEach var="profit" items="${stat.profitByMonth}" varStatus="step">
 										<td  class="valid text-right">
-											<c:if test="${profit > 0}"><span class="state_good bold-text">${profit}</span></c:if>
-											<c:if test="${profit < 0}"><span class="state_alert bold-text">${profit}</span></c:if>
-											<c:if test="${profit == 0}"><span class="state_normal">${profit}</span></c:if>
+											<a onclick="openProfitDetail('${stat.companyName}','${stat.companyId}','${step.index+1}')">
+												<c:if test="${profit > 0}"><span data-toggle="tooltip" title="Click để xem chi tiết" class="state_good bold-text clickable">${profit}</span></c:if>
+												<c:if test="${profit < 0}"><span data-toggle="tooltip" title="Click để xem chi tiết" class="state_alert bold-text clickable">${profit}</span></c:if>
+												<c:if test="${profit == 0}"><span data-toggle="tooltip" title="Click để xem chi tiết" class="state_normal clickable">${profit}</span></c:if>
+											</a>
 										</td>
 									</c:forEach>
 									
 						    	</tr>
 						    	<tr>
 						    		<td class="valid"><div class="cost-by-month cost-by-month-normal"></div></td>
-						    		<c:forEach var="cost" items="${stat.rentingCostByMonth}" >
+						    		<c:forEach var="cost" items="${stat.rentingCostByMonth}" varStatus="step2" >
 										<td class="valid text-right">
-											<c:if test="${cost < 0}"><span class="state_good bold-text">${cost}</span></c:if>
-											<c:if test="${cost > 0}"><span class="state_alert bold-text">${cost}</span></c:if>
-											<c:if test="${cost == 0}"><span class="state_normal">${cost}</span></c:if>
+											<a onclick="openProfitDetail('${stat.companyName}','${stat.companyId}','${step2.index+1}')">
+												<c:if test="${cost < 0}"><span data-toggle="tooltip" title="Click để xem chi tiết" class="state_good bold-text clickable">${cost}</span></c:if>
+												<c:if test="${cost > 0}"><span data-toggle="tooltip" title="Click để xem chi tiết" class="state_alert bold-text clickable">${cost}</span></c:if>
+												<c:if test="${cost == 0}"><span data-toggle="tooltip" title="Click để xem chi tiết" class="state_normal clickable">${cost}</span></c:if>
+											</a>
 										</td>
 									</c:forEach>
 						    	</tr>
@@ -113,7 +118,7 @@
 			</div>
 		</div>
 	</div>
-	
+	<jsp:include page="includes/companyProfitDetailPopup.jsp"></jsp:include>
 <script src="<c:url value='/resources/js/bootstrap-complextable.js' />"><!-- comment --></script>
 	<script type="text/javascript">
 		$( document ).ready(function() {

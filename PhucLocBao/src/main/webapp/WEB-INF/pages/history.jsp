@@ -65,7 +65,7 @@
 			<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<table data-toggle="table" data-pagination="true" >
+						<table data-toggle="table" data-pagination="true" data-page-list="[30, 60, 120, 240]" data-page-size="30" >
 						    <thead>
 						    <tr>
 						        <th data-field="historyType" data-sortable="true">Hoạt động</th>

@@ -216,7 +216,7 @@ public class NavigationController extends BaseController {
 			paymentHistory = new PaymentHistoryView();
 		}
 		try {
-			List<PaymentHistoryDto> paymentDtos = paymentHistoryService.getHistories(plbSession.getCompanyId(), paymentHistory.getStartDate(), paymentHistory.getEndDate());
+			List<PaymentHistoryDto> paymentDtos = paymentHistoryService.getHistories(plbSession.getCompanyId(), paymentHistory.getStartDate(), DateTimeUtil.addMoreDate(paymentHistory.getEndDate(), 1));
 			paymentHistory.setPaymentHistories(paymentDtos);
 			model.addObject("historyView", paymentHistory);
 		} catch (BusinessException e) {

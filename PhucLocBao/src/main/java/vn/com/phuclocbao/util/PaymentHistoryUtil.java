@@ -73,6 +73,9 @@ public class PaymentHistoryUtil {
 			break;
 		case UPDATE_FUNDING:
 		case INVEST_FUNDING:
+			if(fee < 0){
+				fee = fee * -1;
+			}
 			history.setFee(fee);
 			break;
 		case OTHER:
