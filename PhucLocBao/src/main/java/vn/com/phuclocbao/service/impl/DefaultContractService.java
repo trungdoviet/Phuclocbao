@@ -907,6 +907,14 @@ public class DefaultContractService extends BaseService implements ContractServi
 																			  item.setState(ContractStatusType.BAD.getName());
 																			return true;  
 																		  }
+																		} else { //not pay any date
+																			Date startDate = item.getStartDate();
+																			 int periodPaymentDay = item.getPeriodOfPayment();
+																			 Date dateToMarkAsBadContract = DateTimeUtil.addMoreDate(startDate, periodPaymentDay + ((int)(periodPaymentDay / 2)));
+																			 if(dateToMarkAsBadContract.compareTo(currentDate) <= 0){
+																				  item.setState(ContractStatusType.BAD.getName());
+																				return true;  
+																			  }
 																		}
 																		return false;
 																	})
