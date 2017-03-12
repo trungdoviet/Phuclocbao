@@ -79,7 +79,7 @@
 			</div>
 		</div><!--/.row-->
 		<div class="row">
-			<div class="col-lg-8">
+			<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="row">
@@ -107,6 +107,28 @@
 					</div>
 				</div>
 			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">Thu trong tháng <span id="curTimeIncome"></span></div>
+					<div class="panel-body">
+						<div class="canvas-wrapper">
+							<canvas class="chart" id="pie-chart-income" ></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">Chi trong tháng <span id="curTimeProfit"></span></div>
+					<div class="panel-body">
+						<div class="canvas-wrapper">
+							<canvas class="chart" id="pie-chart-cost" ></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="col-lg-4">
 				<iframe id="fr31" style="border: none;" src="//www.tygia.com/api.php?cols=1&amp;title=0&amp;chart=1&amp;gold=1&amp;rate=0&amp;expand=0&amp;color=FFFFFF&amp;titlecolor=333333&amp;nganhang=VIETCOM&amp;fontsize=80&amp;change=1&amp;css=%23SJC_N_ng{display:%20table-row%20!important;}" width="100%" height="370"></iframe>
 			</div>
@@ -119,7 +141,12 @@ $( document ).ready(function() {
 	home_init();
 });
 var profitByMonth = ${generalView.statistic.profitByMonth};
-var costByMonth = ${generalView.statistic.rentingCostByMonth}
+var costByMonth = ${generalView.statistic.rentingCostByMonth};
+
+var curMonthRentingNew = ${generalView.statistic.curMonthRentingNew};
+var curMonthActualProfit = ${generalView.statistic.curMonthActualProfit};
+var curMonthOtherCost = ${generalView.statistic.curMonthOtherCost};
+var curMonthPayoffProfit = ${generalView.statistic.curMonthPayoffProfit};
 </script>
 
 </div>

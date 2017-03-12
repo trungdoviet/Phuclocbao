@@ -710,13 +710,14 @@ public class DefaultContractService extends BaseService implements ContractServi
 	
 	private void buildPaymentStatisticForCompany(StatisticInfo statistic, List<PaymentHistory> payments) {
 		if(CollectionUtils.isNotEmpty(payments)){
-				//collect cost
+				//collect cost= renting new +other cost
 				payments.stream()
 							.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.RENTING_NEW_MOTOBIKE.getType()))
 							.collect(Collectors.groupingBy(
 								PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getRentingAmount)	
 							)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
 						statistic.getRentingCostByMonth().set(item.getKey(), item.getValue());
+						statistic.getRentingNewMotobikeByMonth().set(item.getKey(), item.getValue());
 				});
 				payments.stream()
 						.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.OTHER_PAY.getType()))
@@ -725,41 +726,18 @@ public class DefaultContractService extends BaseService implements ContractServi
 						)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
 							Double totalValue = statistic.getRentingCostByMonth().get(item.getKey()) + item.getValue();
 							statistic.getRentingCostByMonth().set(item.getKey(),totalValue);
+							statistic.getOtherCostByMonth().set(item.getKey(), item.getValue());
 				});
-				
-				payments.stream()
-					.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.CUSTOMER_DEBT.getType()))
-					.collect(Collectors.groupingBy(
-						PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getFee)	
-					)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
-						Double totalValue = statistic.getRentingCostByMonth().get(item.getKey()) + item.getValue();
-						statistic.getRentingCostByMonth().set(item.getKey(),totalValue);
-				});
-				
-				payments.stream()
-				.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.COMPANY_PAY_DEBT.getType()))
-				.collect(Collectors.groupingBy(PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getFee)))
-				.entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
-						Double totalValue = statistic.getRentingCostByMonth().get(item.getKey()) + item.getValue();
-						statistic.getRentingCostByMonth().set(item.getKey(),totalValue);
-				});
-				
-				payments.stream()
-						.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.REFUNDING_FOR_CUSTOMER.getType()))
-						.collect(Collectors.groupingBy(
-							PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getFee)	
-						)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
-							Double totalValue = statistic.getRentingCostByMonth().get(item.getKey()) + item.getValue();
-							statistic.getRentingCostByMonth().set(item.getKey(),totalValue);
-					});
 					
-				//collect profit
+				//collect profit = payoff + renting cost + other income  + customer pay debt + company Debt + refunding for company 
+				//                - (customer Debt + Company Pay debt + refunding for customer)
 				payments.stream()
 					.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.PAYOFF.getType()) )
 					.collect(Collectors.groupingBy(
 							PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getPayoff)	
 					)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
 						statistic.getProfitByMonth().set(item.getKey(), item.getValue());
+						statistic.getPayoffProfitByMonth().set(item.getKey(), item.getValue());
 				});
 					
 				payments.stream()
@@ -769,6 +747,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 				)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
 					Double totalValue = statistic.getProfitByMonth().get(item.getKey()) + item.getValue();
 					statistic.getProfitByMonth().set(item.getKey(), totalValue);
+					statistic.getActualProfitByMonth().set(item.getKey(), item.getValue());
 			    });
 				
 				payments.stream()
@@ -778,6 +757,9 @@ public class DefaultContractService extends BaseService implements ContractServi
 				)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
 					Double totalValue = statistic.getProfitByMonth().get(item.getKey()) + item.getValue();
 					statistic.getProfitByMonth().set(item.getKey(), totalValue);
+					
+					Double actualValue = statistic.getActualProfitByMonth().get(item.getKey()) + item.getValue();
+					statistic.getActualProfitByMonth().set(item.getKey(), actualValue);
 			    });
 				
 				payments.stream()
@@ -787,6 +769,9 @@ public class DefaultContractService extends BaseService implements ContractServi
 				)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
 					Double totalValue = statistic.getProfitByMonth().get(item.getKey()) + item.getValue();
 					statistic.getProfitByMonth().set(item.getKey(), totalValue);
+					
+					Double actualValue = statistic.getActualProfitByMonth().get(item.getKey()) + item.getValue();
+					statistic.getActualProfitByMonth().set(item.getKey(), actualValue);
 			    });
 				
 				payments.stream()
@@ -796,6 +781,9 @@ public class DefaultContractService extends BaseService implements ContractServi
 				)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
 					Double totalValue = statistic.getProfitByMonth().get(item.getKey()) + item.getValue();
 					statistic.getProfitByMonth().set(item.getKey(), totalValue);
+					
+					Double actualValue = statistic.getActualProfitByMonth().get(item.getKey()) + item.getValue();
+					statistic.getActualProfitByMonth().set(item.getKey(), actualValue);
 			    });
 				
 				payments.stream()
@@ -805,16 +793,70 @@ public class DefaultContractService extends BaseService implements ContractServi
 				)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
 					Double totalValue = statistic.getProfitByMonth().get(item.getKey()) + item.getValue();
 					statistic.getProfitByMonth().set(item.getKey(), totalValue);
+					
+					Double actualValue = statistic.getActualProfitByMonth().get(item.getKey()) + item.getValue();
+					statistic.getActualProfitByMonth().set(item.getKey(), actualValue);
 			    });
 				
+				
+				payments.stream()
+				.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.CUSTOMER_DEBT.getType()) )
+				.collect(Collectors.groupingBy(
+						PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getFee)	
+				)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
+					Double totalValue = statistic.getProfitByMonth().get(item.getKey()) - item.getValue();
+					statistic.getProfitByMonth().set(item.getKey(), totalValue);
+					
+					Double actualValue = statistic.getActualProfitByMonth().get(item.getKey()) - item.getValue();
+					statistic.getActualProfitByMonth().set(item.getKey(), actualValue);
+			    });
+				
+				payments.stream()
+				.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.COMPANY_PAY_DEBT.getType()) )
+				.collect(Collectors.groupingBy(
+						PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getFee)	
+				)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
+					Double totalValue = statistic.getProfitByMonth().get(item.getKey()) - item.getValue();
+					statistic.getProfitByMonth().set(item.getKey(), totalValue);
+					
+					Double actualValue = statistic.getActualProfitByMonth().get(item.getKey()) - item.getValue();
+					statistic.getActualProfitByMonth().set(item.getKey(), actualValue);
+			    });
+				
+				payments.stream()
+				.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.REFUNDING_FOR_CUSTOMER.getType()) )
+				.collect(Collectors.groupingBy(
+						PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getFee)	
+				)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
+					Double totalValue = statistic.getProfitByMonth().get(item.getKey()) - item.getValue();
+					statistic.getProfitByMonth().set(item.getKey(), totalValue);
+					
+					Double actualValue = statistic.getActualProfitByMonth().get(item.getKey()) - item.getValue();
+					statistic.getActualProfitByMonth().set(item.getKey(), actualValue);
+			    });
 
 				
 				
-				 List<Double> effectiveRentingCost = statistic.getRentingCostByMonth().stream().map(item -> Math.round( (item /1000000) * 100.0 ) / 100.0).collect(Collectors.toList());
-				 List<Double> effectiveProfitCost = statistic.getProfitByMonth().stream().map(item -> Math.round( (item /1000000) * 100.0 ) / 100.0).collect(Collectors.toList());
+				 List<Double> effectiveRentingCost = statistic.getRentingCostByMonth().stream().map(item -> roundUpToMilion(item)).collect(Collectors.toList());
+				 List<Double> effectiveProfitCost = statistic.getProfitByMonth().stream().map(item -> roundUpToMilion(item)).collect(Collectors.toList());
 				 statistic.setRentingCostByMonth(effectiveRentingCost);
 				 statistic.setProfitByMonth(effectiveProfitCost);
+				 
+				 List<Double> effectiveRentingNew = statistic.getRentingNewMotobikeByMonth().stream().map(item -> roundUpToMilion(item)).collect(Collectors.toList());
+				 List<Double> effectiveOtherCost = statistic.getOtherCostByMonth().stream().map(item -> roundUpToMilion(item)).collect(Collectors.toList());
+				 statistic.setRentingNewMotobikeByMonth(effectiveRentingNew);
+				 statistic.setOtherCostByMonth(effectiveOtherCost);
+				 
+				 List<Double> effectiveActualProfit = statistic.getActualProfitByMonth().stream().map(item -> roundUpToMilion(item)).collect(Collectors.toList());
+				 List<Double> effectivePayoff = statistic.getPayoffProfitByMonth().stream().map(item -> roundUpToMilion(item)).collect(Collectors.toList());
+				 statistic.setActualProfitByMonth(effectiveActualProfit);
+				 statistic.setPayoffProfitByMonth(effectivePayoff);
+				 statistic.buildProfitAndCostForCurrentMonth();
 		}
+	}
+
+	private double roundUpToMilion(Double item) {
+		return Math.round( (item /1000000) * 100.0 ) / 100.0;
 	}
 	
 	
@@ -895,7 +937,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 		return methodWrapper(new PersistenceExecutable<List<StatisticInfo>>() {
 			@Override
 			public List<StatisticInfo> execute() throws BusinessException, ClassNotFoundException, IOException {
-				List<PaymentHistory> payments = paymentHistoryDao.getHistoriesInDateRangeAllCompany(DateTimeUtil.getFirstDateOfYear(currentYear), DateTimeUtil.getLastDateOfYear(currentYear));
+				List<PaymentHistory> payments = paymentHistoryDao.getHistoriesInDateRangeAllCompany(DateTimeUtil.getFirstDateOfYear(currentYear), DateTimeUtil.getFirstDateOfYear(currentYear+1));
 				List<StatisticInfo> result = new ArrayList<>();
 				if(CollectionUtils.isNotEmpty(payments)){
 					Map<Integer, List<PaymentHistory>> paymentByCompany = payments.stream().collect(Collectors.groupingBy(PaymentHistory::getCompanyId));

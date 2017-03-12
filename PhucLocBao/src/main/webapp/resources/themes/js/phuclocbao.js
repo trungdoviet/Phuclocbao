@@ -1014,6 +1014,13 @@ function mu_init(){
 }
 
 function home_init(){
+	var curTime = new Date();
+	var curMonth = curTime.getMonth() + 1;
+	var curYear = curTime.getFullYear();
+	var curTimeStr = curMonth +"/" + curYear;
+	$("#curTimeIncome").text(curTimeStr);
+	$("#curTimeProfit").text(curTimeStr);
+	
 	$("#availableYears").change(function(){
 		var search = {}
 		search["year"] = $("#availableYears").val();

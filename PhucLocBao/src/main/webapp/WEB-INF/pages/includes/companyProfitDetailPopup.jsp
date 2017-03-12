@@ -61,7 +61,7 @@
 					    		<td class="valid"> <span class="bold-text" id="totalPayoff"></span></td>
 					    	</tr>
 					    	<tr>
-					    		<td class="valid">Doanh thu (tổng phí đã thu):<span class="glyphicon glyphicon-question-sign pull-right noprint" data-toggle="tooltip" title="Doanh thu = [Tổng phí thuê xe đã thu + Tổng khách trả nợ + Tổng cty nợ + Tổng phí khách thiếu khi thanh lý] - [Tổng khách nợ + Tổng cty trả nợ + Tổng thừa phí của khách khi thanh lý] (trong khoảng thời gian bạn chọn)" aria-hidden="true"></span></td> 
+					    		<td class="valid">Doanh thu (tổng phí đã thu):<span class="glyphicon glyphicon-question-sign pull-right noprint" data-toggle="tooltip" title="Doanh thu = [Tổng phí thuê xe đã thu + Tổng khách trả nợ + Tổng cty nợ + Tổng phí khách trả khi thanh lý] - [Tổng khách nợ + Tổng cty trả nợ + Tổng thừa phí của khách khi thanh lý] (trong khoảng thời gian bạn chọn)" aria-hidden="true"></span></td> 
 					    		<td class="valid"> <span class="bold-text" id="totalRevenueContractAmount"></span></td>
 					    	</tr>
 					    	<tr>

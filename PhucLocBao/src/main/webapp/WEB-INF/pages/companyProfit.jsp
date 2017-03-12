@@ -58,6 +58,7 @@
 				<div class="panel-body">
 						<div >
 								Thống kê thu chi <small>(triệu đồng)</small> <div class="profit-by-month"></div> <small>thu</small> <div class="cost-by-month"></div> <small>chi</small>
+								<span class="glyphicon glyphicon-question-sign pull-right noprint" data-toggle="tooltip"  data-html="true" title="Thu = Kết quả kinh doanh + Tổng tiền hợp đồng đã thanh lý. Chi = Tổng tiền cho thuê xe + chi phí khác" aria-hidden="true"></span>
 						</div> 
 					<table data-toggle="table" >
 					    <thead>

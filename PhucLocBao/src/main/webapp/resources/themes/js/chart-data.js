@@ -49,35 +49,38 @@ var randomScalingFactor = function(){ return Math.round(Math.random()*1000)};
 	
 		}
 
-	/*var pieData = [
+	var pieIncomeData = [
 				{
-					value: 300,
+					value: curMonthPayoffProfit,
 					color:"#30a5ff",
 					highlight: "#62b9fb",
-					label: "Blue"
+					label: "Thanh lý hợp đồng"
 				},
 				{
-					value: 50,
-					color: "#ffb53e",
-					highlight: "#fac878",
-					label: "Orange"
-				},
-				{
-					value: 100,
+					value: curMonthActualProfit,
 					color: "#1ebfae",
 					highlight: "#3cdfce",
-					label: "Teal"
-				},
-				{
-					value: 120,
-					color: "#f9243f",
-					highlight: "#f6495f",
-					label: "Red"
+					label: "Tổng Lợi nhuận"
 				}
 
 			];
+	var pieCostData = [
+				{
+					value: curMonthRentingNew,
+					color: "#ffb53e",
+					highlight: "#fac878",
+					label: "Cho thuê mới"
+				},
+				{
+					value: curMonthOtherCost,
+					color: "#f9243f",
+					highlight: "#f6495f",
+					label: "Chi phí khác"
+				}
+		
+			];
 			
-	var doughnutData = [
+	/*var doughnutData = [
 					{
 						value: 300,
 						color:"#30a5ff",
@@ -116,9 +119,12 @@ function onLoadChart(){
 	});
 	/*var chart3 = document.getElementById("doughnut-chart").getContext("2d");
 	window.myDoughnut = new Chart(chart3).Doughnut(doughnutData, {responsive : true
-	});
-	var chart4 = document.getElementById("pie-chart").getContext("2d");
-	window.myPie = new Chart(chart4).Pie(pieData, {responsive : true
 	});*/
+	var chart4 = document.getElementById("pie-chart-income").getContext("2d");
+	window.myPie = new Chart(chart4).Pie(pieIncomeData, {responsive : true
+	});
+	var chart5 = document.getElementById("pie-chart-cost").getContext("2d");
+	window.myPie = new Chart(chart5).Pie(pieCostData, {responsive : true
+	});
 	
 };

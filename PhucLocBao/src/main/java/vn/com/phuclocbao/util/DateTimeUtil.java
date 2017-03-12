@@ -22,6 +22,23 @@ public class DateTimeUtil {
 		return cal.get(Calendar.MONTH);
 	}
 	
+	public static int getYearOfDate(Date date){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal.get(Calendar.YEAR);
+	}
+	
+	public static int getCurrentYear(){
+		Date now = getCurrentDate();
+		return getYearOfDate(now);
+	}
+	
+	public static int getCurrentMonth(){
+		Date now = getCurrentDate();
+		return getMonthOfDate(now);
+	}
+	
+	
 	public static Date getCurrentDateWithoutTime(){
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 0);
