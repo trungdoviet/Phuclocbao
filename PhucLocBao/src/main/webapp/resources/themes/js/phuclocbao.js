@@ -336,6 +336,7 @@ function initContractPageButtons(){
 		 ctr_updateNumber();
 		 collectPaymentSchedule();
 	});
+	
 	var btnPayoffContractOk = $("#btnPayoffContractOk");
 	if(btnPayoffContractOk != null && btnPayoffContractOk != undefined){
 		btnPayoffContractOk.off( "click");
@@ -367,7 +368,30 @@ function initContractPageButtons(){
 			ctr_updateNumber();
 		});
 		
-		
+		$("#payoffDate").change(function(){ 
+			var startCalDateString = findLastPaymentDate();
+			if(startCalDateString == "" || startCalDateString == undefined){
+				startCalDateString = $( "#startDate" ).val();
+			}
+			var endCalDateString = $( "#payoffDate" ).val();
+			
+			var dateFormat = "dd/MM/yyyy";
+			if(endCalDateString != ""){
+				var startCalDate = Date.parseExact ( startCalDateString,dateFormat);
+				var endCalDate = Date.parseExact ( endCalDateString,dateFormat);
+				var difDay = Math.abs(endCalDate - startCalDate)/(1000*3600*24)
+				if(difDay >= 0){ //if date is valid
+					var feeAday =  $("#feeADay").autoNumeric("get");
+					var customerDebt = $("#companyDebt").autoNumeric("get");
+					var companyDebt = $("#customerDebt").autoNumeric("get");
+					var totalRefund = (difDay * feeADay) ;
+					$("#totalMoneyRefundingAmount").attr('refunding', totalRefund);
+					totalRefund = totalRefund - customerDebt + companyDebt
+					$("#totalMoneyRefundingAmount").text(ctr_formatNumeric(totalRefund));
+				}
+				
+			}
+		});
 	} else if (processStage == "update"){
 		$( "#btnSaveOldContract" ).off( "click");
 		$( "#btnSaveOldContract" ).on( "click", function() {
@@ -383,7 +407,7 @@ function ctr_updateNumber(){
 	 $("#feeADay").val(feeAday);
 	 var companyDebt = $("#companyDebt").autoNumeric("get");
 	$("#companyDebt").val(companyDebt);
-	var companyDebt = $("#customerDebt").autoNumeric("get");
+	var customerDebt = $("#customerDebt").autoNumeric("get");
 	$("#customerDebt").val(companyDebt);
 }
 
@@ -1195,6 +1219,8 @@ function sendProfitDetailAjax(companyId, year, month){
 				$("#totalOtherCost").text(ctr_formatNumeric(data.monthlyProfitDetail.totalOtherCost) +" VNĐ");
 				$("#totalOtherIncome").text(ctr_formatNumeric(data.monthlyProfitDetail.totalOtherIncome) +" VNĐ");
 				$("#totalInvest").text(ctr_formatNumeric(data.monthlyProfitDetail.totalInvest) +" VNĐ");
+				$("#totalRunningContractInDateRange").text(ctr_formatNumeric(data.monthlyProfitDetail.totalRunningContractInDateRange) +" VNĐ");
+				$("#totalTakeOffRefund").text(ctr_formatNumeric(data.monthlyProfitDetail.totalTakeOffRefund) +" VNĐ");
 				$("#totalProfit").text(ctr_formatNumeric(data.monthlyProfitDetail.totalProfit) +" VNĐ");
 				$('#monthlyProfit').modal("show");	
 				

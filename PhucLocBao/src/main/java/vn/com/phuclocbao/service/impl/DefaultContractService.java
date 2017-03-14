@@ -480,7 +480,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 		Double totalRefunding = 0D;
 		PaymentScheduleDto latestPaid = PlbUtil.getLatestPaid(dto.getPaymentSchedules());
 		Date targetDate = null;
-		Date today = DateTimeUtil.getCurrentDateWithoutTime();
+		Date today = dto.getPayoffDate();
 		if(latestPaid != null){
 			targetDate = latestPaid.getExpectedPayDate();
 		} else {
@@ -1005,6 +1005,8 @@ public class DefaultContractService extends BaseService implements ContractServi
 					startDate = DateTimeUtil.getFirstDateOfYear(year);
 					endDate = DateTimeUtil.getFirstDateOfYear(year+1);
 				}
+				Double totalRunningContractValueInCurrentDateRange = contractDao.sumContractByDateRangeAndStatusAndCompanyId(ContractStatusType.IN_PROGRESS, companyId, endDate, startDate);
+				detail.setTotalRunningContractInDateRange(totalRunningContractValueInCurrentDateRange);
 				List<PaymentHistory> monthlyHistories = paymentHistoryDao.getHistoriesInDateRange(companyId, startDate, endDate);
 				
 				if(CollectionUtils.isNotEmpty(monthlyHistories)){
@@ -1042,11 +1044,12 @@ public class DefaultContractService extends BaseService implements ContractServi
 					Double totalIncreaseInvest = monthlyHistories.stream()
 							.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.INVEST_FUNDING.getType()))
 							.collect(Collectors.summingDouble(PaymentHistory::getFee));
+					detail.setTotalInvest(totalIncreaseInvest);
+					
 					Double totaldescreaseInvest = monthlyHistories.stream()
 							.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.TAKE_OUT_FUNDING.getType()))
 							.collect(Collectors.summingDouble(PaymentHistory::getFee));
-					Double totalInvest = totalIncreaseInvest - totaldescreaseInvest;
-					detail.setTotalInvest(roundUp(totalInvest));
+					detail.setTotalTakeOffRefund(roundUp(totaldescreaseInvest));
 					
 					//total other cost
 					Double totalOtherCost = monthlyHistories.stream()

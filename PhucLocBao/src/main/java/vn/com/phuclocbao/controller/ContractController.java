@@ -420,7 +420,11 @@ public class ContractController {
 		Double totalRefunding = 0D;
 		PaymentScheduleDto latestPaid = PlbUtil.getLatestPaid(dto.getPaymentSchedules());
 		Date targetDate = null;
-		Date today = DateTimeUtil.getCurrentDateWithoutTime();
+		Date today = dto.getPayoffDate();
+		if(today == null) {
+			dto.setPayoffDate(DateTimeUtil.getCurrentDateWithoutTime());
+			today = dto.getPayoffDate();
+		}
 		if(latestPaid != null){
 			targetDate = latestPaid.getExpectedPayDate();
 		} else {

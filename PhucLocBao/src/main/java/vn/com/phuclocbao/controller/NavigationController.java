@@ -117,13 +117,11 @@ public class NavigationController extends BaseController {
 	
 	@RequestMapping(value = { "/mngContracts"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView openManageContract(HttpServletRequest request, HttpServletResponse response) {
-		long startTime = System.currentTimeMillis();
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.MANAGE_CONTRACT);
 		ModelAndView model = new ModelAndView("mngContracts");
 		reloadCompanySession(model, request);
 		try {
-			
 			List<ContractDto> contracts = contractService.findContractsByStateAndId(ContractStatusType.IN_PROGRESS, plbSession.getCompanyId());
 			ManageContractBean mcb = contractService.buildManageContractBean(contracts);
 			model.addObject("mngContract", mcb);
@@ -133,7 +131,6 @@ public class NavigationController extends BaseController {
 			logger.error(e);
 			e.printStackTrace();
 		}
-		System.out.println("Total time=:" + (System.currentTimeMillis() - startTime)/1000);
 		return model;
 	}
 	

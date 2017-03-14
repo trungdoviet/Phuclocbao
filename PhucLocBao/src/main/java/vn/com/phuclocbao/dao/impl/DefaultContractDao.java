@@ -96,4 +96,18 @@ public class DefaultContractDao extends BaseDaoJpaImpl<Contract, Integer> implem
 		}
 		return ((Number)result).doubleValue();
 	}
+	@Override
+	public Double sumContractByDateRangeAndStatusAndCompanyId(ContractStatusType state, Integer id,
+			Date maxDate, Date minDate) throws BusinessException {
+		TypedQuery<Number> query = getEm().createNamedQuery("Contract_sumContractByDateRangeAndStateAndcompanyId", Number.class);
+		query.setParameter("contractState", state.getName());
+		query.setParameter("companyId", id);
+		query.setParameter("maxDate", maxDate);
+		query.setParameter("minDate", minDate);
+		Number result = query.getSingleResult() ;
+		if(result == null){
+			return 0D;
+		}
+		return ((Number)result).doubleValue();
+	}
 }

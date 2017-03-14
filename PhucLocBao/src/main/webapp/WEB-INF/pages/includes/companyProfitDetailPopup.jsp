@@ -48,13 +48,23 @@
 					    	</tr>
 					    	<tr>
 					    		<td class="valid">Tổng đầu tư:
-					    		<span class="glyphicon glyphicon-question-sign pull-right noprint" data-toggle="tooltip" title="Tổng đầu tư = Tổng nhập vốn - Tổng xuất vốn (trong khoảng thời gian bạn chọn)" aria-hidden="true"></span></td> 
+					    		<span class="glyphicon glyphicon-question-sign pull-right noprint" data-toggle="tooltip" title="Tổng nhập vốn  (trong khoảng thời gian bạn chọn)" aria-hidden="true"></span></td> 
 					    		<td class="valid"> <span class="bold-text" id="totalInvest"></span></td>
+					    	</tr>
+					    	<tr>
+					    		<td class="valid">Tổng xuất vốn:
+					    		<span class="glyphicon glyphicon-question-sign pull-right noprint" data-toggle="tooltip" title="Tổng xuất vốn (trong khoảng thời gian bạn chọn)" aria-hidden="true"></span></td> 
+					    		<td class="valid"> <span class="bold-text" id="totalTakeOffRefund"></span></td>
 					    	</tr>
 					    	<tr>
 					    		<td class="valid">Tổng tiền cho thuê xe:
 					    		<span class="glyphicon glyphicon-question-sign pull-right noprint" data-toggle="tooltip" title="Tổng giá trị hợp đồng đã cho thuê (trong khoảng thời gian bạn chọn)" aria-hidden="true"></span></td> 
 					    		<td class="valid"> <span class="bold-text" id="totalRentingNew"></span></td>
+					    	</tr>
+					    	<tr>
+					    		<td class="valid">Tổng tiền cho thuê xe chưa thanh lý:
+					    		<span class="glyphicon glyphicon-question-sign pull-right noprint" data-toggle="tooltip" title="Tổng giá trị hợp đồng đã cho thuê nhưng chưa được thanh lý, không bao gồm hợp đồng xấu (trong khoảng thời gian bạn chọn)" aria-hidden="true"></span></td> 
+					    		<td class="valid"> <span class="bold-text" id="totalRunningContractInDateRange"></span></td>
 					    	</tr>
 					    	<tr>
 					    		<td class="valid">Tổng tiền thanh lý xe:<span class="glyphicon glyphicon-question-sign pull-right noprint" data-toggle="tooltip" title="Tổng giá trị hợp đồng đã thanh lý không bao gồm phí (trong khoảng thời gian bạn chọn)" aria-hidden="true"></span></td> 

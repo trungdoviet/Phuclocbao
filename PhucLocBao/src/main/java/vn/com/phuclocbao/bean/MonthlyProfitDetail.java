@@ -25,7 +25,10 @@ public class MonthlyProfitDetail {
 	private Double totalRentingNew;
 	@JsonView(Views.ProfitStatistic.class)
 	private Double totalPayOff;
-	
+	@JsonView(Views.ProfitStatistic.class)
+	private Double totalRunningContractInDateRange;
+	@JsonView(Views.ProfitStatistic.class)
+	private Double totalTakeOffRefund;
 	
 	public MonthlyProfitDetail(){
 		totalContractAmount = 0D;
@@ -39,9 +42,39 @@ public class MonthlyProfitDetail {
 		totalRevenue = 0D;
 		totalOtherIncome = 0D;
 		totalProfit = 0D;
+		totalRunningContractInDateRange = 0D;
+		totalTakeOffRefund = 0D;
 	}
 	
-	
+
+	public Double getTotalTakeOffRefund() {
+		return totalTakeOffRefund;
+	}
+
+
+
+
+	public void setTotalTakeOffRefund(Double totalTakeOffRefund) {
+		this.totalTakeOffRefund = totalTakeOffRefund;
+	}
+
+
+
+
+	public Double getTotalRunningContractInDateRange() {
+		return totalRunningContractInDateRange;
+	}
+
+
+
+
+	public void setTotalRunningContractInDateRange(Double totalRunningContractInDateRange) {
+		this.totalRunningContractInDateRange = totalRunningContractInDateRange;
+	}
+
+
+
+
 	public Double getTotalRentingNew() {
 		return totalRentingNew;
 	}
