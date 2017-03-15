@@ -86,7 +86,7 @@ public class ContractController {
 	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
-		System.out.println("=======Binding validator");
+		//System.out.println("=======Binding validator");
 		 binder.registerCustomEditor(Date.class,     
                  new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10));
 		/* ContractBean contractBean = (ContractBean) binder.getTarget();

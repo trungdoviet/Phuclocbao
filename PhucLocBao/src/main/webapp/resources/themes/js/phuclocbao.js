@@ -92,12 +92,28 @@ function initInput(){
 		if(processStage == "payoff"){
 			var payoffDate = $( "#payoffDate" );
 			if(payoffDate != undefined) {
-				payoffDate.datepicker({
-							    format: 'dd/mm/yyyy',
-							    todayHighlight: true,
-							    autoclose:true,
-							    language: 'vi'
-							});
+				var startCalDateString = findLastPaymentDate();
+				if(startCalDateString == "" || startCalDateString == undefined){
+					startCalDateString = $( "#startDate" ).val();
+				}
+				var dateFormat = "dd/MM/yyyy";
+				if(startCalDateString != ""){
+					var startCalDate = Date.parseExact ( startCalDateString,dateFormat);
+					payoffDate.datepicker({
+					    format: 'dd/mm/yyyy',
+					    todayHighlight: true,
+					    autoclose:true,
+					    startDate: startCalDate,
+					    language: 'vi'
+					});
+				} else {
+					payoffDate.datepicker({
+								    format: 'dd/mm/yyyy',
+								    todayHighlight: true,
+								    autoclose:true,
+								    language: 'vi'
+								});
+				}
 			}
 		 $("#customerDebt").autoNumeric("init",defaultAllRangeNumber);
 		 $("#companyDebt").autoNumeric("init", defaultAllRangeNumber);
@@ -368,6 +384,7 @@ function initContractPageButtons(){
 			ctr_updateNumber();
 		});
 		
+		$("#payoffDate").off("change");
 		$("#payoffDate").change(function(){ 
 			var startCalDateString = findLastPaymentDate();
 			if(startCalDateString == "" || startCalDateString == undefined){
@@ -379,14 +396,18 @@ function initContractPageButtons(){
 			if(endCalDateString != ""){
 				var startCalDate = Date.parseExact ( startCalDateString,dateFormat);
 				var endCalDate = Date.parseExact ( endCalDateString,dateFormat);
-				var difDay = Math.abs(endCalDate - startCalDate)/(1000*3600*24)
+				var difDay = Math.abs(endCalDate - startCalDate)/(1000*3600*24);
+				var refundMinus = 1;
+				if(endCalDate - startCalDate > 0){
+					refundMinus = -1;
+				}
 				if(difDay >= 0){ //if date is valid
-					var feeAday =  $("#feeADay").autoNumeric("get");
-					var customerDebt = $("#companyDebt").autoNumeric("get");
-					var companyDebt = $("#customerDebt").autoNumeric("get");
-					var totalRefund = (difDay * feeADay) ;
+					var feeAdayValue =  parseFloat($("#feeADay").autoNumeric("get"));
+					var customerDebtValue = parseFloat($("#companyDebt").autoNumeric("get"));
+					var companyDebtValue = parseFloat($("#customerDebt").autoNumeric("get"));
+					var totalRefund = (difDay * feeAdayValue) *refundMinus ;
 					$("#totalMoneyRefundingAmount").attr('refunding', totalRefund);
-					totalRefund = totalRefund - customerDebt + companyDebt
+					totalRefund = totalRefund - customerDebtValue + companyDebtValue
 					$("#totalMoneyRefundingAmount").text(ctr_formatNumeric(totalRefund));
 				}
 				

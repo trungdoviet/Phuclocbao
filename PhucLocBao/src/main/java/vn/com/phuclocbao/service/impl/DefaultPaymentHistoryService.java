@@ -137,6 +137,9 @@ public class DefaultPaymentHistoryService extends BaseService implements Payment
 					throw new BusinessException(PLBErrorCode.OBJECT_NOT_FOUND.name());
 				}
 				if(type == PaymentHistoryType.INVEST_FUNDING || type == PaymentHistoryType.OTHER_PROFIT){
+					if(company.getTotalFund() == null) {
+						company.setTotalFund(0D);
+					}
 					company.setTotalFund(company.getTotalFund() + amount);
 				} else {
 					company.setTotalFund(company.getTotalFund() - amount);
