@@ -1,7 +1,7 @@
 package vn.com.phuclocbao.enums;
 
 public enum ContractType {
-	RENTING_MOTOBIKE("RMB", "Cho thuê xe"),
+	RENTING_MOTOBIKE("RMB", "Cho thuÃª xe"),
 	UNKNOWN("","")
 	;
 	private String desc;
