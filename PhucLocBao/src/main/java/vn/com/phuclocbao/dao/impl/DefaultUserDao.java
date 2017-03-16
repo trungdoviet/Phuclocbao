@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -65,6 +66,14 @@ public class DefaultUserDao extends BaseDaoJpaImpl<UserAccount, Integer> impleme
 				return CollectionUtils.isNotEmpty(users);
 			}
 			return false;
+		}
+
+
+		@Override
+		public int deleteByCompanyId(Integer companyId) throws BusinessException {
+			Query query = getEm().createNamedQuery("userAccount_deleteByCompanyId");
+			query.setParameter("companyId", companyId);
+			return query.executeUpdate();
 		}
 
 }

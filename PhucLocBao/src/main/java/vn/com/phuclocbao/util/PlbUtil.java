@@ -11,6 +11,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.dto.PaymentScheduleDto;
+import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.entity.PaymentSchedule;
 
 public class PlbUtil {
@@ -48,5 +49,9 @@ public class PlbUtil {
 			}
 		}
 		return null;
+	}
+	
+	public static String getCompanyTypeString(CompanyEntity company) {
+		return company.getType().getId().equals(1) ? ConstantVariable.YES_OPTION : ConstantVariable.NO_OPTION;
 	}
 }

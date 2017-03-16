@@ -20,6 +20,7 @@ import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.dao.CompanyTypeDao;
 import vn.com.phuclocbao.dao.PaymentHistoryDao;
 import vn.com.phuclocbao.dao.PersistenceExecutable;
+import vn.com.phuclocbao.dao.UserDao;
 import vn.com.phuclocbao.dao.UserHistoryDao;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.UserAccountDto;
@@ -36,6 +37,7 @@ import vn.com.phuclocbao.service.CompanyService;
 import vn.com.phuclocbao.service.VietnamCityService;
 import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.PaymentHistoryUtil;
+import vn.com.phuclocbao.util.PlbUtil;
 import vn.com.phuclocbao.util.UserHistoryUtil;
 import vn.com.phuclocbao.vo.UserActionParamVO;
 @Service
@@ -43,6 +45,8 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DefaultCompanyService.class);
 	@Autowired
 	private CompanyDao companyDao;
+	@Autowired
+	private UserDao userDao;
 	@Autowired
 	private CompanyTypeDao companyTypeDao;
 	@Autowired
@@ -144,7 +148,9 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 		return methodWrapper(new PersistenceExecutable<List<CompanyDto>>() {
 			@Override
 			public List<CompanyDto> execute() throws BusinessException, ClassNotFoundException, IOException {
-				List<CompanyDto> dtos = CompanyConverter.getInstance().toDtos(companyDao.findAll());
+				List<CompanyEntity> allComps = companyDao.findAll();
+				List<CompanyDto> dtos = CompanyConverter.getInstance().toDtos(allComps);
+				
 				if(CollectionUtils.isNotEmpty(dtos)){
 					dtos.forEach(item ->{
 						item.setCityInString(VietnamCityService.getProvinceName(item.getCity()));
@@ -210,9 +216,10 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 				CompanyEntity company = companyDao.findById(id);
 				String companyName = company.getName();
 				if(company != null){
-					if(CollectionUtils.isNotEmpty(company.getContracts())){
+					if(CollectionUtils.isNotEmpty(company.getContracts()) || isHeadOffice(company)){
 						return false;
 					}
+					userDao.deleteByCompanyId(id);
 					companyDao.remove(company);
 					userHistoryDao.deleteHistoryByCompanyId(id);
 					paymentHistoryDao.deletePaymentHistoryByCompanyId(id);
@@ -223,6 +230,10 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 					
 				}
 				return true;
+			}
+
+			private boolean isHeadOffice(CompanyEntity company) {
+				return PlbUtil.getCompanyTypeString(company).equalsIgnoreCase(ConstantVariable.YES_OPTION);
 			}
 		});
 		

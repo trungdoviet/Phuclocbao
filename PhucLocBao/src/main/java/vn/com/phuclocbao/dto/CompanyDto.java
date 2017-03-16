@@ -42,6 +42,25 @@ public class CompanyDto implements IBaseDTO {
 	private String cityInString;
 	private String userAccountsInString;
 	 private java.lang.String state;
+	private transient Integer numberOfContract;
+	private transient String isHeadOffice;
+	
+	
+	public String getIsHeadOffice() {
+		return isHeadOffice;
+	}
+
+	public void setIsHeadOffice(String isHeadOffice) {
+		this.isHeadOffice = isHeadOffice;
+	}
+
+	public Integer getNumberOfContract() {
+		return numberOfContract;
+	}
+
+	public void setNumberOfContract(Integer numberOfContract) {
+		this.numberOfContract = numberOfContract;
+	}
 
 	public String getCityInString() {
 		return cityInString;

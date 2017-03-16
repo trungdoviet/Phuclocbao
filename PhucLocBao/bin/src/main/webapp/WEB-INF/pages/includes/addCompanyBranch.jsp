@@ -102,16 +102,15 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Xác nhận Xoá công ty</h4>
+        <h4 class="modal-title">Xác nhận</h4>
       </div>
       <div class="modal-body">
         <p>Xác nhận xoá công ty <strong><span id="companyNameField"></span></strong>. </p>
-         <p>Thao tác này sẽ xoá công ty cùng với tài khoản của công ty và không thể lấy lại.</p>
-         <p>Các công ty đã có hợp đồng với khách hàng sẽ không thể bị xoá</p>
-         <p>Vui lòng xác nhận thao tác.</p>
+         <p>Thao tác này sẽ xoá công ty và tài khoản của công ty và không thể thay đổi.</p>
+         <p>Vui lòng kiểm tra xác nhận.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-info" data-dismiss="modal" id="deleteCompanyClose">Giữ</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="deleteCompanyClose">Thoát</button>
         <button type="button" class="btn btn-danger" name="delete" id="deleteCompanyOk">Chắc chắn</button>
       </div>
     </div><!-- /.modal-content -->

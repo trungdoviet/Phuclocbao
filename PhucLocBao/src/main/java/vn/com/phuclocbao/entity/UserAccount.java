@@ -1,5 +1,6 @@
 package vn.com.phuclocbao.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
@@ -8,8 +9,10 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
 @javax.persistence.Entity
 @javax.persistence.Table(name="tblUser")
 @NamedQueries({
-	@NamedQuery(name = "getUserByUsername", query = "SELECT user FROM UserAccount user WHERE user.username = :username")
+	@NamedQuery(name = "getUserByUsername", query = "SELECT user FROM UserAccount user WHERE user.username = :username"),
+	@NamedQuery(name = "userAccount_deleteByCompanyId", query = "DELETE FROM UserAccount ua WHERE ua.companyEntity.id = :companyId"),
 })
+
 public class UserAccount implements IBaseEntity {
   /** SerialVersionUID */
   private static final long serialVersionUID = 8710777840096998292L;
@@ -30,7 +33,7 @@ public class UserAccount implements IBaseEntity {
   private java.lang.String fullname;
   @javax.persistence.Column(length=255)
   private java.lang.String email;
-  @javax.persistence.ManyToOne(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER)
+  @javax.persistence.ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER)
   private vn.com.phuclocbao.entity.CompanyEntity companyEntity;
   @javax.persistence.Column(length=45)
   private java.lang.String state;

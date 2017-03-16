@@ -23,10 +23,9 @@ public class DefaultCompanyDao extends BaseDaoJpaImpl<CompanyEntity, Integer> im
 
 	@Override
 	public void remove(CompanyEntity entity) {
-		//Query query = getEm().createNamedQuery("companyEntity_deleteById");
-		//query.setParameter("companyId", entity.getId());
-		//query.executeUpdate();
-		getEm().remove(entity);
+		Query query = getEm().createNamedQuery("companyEntity_deleteById");
+		query.setParameter("companyId", entity.getId());
+		query.executeUpdate();
 	}
 	
 	

@@ -7,10 +7,13 @@ import org.apache.commons.collections.CollectionUtils;
 
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.CompanyTypeDto;
+import vn.com.phuclocbao.dto.UserAccountDto;
 import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.enums.CompanyState;
 import vn.com.phuclocbao.exception.BusinessException;
+import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.LambdaExceptionUtil;
+import vn.com.phuclocbao.util.PlbUtil;
 
 public class CompanyConverter extends BaseConverter<CompanyDto, CompanyEntity>{
 
@@ -50,11 +53,19 @@ public class CompanyConverter extends BaseConverter<CompanyDto, CompanyEntity>{
 						CompanyDto dto = this.toDto(item, new CompanyDto());
 						dto.setType(CompanyTypeConverter.getInstance().toDto(item.getType(), new CompanyTypeDto()));
 						dto.setUserAccounts(UserAccountConverter.getInstance().toDtos(item.getUserAccounts()));
+						if(CollectionUtils.isNotEmpty(item.getContracts())) {
+							dto.setNumberOfContract(item.getContracts().size());
+						} else {
+							dto.setNumberOfContract(0);
+						}
+						dto.setIsHeadOffice(PlbUtil.getCompanyTypeString(item));
 						return dto;
 					})).collect(Collectors.toList());
 		}
 		return dtos;
 	}
+	
+	
 	public CompanyEntity toNewEntity(CompanyDto dto) throws BusinessException{
 		CompanyEntity entity = this.toEntity(dto, new CompanyEntity(),"id");
 		entity.setState(CompanyState.ACTIVE.getName());
