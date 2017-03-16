@@ -1,10 +1,16 @@
 package vn.com.phuclocbao.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 import vn.com.phuclocbao.entity.base.IBaseEntity;
 @Entity
 @javax.persistence.Table(name="tblCompany")
+@NamedQueries({
+	@NamedQuery(name = "companyEntity_deleteById", query = "DELETE FROM CompanyEntity ce WHERE ce.id = :companyId"),
+})
 public class CompanyEntity implements IBaseEntity
 {
 	/** SerialVersionUID */
@@ -22,7 +28,7 @@ public class CompanyEntity implements IBaseEntity
 	  private java.lang.String address;
 	  @javax.persistence.Column(length=255)
 	  private java.lang.String description;
-	  @javax.persistence.OneToMany(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER, mappedBy="companyEntity", orphanRemoval=false)
+	  @javax.persistence.OneToMany(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE, CascadeType.REMOVE}, fetch=javax.persistence.FetchType.EAGER, mappedBy="companyEntity", orphanRemoval=true)
 	  private java.util.Set<vn.com.phuclocbao.entity.UserAccount> userAccounts;
 	  @javax.persistence.ManyToOne(cascade={javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}, fetch=javax.persistence.FetchType.EAGER)
 	  @javax.persistence.JoinColumn(name="companytype")

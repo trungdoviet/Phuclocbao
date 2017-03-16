@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
@@ -34,6 +35,12 @@ public class DefaultUserHistoryDao extends BaseDaoJpaImpl<UserHistory, Integer> 
 		query.setParameter("endDate", endDate);
 		query.setParameter("companyId", companyId);
 		return query.getResultList();
+	}
+	@Override
+	public void deleteHistoryByCompanyId(Integer companyId) throws BusinessException {
+		Query query = getEm().createNamedQuery("userHistory_deleteHistoryByCompany");
+		query.setParameter("companyId", companyId);
+		query.executeUpdate();
 	}
 	
 }

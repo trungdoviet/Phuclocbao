@@ -16,6 +16,7 @@ public enum UserActionHistoryType {
 	UPDATE_COMPANY_INFO("UPDATE_COMPANY_INFO","Cập nhật thông tin công ty"),
 	UPDATE_COMPANY_BRANCH("UPDATE_COMPANY_BRANCH","Cập nhật chi nhánh công ty"),
 	CREATE_COMPANY_BRANCH("CREATE_COMPANY_BRANCH","Tạo công ty"),
+	DELETE_COMPANY_BRANCH("DELETE_COMPANY_BRANCH","Xoá công ty"),
 	OTHER("OTHER","Không tên")
 	
 	;

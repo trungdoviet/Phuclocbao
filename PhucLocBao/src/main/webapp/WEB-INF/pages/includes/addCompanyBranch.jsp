@@ -95,3 +95,24 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
+<div class="modal fade" id="deleteCompanyDlg" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Xác nhận</h4>
+      </div>
+      <div class="modal-body">
+        <p>Xác nhận xoá công ty <strong><span id="companyNameField"></span></strong>. </p>
+         <p>Thao tác này sẽ xoá công ty và tài khoản của công ty và không thể thay đổi.</p>
+         <p>Vui lòng kiểm tra xác nhận.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="deleteCompanyClose">Thoát</button>
+        <button type="button" class="btn btn-danger" name="delete" id="deleteCompanyOk">Chắc chắn</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

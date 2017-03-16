@@ -201,6 +201,32 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 	private Contract nothing() {
 		return null;
 	}
+	@Transactional(rollbackFor=BusinessException.class)
+	@Override
+	public boolean remove(Integer id, UserActionParamVO userActionParam) throws BusinessException {
+		return transactionWrapper(new PersistenceExecutable<Boolean>() {
+			@Override
+			public Boolean execute() throws BusinessException, ClassNotFoundException, IOException {
+				CompanyEntity company = companyDao.findById(id);
+				String companyName = company.getName();
+				if(company != null){
+					if(CollectionUtils.isNotEmpty(company.getContracts())){
+						return false;
+					}
+					companyDao.remove(company);
+					userHistoryDao.deleteHistoryByCompanyId(id);
+					paymentHistoryDao.deletePaymentHistoryByCompanyId(id);
+					UserHistory userHistory = UserHistoryUtil.createNewHistory(nothing(), userActionParam.getCompanyId(), 
+							userActionParam.getCompanyName(), userActionParam.getUsername(), 
+							UserActionHistoryType.DELETE_COMPANY_BRANCH, companyName);
+					userHistoryDao.persist(userHistory);
+					
+				}
+				return true;
+			}
+		});
+		
+	}
 
 
 }

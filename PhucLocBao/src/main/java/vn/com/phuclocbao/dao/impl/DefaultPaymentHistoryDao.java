@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import vn.com.phuclocbao.dao.BaseDaoJpaImpl;
 import vn.com.phuclocbao.dao.PaymentHistoryDao;
@@ -42,6 +42,13 @@ public class DefaultPaymentHistoryDao extends BaseDaoJpaImpl<PaymentHistory, Int
 		query.setParameter("startDate", startDate);
 		query.setParameter("endDate", endDate);
 		return query.getResultList();
+	}
+	@Override
+	public void deletePaymentHistoryByCompanyId(Integer companyId) throws BusinessException {
+		Query query = getEm().createNamedQuery("paymentHistory_deleteHistoriesByCompanyId");
+		query.setParameter("companyId", companyId);
+		query.executeUpdate();
+		
 	}
 	
 }

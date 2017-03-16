@@ -11,7 +11,8 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
 @javax.persistence.Entity
 @javax.persistence.Table(name="tblUserHistory")
 @NamedQueries({
-	@NamedQuery(name = "userHistory_getHistoriesInDateRange", query = "SELECT uh FROM UserHistory uh WHERE uh.companyId = :companyId AND uh.happenTime >= :startDate AND uh.happenTime <= :endDate")
+	@NamedQuery(name = "userHistory_getHistoriesInDateRange", query = "SELECT uh FROM UserHistory uh WHERE uh.companyId = :companyId AND uh.happenTime >= :startDate AND uh.happenTime <= :endDate"),
+	@NamedQuery(name = "userHistory_deleteHistoryByCompany", query = "DELETE FROM UserHistory uh WHERE uh.companyId = :companyId")
 })
 public class UserHistory implements IBaseEntity
 {

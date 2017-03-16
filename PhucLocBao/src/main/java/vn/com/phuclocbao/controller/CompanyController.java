@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
@@ -23,6 +24,7 @@ import vn.com.phuclocbao.bean.StatisticInfo;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.exception.BusinessException;
+import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.CompanyService;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.service.PaymentHistoryService;
@@ -40,6 +42,8 @@ import vn.com.phuclocbao.vo.UserActionParamVO.UserActionParamVOBuilder;
 public class CompanyController extends BaseController{
 	private static final String MSG_CREATE_COMPANY_FAILED = "msg.createCompanyFailed";
 	private static final String MSG_CREATE_COMPANY_SUCCESS = "msg.createCompanySuccess";
+	private static final String MSG_DELETE_COMPANY_SUCCESS = "msg.deleteCompanySuccess";
+	private static final String MSG_DELETE_COMPANY_FAILED = "msg.deleteCompanyFailed";
 	private static final String MSG_UPDATE_COMPANY_FINANCIAL_SUCCESS = "msg.updateCompanyFinancialSuccess";
 	private static final String MSG_UPDATE_COMPANY_FINANCIAL_FAILED = "msg.updateCompanyFinancialFailed";
 	@Autowired
@@ -57,7 +61,10 @@ public class CompanyController extends BaseController{
 	@RequestMapping(value = { "/updateCompanyFinancial"}, params="save", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView updateFinancial(HttpServletRequest request, HttpServletResponse response, 
 			@ModelAttribute("cfBean") @Validated CompanyFinancialBean cfBean, 
-			BindingResult result, SessionStatus status, final RedirectAttributes redirectAttributes) {
+			BindingResult result, SessionStatus status, final RedirectAttributes redirectAttributes) throws BusinessException {
+		if(!isAdmin(request) || !isHeadOffice(request)){
+			throw new BusinessException(PLBErrorCode.USER_NOT_AUTHORIZED.name());
+		}
 		ModelAndView model = null;
 		financialValidator.validate(cfBean, result);
 		if (result.hasErrors()) {
@@ -101,11 +108,13 @@ public class CompanyController extends BaseController{
 	@RequestMapping(value = { "/addBranch"}, params="save", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView createBranch(HttpServletRequest request, HttpServletResponse response, 
 			@ModelAttribute("cbBean") CompanyBranchBean cbBean, 
-			BindingResult result, SessionStatus status, final RedirectAttributes redirectAttributes) {
+			BindingResult result, SessionStatus status, final RedirectAttributes redirectAttributes) throws BusinessException {
+		if(!isAdmin(request) || !isHeadOffice(request)){
+			throw new BusinessException(PLBErrorCode.USER_NOT_AUTHORIZED.name());
+		}
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		ModelAndView model = null;
 		model = new ModelAndView(MenuDefinition.COMPANY_BRANCH.getRedirectCommand());
-		System.out.println("New name:" + cbBean.getCompany().getName() +"-id:" + cbBean.getCompany().getType().getId());
 		try {
 			
 			CompanyDto persistedDto = companyService.persist(cbBean.getCompany(), UserActionParamVOBuilder.createBuilder()
@@ -122,6 +131,34 @@ public class CompanyController extends BaseController{
 			logger.error(e);
 			e.printStackTrace();
 			showErrorAlert(redirectAttributes, MSG_CREATE_COMPANY_FAILED);
+		}
+		return model;
+	}
+	
+	@RequestMapping(value = { "/companyBranch/{id}/delete"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
+	public ModelAndView deleteBranch(HttpServletRequest request, HttpServletResponse response, 
+			@PathVariable("id") int id,  final RedirectAttributes redirectAttributes) throws BusinessException {
+		if(!isAdmin(request) || !isHeadOffice(request)){
+			throw new BusinessException(PLBErrorCode.USER_NOT_AUTHORIZED.name());
+		}
+		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
+		ModelAndView model = null;
+		model = new ModelAndView(MenuDefinition.COMPANY_BRANCH.getRedirectCommand());
+		try {
+			
+			boolean isOK = companyService.remove(id, UserActionParamVOBuilder.createBuilder().setUsername(plbSession.getUserAccount().getUsername())
+																							.setCompanyId(plbSession.getCompanyId())
+																							.setCompanyName(plbSession.getCurrentCompany().getName())
+																							.build());
+			if(isOK){
+				showSucessAlert(redirectAttributes, MSG_DELETE_COMPANY_SUCCESS);
+			} else {
+				showErrorAlert(redirectAttributes, MSG_DELETE_COMPANY_FAILED);
+			}
+		} catch (BusinessException e) {
+			logger.error(e);
+			e.printStackTrace();
+			showErrorAlert(redirectAttributes, MSG_DELETE_COMPANY_FAILED);
 		}
 		return model;
 	}

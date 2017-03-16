@@ -996,6 +996,13 @@ function cb_init(){
 	$("#phoneNumber").change(function(){
 		cb_validate();
 	});
+	
+}
+
+function cb_deleteCompany(branchName, url){
+	$("#companyNameField").text(branchName);
+	$("#deleteCompanyOk").attr("onclick", "location.href='"+url+"'");
+	$('#deleteCompanyDlg').modal("show");	
 }
 
 function cb_validate(){

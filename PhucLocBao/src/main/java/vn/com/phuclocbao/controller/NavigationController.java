@@ -268,15 +268,7 @@ public class NavigationController extends BaseController {
 		return model;
 	}
 	
-	private boolean isAdmin(HttpServletRequest request){
-		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
-		return plbSession.getUserAccount().getIsAdmin().equalsIgnoreCase(ConstantVariable.YES_OPTION);
-	}
 	
-	private boolean isHeadOffice(HttpServletRequest request){
-		return request.getSession().getAttribute(LoginController.SESSION_IS_HEAD_OFFICE) != null 
-				&& request.getSession().getAttribute(LoginController.SESSION_IS_HEAD_OFFICE).toString().equalsIgnoreCase(ConstantVariable.YES_OPTION);
-	}
 	
 	@RequestMapping(value = { "/companyFinancial"}, method = RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView openCompanyFinancial(HttpServletRequest request, HttpServletResponse response, CompanyFinancialBean cfBean) throws BusinessException {

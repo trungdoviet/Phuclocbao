@@ -68,7 +68,8 @@
 												${branch.userAccountsInString}
 											</td>
 											<td>
-												
+												<spring:url value="/companyBranch/${branch.id}/delete" var="deleteUrl" /> 
+												<button class="btn btn-danger btn-xs noprint" onclick="cb_deleteCompany('${branch.name}','${deleteUrl}')"  >Xoá</button>
 											</td>
 								    	</tr>
 							    	</c:forEach>

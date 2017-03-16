@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.com.phuclocbao.bean.PLBSession;
 import vn.com.phuclocbao.enums.MenuDefinition;
 import vn.com.phuclocbao.exception.BusinessException;
+import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.UserService;
 import vn.com.phuclocbao.viewbean.ManageUserBean;
 import vn.com.phuclocbao.viewbean.UserPasswordBean;
@@ -37,7 +38,10 @@ public class ManageUserController extends BaseController {
 	@RequestMapping(value = { "/addUser"}, params="save", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView addUser(HttpServletRequest request, HttpServletResponse response, 
 			@ModelAttribute("muBean")  ManageUserBean muBean,  final RedirectAttributes redirectAttributes,
-			BindingResult result, SessionStatus status) {
+			BindingResult result, SessionStatus status) throws BusinessException {
+		if(!isAdmin(request) || !isHeadOffice(request)){
+			throw new BusinessException(PLBErrorCode.USER_NOT_AUTHORIZED.name());
+		}
 		ModelAndView model = null;
 		model = new ModelAndView(MenuDefinition.MANAGE_USER.getRedirectCommand());
 		try {
@@ -58,7 +62,10 @@ public class ManageUserController extends BaseController {
 	@RequestMapping(value = { "/changePassword"}, params="save", method = RequestMethod.POST, produces="application/x-www-form-urlencoded;charset=UTF-8")
 	public ModelAndView changePassword(HttpServletRequest request, HttpServletResponse response, 
 			@ModelAttribute("cpBean")  UserPasswordBean cpBean,  final RedirectAttributes redirectAttributes,
-			BindingResult result, SessionStatus status) {
+			BindingResult result, SessionStatus status) throws BusinessException {
+		if(!isAdmin(request) || !isHeadOffice(request)){
+			throw new BusinessException(PLBErrorCode.USER_NOT_AUTHORIZED.name());
+		}
 		ModelAndView model = null;
 		model = new ModelAndView(MenuDefinition.MANAGE_USER.getRedirectCommand());
 		try {

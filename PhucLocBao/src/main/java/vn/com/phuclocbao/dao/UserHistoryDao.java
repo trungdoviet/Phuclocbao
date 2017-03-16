@@ -12,4 +12,5 @@ public interface UserHistoryDao {
 	public UserHistory persist(UserHistory entity) throws BusinessException;
 	public List<UserHistory> persistList(List<UserHistory> entities) throws BusinessException;
 	public List<UserHistory> getHistoriesInDateRange(Integer companyId, Date startDate, Date endDate) throws BusinessException;
+	public void deleteHistoryByCompanyId(Integer companyId) throws BusinessException;
 }

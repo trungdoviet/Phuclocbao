@@ -12,4 +12,5 @@ public interface PaymentHistoryDao {
 	public List<PaymentHistory> persistList(List<PaymentHistory> entities) throws BusinessException;
 	public List<PaymentHistory> getHistoriesInDateRange(Integer companyId, Date startDate, Date endDate) throws BusinessException;
 	public List<PaymentHistory> getHistoriesInDateRangeAllCompany(Date startDate, Date endDate) throws BusinessException;
+	public void deletePaymentHistoryByCompanyId(Integer companyId) throws BusinessException;
 }

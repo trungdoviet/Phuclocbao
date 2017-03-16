@@ -10,4 +10,5 @@ public interface CompanyDao{
 	public CompanyEntity merge( CompanyEntity entity) throws BusinessException;
 	public List<CompanyEntity> findAll() throws BusinessException;
 	public CompanyEntity persist(CompanyEntity entity) throws BusinessException;
+	public void remove(CompanyEntity entity)  throws BusinessException;
 }
