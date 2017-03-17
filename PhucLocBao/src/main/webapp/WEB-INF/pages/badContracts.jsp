@@ -142,11 +142,20 @@
 									</td>
 									<td class="text-center" ><span class="label-alert"> ${contract.totalLateDays} Ngày</span></td>
 									<td class="text-center">
-										<fmt:formatNumber currencySymbol=" "  value="${contract.totalUnpaidFee}" type="currency" maxFractionDigits="0" var="totalUnpaidFee"/>
-										${fn:replace(totalUnpaidFee, ",", ".")}
-										VNĐ
+										<c:if test="${contract.totalUnpaidFee < 0}">
+											<fmt:formatNumber currencySymbol=" "  value="${contract.totalUnpaidFee *(-1)}" type="currency" maxFractionDigits="0" var="totalUnpaidFee"/>
+												-${fn:replace(totalUnpaidFee, ",", ".")}
+												VNĐ
+										</c:if>
+										<c:if test="${contract.totalUnpaidFee >= 0}">
+											<fmt:formatNumber currencySymbol=" "  value="${contract.totalUnpaidFee}" type="currency" maxFractionDigits="0" var="totalUnpaidFee"/>
+											${fn:replace(totalUnpaidFee, ",", ".")}
+											VNĐ
+										</c:if>
 									</td>
 									<td>
+											<spring:url value="/contract/${contract.id}/paid" var="paidUrl" /> 
+											<button class="btn btn-primary btn-xs noprint" onclick="location.href='${paidUrl}'">Trả phí</button>
 											<spring:url value="/contract/${contract.id}/payoff" var="payOffUrl" />
 											<button class="btn btn-danger btn-xs noprint" onclick="location.href='${payOffUrl}'">Thanh lý</button>
 										

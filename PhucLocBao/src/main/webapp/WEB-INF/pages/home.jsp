@@ -111,7 +111,7 @@
 		<div class="row">
 			<div class="col-lg-4">
 				<div class="panel panel-default">
-					<div class="panel-heading">Thu trong tháng <span id="curTimeIncome"></span></div>
+					<div class="panel-heading">Thu trong tháng <span id="curTimeIncome"></span><small>(triệu đồng)</small></div>
 					<div class="panel-body">
 						<div class="canvas-wrapper">
 							<canvas class="chart" id="pie-chart-income" ></canvas>
@@ -121,7 +121,7 @@
 			</div>
 			<div class="col-lg-4">
 				<div class="panel panel-default">
-					<div class="panel-heading">Chi trong tháng <span id="curTimeProfit"></span></div>
+					<div class="panel-heading">Chi trong tháng <span id="curTimeProfit"></span><small>(triệu đồng)</small></div>
 					<div class="panel-body">
 						<div class="canvas-wrapper">
 							<canvas class="chart" id="pie-chart-cost" ></canvas>

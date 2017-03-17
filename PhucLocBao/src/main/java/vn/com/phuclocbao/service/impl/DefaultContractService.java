@@ -36,6 +36,7 @@ import vn.com.phuclocbao.entity.PaymentSchedule;
 import vn.com.phuclocbao.entity.UserHistory;
 import vn.com.phuclocbao.enums.ContractSeverity;
 import vn.com.phuclocbao.enums.ContractStatusType;
+import vn.com.phuclocbao.enums.ContractType;
 import vn.com.phuclocbao.enums.PaymentHistoryType;
 import vn.com.phuclocbao.enums.ProcessStaging;
 import vn.com.phuclocbao.enums.UserActionHistoryType;
@@ -330,8 +331,25 @@ public class DefaultContractService extends BaseService implements ContractServi
 					 }
 					 
 					 ContractConverter.getInstance().updateContractInPaidTime(dto, contract);
-					 PaymentHistory paidHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.RENTING_COST, totalPaidCost, StringUtils.EMPTY);
-					 paymentHistories.add(paidHistory);
+					 if(totalPaidCost > 0){
+						 PaymentHistory paidHistory = PaymentHistoryUtil.createNewHistory(contract, dto.getCompany().getId(), PaymentHistoryType.RENTING_COST, totalPaidCost, StringUtils.EMPTY);
+						 paymentHistories.add(paidHistory);
+					 }
+					 if(contract.getState().equalsIgnoreCase(ContractStatusType.BAD.getName())){//if this is bad contract
+						 Date expireDate = contract.getExpireDate();
+						 Date currentDate = DateTimeUtil.getCurrentDateMaxTime();
+						 if(currentDate.compareTo(expireDate) <= 0){ // not expired yet
+							 PaymentScheduleDto lastPayment = PlbUtil.getLatestPaid(dto.getPaymentSchedules());
+							 if(lastPayment != null){
+								 int periodPaymentDay = contract.getPeriodOfPayment();
+								  Date dateToMarkAsBadContract = DateTimeUtil.addMoreDate(lastPayment.getExpectedPayDate(), periodPaymentDay + ((int)(periodPaymentDay / 2)));
+								  if(dateToMarkAsBadContract.compareTo(currentDate) > 0){
+									  contract.setState(ContractStatusType.IN_PROGRESS.getName());
+								  }
+							 }
+						 }
+						 
+					 }
 					 ContractDto updatedContract= ContractConverter.getInstance().toContract(new ContractDto(), contractDao.merge(contract));
 					 if(updatedContract != null){
 						 CompanyEntity company = companyDao.findById(dto.getCompany().getId());
