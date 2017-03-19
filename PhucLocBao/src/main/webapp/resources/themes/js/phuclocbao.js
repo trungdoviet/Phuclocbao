@@ -429,7 +429,7 @@ function ctr_updateNumber(){
 	 var companyDebt = $("#companyDebt").autoNumeric("get");
 	$("#companyDebt").val(companyDebt);
 	var customerDebt = $("#customerDebt").autoNumeric("get");
-	$("#customerDebt").val(companyDebt);
+	$("#customerDebt").val(customerDebt);
 }
 
 function openContractDetail(contractId){
