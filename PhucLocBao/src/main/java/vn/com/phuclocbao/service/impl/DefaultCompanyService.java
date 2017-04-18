@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import vn.com.phuclocbao.converter.CompanyConverter;
+import vn.com.phuclocbao.dao.AtomicCounterDao;
 import vn.com.phuclocbao.dao.CompanyDao;
 import vn.com.phuclocbao.dao.CompanyTypeDao;
 import vn.com.phuclocbao.dao.PaymentHistoryDao;
@@ -24,10 +25,12 @@ import vn.com.phuclocbao.dao.UserDao;
 import vn.com.phuclocbao.dao.UserHistoryDao;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.UserAccountDto;
+import vn.com.phuclocbao.entity.AtomicCounter;
 import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.entity.CompanyType;
 import vn.com.phuclocbao.entity.Contract;
 import vn.com.phuclocbao.entity.UserHistory;
+import vn.com.phuclocbao.enums.AtomicCounterOption;
 import vn.com.phuclocbao.enums.PaymentHistoryType;
 import vn.com.phuclocbao.enums.UserActionHistoryType;
 import vn.com.phuclocbao.exception.BusinessException;
@@ -53,6 +56,8 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 	private PaymentHistoryDao paymentHistoryDao;
 	@Autowired
 	private UserHistoryDao userHistoryDao;
+	@Autowired
+	private AtomicCounterDao atomicCounterDao;
 	@PersistenceContext
 	private EntityManager manager;
 	@Override
@@ -86,6 +91,24 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 	public void setCompanyTypeDao(CompanyTypeDao companyTypeDao) {
 		this.companyTypeDao = companyTypeDao;
 	}
+	
+	
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
+
+	public AtomicCounterDao getAtomicCounterDao() {
+		return atomicCounterDao;
+	}
+
+	public void setAtomicCounterDao(AtomicCounterDao atomicCounterDao) {
+		this.atomicCounterDao = atomicCounterDao;
+	}
+
 	@Transactional(rollbackFor=BusinessException.class)
 	@Override
 	public CompanyDto mergeFinancial(CompanyDto dto, UserActionParamVO userActionParam) throws BusinessException {
@@ -227,7 +250,10 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 							userActionParam.getCompanyName(), userActionParam.getUsername(), 
 							UserActionHistoryType.DELETE_COMPANY_BRANCH, companyName);
 					userHistoryDao.persist(userHistory);
-					
+					AtomicCounter atomic = atomicCounterDao.findByKey(AtomicCounterOption.SYNCHRONIZE_BAD_CONTRACT.getName(), id);
+					if(atomic != null){
+						 atomicCounterDao.remove(atomic);
+					}
 				}
 				return true;
 			}

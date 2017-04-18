@@ -23,6 +23,7 @@ import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.UserAccountDto;
 import vn.com.phuclocbao.enums.AlertType;
 import vn.com.phuclocbao.enums.MenuDefinition;
+import vn.com.phuclocbao.service.AtomicCounterService;
 import vn.com.phuclocbao.service.CompanyService;
 import vn.com.phuclocbao.service.ContractService;
 import vn.com.phuclocbao.util.ConstantVariable;
@@ -46,6 +47,9 @@ public class LoginController {
 		CompanyService companyService;
 		@Autowired
 		ContractService contractService;
+		
+		@Autowired
+		AtomicCounterService atomicCounterService;
 		
 		@RequestMapping(value={"/", "/index", "/login"},method=RequestMethod.GET, produces="application/x-www-form-urlencoded;charset=UTF-8")
 		public ModelAndView displayLogin(HttpServletRequest request, HttpServletResponse response, LoginBean loginBean){
@@ -101,9 +105,12 @@ public class LoginController {
 								}
 								
 								System.out.println("User Login Successful with username:" + userAccount.getFullname());
-								int numberOfBadContract = contractService.updateBadContract(plbSession.getCompanyId());
-								numberOfBadContract += contractService.updateBadContractBaseOnPaymentDate(plbSession.getCompanyId());
-								System.out.println("Update " + numberOfBadContract +" contract as BAD contract");
+								if(!atomicCounterService.isBadContractSynchronized(plbSession.getCompanyId())){
+									int numberOfBadContract = contractService.updateBadContract(plbSession.getCompanyId());
+									numberOfBadContract += contractService.updateBadContractBaseOnPaymentDate(plbSession.getCompanyId());
+									System.out.println("Update " + numberOfBadContract +" contract as BAD contract");
+									atomicCounterService.addNewOrUpdateSynchronizedCounter(plbSession.getCompanyId());
+								}
 								model = new ModelAndView(MenuDefinition.HOME.getRedirectCommand());
 								redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG, MessageBundleUtil.getMessage(MSG_WELCOME_LOGIN) + userAccount.getFullname());
 								redirectAttributes.addFlashAttribute(ConstantVariable.ATTR_FLASH_MSG_CSS, AlertType.SUCCESS.getName());

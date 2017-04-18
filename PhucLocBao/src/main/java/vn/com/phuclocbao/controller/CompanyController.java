@@ -62,9 +62,9 @@ public class CompanyController extends BaseController{
 	public ModelAndView updateFinancial(HttpServletRequest request, HttpServletResponse response, 
 			@ModelAttribute("cfBean") @Validated CompanyFinancialBean cfBean, 
 			BindingResult result, SessionStatus status, final RedirectAttributes redirectAttributes) throws BusinessException {
-		if(!isAdmin(request) || !isHeadOffice(request)){
+		/*if(!isAdmin(request)){
 			throw new BusinessException(PLBErrorCode.USER_NOT_AUTHORIZED.name());
-		}
+		}*/
 		ModelAndView model = null;
 		financialValidator.validate(cfBean, result);
 		if (result.hasErrors()) {

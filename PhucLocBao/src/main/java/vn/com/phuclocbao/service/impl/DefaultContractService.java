@@ -281,7 +281,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 			public ContractDto execute() throws BusinessException, ClassNotFoundException, IOException {
 				try {
 					Contract contract = contractDao.findById(dto.getId(), dto.getCompany().getId());
-
+					
 					Double totalPaidCost = 0D;
 					 long numberOfOldPaidTime = contract.getPaymentSchedules().stream().filter(item-> item.getFinish().equalsIgnoreCase(ConstantVariable.YES_OPTION)).count();
 					 long numberOfNewPaidTime  = dto.getPaymentSchedules().stream().filter(item-> item.getFinish().equalsIgnoreCase(ConstantVariable.YES_OPTION)).count();
@@ -398,6 +398,9 @@ public class DefaultContractService extends BaseService implements ContractServi
 			public ContractDto execute() throws BusinessException, ClassNotFoundException, IOException {
 				try {
 					Contract contract = contractDao.findById(dto.getId(), dto.getCompany().getId());
+					if(ContractStatusType.FINISH.getName().equalsIgnoreCase(contract.getState())){
+						return dto;
+					}
 					Double customerDebt = dto.getCustomerDebt() - contract.getCustomerDebt();
 					Double companyDebt = dto.getCompanyDebt() - contract.getCompanyDebt();
 					Double profitToCompany = 0D;

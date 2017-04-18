@@ -131,7 +131,14 @@ use c43phuclocbao;
         primary key (id)
     );
 
-
+	create table tblCounter (
+        id integer not null auto_increment,
+        content varchar(1024),
+        keyName varchar(255),
+        setTime datetime,
+        primary key (id)
+    );
+    
     alter table tblCustomer 
         add constraint UK_3o2aqpijjd7i6f5galmbyc8d8 unique (contract_id);
 
