@@ -153,8 +153,8 @@ public class DefaultCompanyService extends BaseService implements CompanyService
 						logger.error("Can not find company with id " + id);
 						throw new BusinessException(PLBErrorCode.OBJECT_NOT_FOUND.name());
 					}
-					
-					return CompanyConverter.getInstance().toDto(entity, new CompanyDto());
+					 CompanyDto dto = CompanyConverter.getInstance().toDto(entity, new CompanyDto());
+					 return dto;
 				}
 			});
 	}

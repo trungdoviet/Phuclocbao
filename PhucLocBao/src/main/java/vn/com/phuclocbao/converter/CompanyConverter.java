@@ -53,11 +53,11 @@ public class CompanyConverter extends BaseConverter<CompanyDto, CompanyEntity>{
 						CompanyDto dto = this.toDto(item, new CompanyDto());
 						dto.setType(CompanyTypeConverter.getInstance().toDto(item.getType(), new CompanyTypeDto()));
 						dto.setUserAccounts(UserAccountConverter.getInstance().toDtos(item.getUserAccounts()));
-						if(CollectionUtils.isNotEmpty(item.getContracts())) {
+						/*if(CollectionUtils.isNotEmpty(item.getContracts())) {
 							dto.setNumberOfContract(item.getContracts().size());
 						} else {
 							dto.setNumberOfContract(0);
-						}
+						}*/
 						dto.setIsHeadOffice(PlbUtil.getCompanyTypeString(item));
 						return dto;
 					})).collect(Collectors.toList());

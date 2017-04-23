@@ -2,6 +2,7 @@ package vn.com.phuclocbao.converter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +23,7 @@ import vn.com.phuclocbao.dto.base.IBaseDTO;
 import vn.com.phuclocbao.entity.base.IBaseEntity;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
+import vn.com.phuclocbao.util.BeanUtilsExtension;
 
 public abstract class BaseConverter<D extends IBaseDTO, E extends IBaseEntity> implements ObjectConvertable<D, E>{
 	private static org.apache.log4j.Logger logger = Logger.getLogger(LoginController.class);
@@ -108,7 +110,8 @@ protected <T> T populateProperty(Object source, T dest, String... ignoredPropert
         convertUtilsBean.deregister(Date.class);
         convertUtilsBean.register(dtConverter, Date.class);
         BeanUtilsBean beanUtilsBean = new BeanUtilsBean(convertUtilsBean, new PropertyUtilsBean());
-        Map<String, String> properties = beanUtilsBean.describe(source);
+        BeanUtilsExtension beanExtension = new BeanUtilsExtension(beanUtilsBean);
+        Map<String, String> properties = beanExtension.describe(source, new HashSet<>(Arrays.asList(ignoredProperties)));
         ignoreProperty(properties, ignoredProperties);
         beanUtilsBean.populate(dest, properties);
 

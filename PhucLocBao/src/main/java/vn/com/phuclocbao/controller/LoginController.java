@@ -119,6 +119,7 @@ public class LoginController {
 								model = new ModelAndView("index");
 								request.setAttribute("message", MessageBundleUtil.getMessage(ERROR_USER_LOGIN_FAILED));
 						}
+//						System.out.println("Total time of login controller:" + (System.currentTimeMillis() - startTime));
 
 				}catch(Exception e) {
 						e.printStackTrace();

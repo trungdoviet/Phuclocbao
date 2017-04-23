@@ -86,6 +86,7 @@ public class NavigationController extends BaseController {
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		plbSession.getMenuBean().makeActive(MenuDefinition.HOME);
 		ModelAndView model = new ModelAndView(MenuDefinition.HOME.getName());
+		
 		try {
 			gv = contractService.collectStatistic(plbSession.getCompanyId());
 		} catch (BusinessException e) {

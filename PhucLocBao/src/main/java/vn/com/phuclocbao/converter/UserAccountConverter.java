@@ -13,6 +13,7 @@ import vn.com.phuclocbao.bean.UserCompanyGrouping;
 import vn.com.phuclocbao.dto.CompanyDto;
 import vn.com.phuclocbao.dto.CompanyTypeDto;
 import vn.com.phuclocbao.dto.UserAccountDto;
+import vn.com.phuclocbao.entity.CompanyEntity;
 import vn.com.phuclocbao.entity.UserAccount;
 import vn.com.phuclocbao.enums.UserAccountState;
 import vn.com.phuclocbao.exception.BusinessException;
@@ -46,6 +47,35 @@ public class UserAccountConverter extends BaseConverter<UserAccountDto, UserAcco
 		return dest;
 	}
 	
+	
+	
+	@Override
+	public UserAccountDto doSimple(UserAccount entity, UserAccountDto dest)
+			throws BusinessException {
+		CompanyDto companyDto = new CompanyDto();
+		CompanyEntity companyEntity = entity.getCompanyEntity();
+		companyDto.setAddress(companyEntity.getAddress());
+		companyDto.setCity(companyEntity.getCity());
+		companyDto.setCostBeforeStartDate(companyEntity.getCostBeforeStartDate());
+		companyDto.setDescription(companyEntity.getDescription());
+		companyDto.setFax(companyEntity.getFax());
+		companyDto.setId(companyEntity.getId());
+		companyDto.setInvestBeforeStartDate(companyEntity.getInvestBeforeStartDate());
+		companyDto.setMotobikeRentingFund(companyEntity.getMotobikeRentingFund());
+		companyDto.setName(companyEntity.getName());
+		companyDto.setOriginalFund(companyEntity.getOriginalFund());
+		companyDto.setPhoneNumber(companyEntity.getPhoneNumber());
+		companyDto.setRevenueBeforeStartDate(companyEntity.getRevenueBeforeStartDate());
+		companyDto.setStartDate(companyEntity.getStartDate());
+		companyDto.setState(companyEntity.getState());
+		companyDto.setTotalFund(companyEntity.getTotalFund());
+		dest.setCompanyEntity(companyDto);
+		CompanyTypeDto type = CompanyTypeConverter.getInstance().toDto(entity.getCompanyEntity().getType(), new CompanyTypeDto());
+		dest.getCompanyEntity().setType(type);
+		
+		return dest;
+	}
+
 	public List<UserAccountDto> toDtos(Set<UserAccount> entities) throws BusinessException{
 		List<UserAccountDto> dtos = new ArrayList<>();
 		if(CollectionUtils.isNotEmpty(entities)){

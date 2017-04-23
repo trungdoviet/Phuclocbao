@@ -10,6 +10,7 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
 @javax.persistence.Table(name="tblCompany")
 @NamedQueries({
 	@NamedQuery(name = "companyEntity_deleteById", query = "DELETE FROM CompanyEntity ce WHERE ce.id = :companyId"),
+	@NamedQuery(name = "companyEntity_getCompanyById", query = "SELECT ce FROM CompanyEntity ce WHERE ce.id = :companyId"),
 })
 public class CompanyEntity implements IBaseEntity
 {
@@ -44,7 +45,7 @@ public class CompanyEntity implements IBaseEntity
 	  private java.lang.Double totalFund;
 	  private java.lang.Double revenueBeforeStartDate;
 	  private java.lang.Double costBeforeStartDate;
-	  @javax.persistence.OneToMany(fetch=javax.persistence.FetchType.EAGER, mappedBy="company", orphanRemoval=false)
+	  @javax.persistence.OneToMany(fetch=javax.persistence.FetchType.LAZY, mappedBy="company", orphanRemoval=false)
 	  private java.util.Set<vn.com.phuclocbao.entity.Contract> contracts;
 	  private java.util.Date startDate;
 	  private java.lang.Double originalFund;

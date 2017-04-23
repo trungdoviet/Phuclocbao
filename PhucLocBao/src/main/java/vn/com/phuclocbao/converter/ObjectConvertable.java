@@ -12,9 +12,18 @@ public interface ObjectConvertable<D extends IBaseDTO, E extends IBaseEntity> {
 	public default D doExtra(E entity, D dest) throws BusinessException{
 		return dest;
 	}
+	
+	public default D doSimple(E entity, D dest) throws BusinessException{
+		return dest;
+	}
 	public default D toDtoExtraObject( E entity, D dest, String... ignoredProperties) throws BusinessException{
 		D dto = toDto(entity, dest, ignoredProperties);
 		return doExtra(entity, dto);
+	}
+	
+	public default D toDtoSimpleObject( E entity, D dest, String... ignoredProperties) throws BusinessException{
+		D dto = toDto(entity, dest, ignoredProperties);
+		return doSimple(entity, dto);
 	}
 	
 	

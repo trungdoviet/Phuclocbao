@@ -10,6 +10,7 @@ import javax.persistence.TypedQuery;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +52,10 @@ public class DefaultUserDao extends BaseDaoJpaImpl<UserAccount, Integer> impleme
 			if(StringUtils.isNotEmpty(username)){
 				TypedQuery<UserAccount> query = getEm().createNamedQuery("getUserByUsername", UserAccount.class);
 				query.setParameter("username", username);
-				return query.getSingleResult();
+				 UserAccount account = query.getSingleResult();
+				 Hibernate.initialize(account.getCompanyEntity());
+				 System.out.println("==company id:" + account.getCompanyEntity().getId());
+				 return account;
 			}
 			return null;
 		}
