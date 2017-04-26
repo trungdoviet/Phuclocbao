@@ -17,6 +17,7 @@ public class PaymentHistoryView {
 		startDate = DateTimeUtil.addMoreDate(endDate, -15);
 		createdPaymentDate = DateTimeUtil.getCurrentDate();
 		paymentType = PaymentHistoryType.INVEST_FUNDING.getType();
+		
 	}
 	
 	private String paymentType;
@@ -24,10 +25,18 @@ public class PaymentHistoryView {
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date createdPaymentDate;
 	private String additionalInfo;
-	
+	private List<PaymentHistoryType> paymentTypes;
 	
 	public String getPaymentType() {
 		return paymentType;
+	}
+
+	public List<PaymentHistoryType> getPaymentTypes() {
+		return paymentTypes;
+	}
+
+	public void setPaymentTypes(List<PaymentHistoryType> paymentTypes) {
+		this.paymentTypes = paymentTypes;
 	}
 
 	public void setPaymentType(String paymentType) {

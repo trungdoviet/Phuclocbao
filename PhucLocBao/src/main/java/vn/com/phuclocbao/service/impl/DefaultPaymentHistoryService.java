@@ -44,12 +44,12 @@ public class DefaultPaymentHistoryService extends BaseService implements Payment
 	private CompanyDao companyDao;
 	@Transactional(rollbackFor=BusinessException.class)
 	@Override
-	public List<PaymentHistoryDto> getHistories(Integer companyId, Date startDate, Date endDate) throws BusinessException {
+	public List<PaymentHistoryDto> getHistories(Integer companyId, Date startDate, Date endDate, String paymentType) throws BusinessException {
 		
 		return transactionWrapper(new PersistenceExecutable<List<PaymentHistoryDto>>() {
 			@Override
 			public List<PaymentHistoryDto> execute() throws BusinessException, ClassNotFoundException, IOException {;
-				List<PaymentHistory> histories = paymentHistoryDao.getHistoriesInDateRange(companyId, startDate, endDate);
+				List<PaymentHistory> histories = paymentHistoryDao.getHistoriesInDateRange(companyId, startDate, endDate, paymentType);
 				return PaymentHistoryConverter.getInstance().toDtos(histories);
 			}
 		});

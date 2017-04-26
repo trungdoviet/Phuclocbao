@@ -1,6 +1,7 @@
 package vn.com.phuclocbao.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,6 +29,7 @@ import vn.com.phuclocbao.dto.UserAccountDto;
 import vn.com.phuclocbao.dto.UserHistoryDto;
 import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.enums.MenuDefinition;
+import vn.com.phuclocbao.enums.PaymentHistoryType;
 import vn.com.phuclocbao.enums.ProcessStaging;
 import vn.com.phuclocbao.exception.BusinessException;
 import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
@@ -37,7 +40,6 @@ import vn.com.phuclocbao.service.PaymentHistoryService;
 import vn.com.phuclocbao.service.UserHistoryService;
 import vn.com.phuclocbao.service.UserService;
 import vn.com.phuclocbao.service.VietnamCityService;
-import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.viewbean.CompanyBranchBean;
 import vn.com.phuclocbao.viewbean.CompanyFinancialBean;
@@ -214,7 +216,9 @@ public class NavigationController extends BaseController {
 			paymentHistory = new PaymentHistoryView();
 		}
 		try {
-			List<PaymentHistoryDto> paymentDtos = paymentHistoryService.getHistories(plbSession.getCompanyId(), paymentHistory.getStartDate(), DateTimeUtil.addMoreDate(paymentHistory.getEndDate(), 1));
+			paymentHistory.setPaymentTypes(Arrays.asList(PaymentHistoryType.values()));
+			paymentHistory.setPaymentType(StringUtils.EMPTY);
+			List<PaymentHistoryDto> paymentDtos = paymentHistoryService.getHistories(plbSession.getCompanyId(), paymentHistory.getStartDate(), DateTimeUtil.addMoreDate(paymentHistory.getEndDate(), 1), StringUtils.EMPTY);
 			paymentHistory.setPaymentHistories(paymentDtos);
 			model.addObject("historyView", paymentHistory);
 		} catch (BusinessException e) {

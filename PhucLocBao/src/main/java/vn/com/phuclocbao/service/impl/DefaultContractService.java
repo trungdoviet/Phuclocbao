@@ -36,7 +36,6 @@ import vn.com.phuclocbao.entity.PaymentSchedule;
 import vn.com.phuclocbao.entity.UserHistory;
 import vn.com.phuclocbao.enums.ContractSeverity;
 import vn.com.phuclocbao.enums.ContractStatusType;
-import vn.com.phuclocbao.enums.ContractType;
 import vn.com.phuclocbao.enums.PaymentHistoryType;
 import vn.com.phuclocbao.enums.ProcessStaging;
 import vn.com.phuclocbao.enums.UserActionHistoryType;
@@ -724,7 +723,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 	}
 	private StatisticInfo buildProfitStatistic(Integer companyId, StatisticInfo statistic, int currentYear)
 			throws BusinessException {
-		List<PaymentHistory> payments =paymentHistoryDao.getHistoriesInDateRange(companyId, DateTimeUtil.getFirstDateOfYear(currentYear), DateTimeUtil.getFirstDateOfYear(currentYear+1));
+		List<PaymentHistory> payments =paymentHistoryDao.getHistoriesInDateRange(companyId, DateTimeUtil.getFirstDateOfYear(currentYear), DateTimeUtil.getFirstDateOfYear(currentYear+1), StringUtils.EMPTY);
 		buildPaymentStatisticForCompany(statistic, payments);
 		return statistic;
 	}
@@ -1028,7 +1027,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 				}
 				Double totalRunningContractValueInCurrentDateRange = contractDao.sumContractByDateRangeAndStatusAndCompanyId(ContractStatusType.IN_PROGRESS, companyId, endDate, startDate);
 				detail.setTotalRunningContractInDateRange(totalRunningContractValueInCurrentDateRange);
-				List<PaymentHistory> monthlyHistories = paymentHistoryDao.getHistoriesInDateRange(companyId, startDate, endDate);
+				List<PaymentHistory> monthlyHistories = paymentHistoryDao.getHistoriesInDateRange(companyId, startDate, endDate, StringUtils.EMPTY);
 				
 				if(CollectionUtils.isNotEmpty(monthlyHistories)){
 					//revenue

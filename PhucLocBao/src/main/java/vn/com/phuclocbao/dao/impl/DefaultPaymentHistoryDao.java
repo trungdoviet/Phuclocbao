@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import vn.com.phuclocbao.dao.BaseDaoJpaImpl;
@@ -28,8 +29,14 @@ public class DefaultPaymentHistoryDao extends BaseDaoJpaImpl<PaymentHistory, Int
 		return null;
 	}
 	@Override
-	public List<PaymentHistory> getHistoriesInDateRange(Integer companyId, Date startDate, Date endDate) throws BusinessException {
-		TypedQuery<PaymentHistory> query = getEm().createNamedQuery("paymentHistory_getHistoriesInDateRange", PaymentHistory.class);
+	public List<PaymentHistory> getHistoriesInDateRange(Integer companyId, Date startDate, Date endDate, String paymentType) throws BusinessException {
+		TypedQuery<PaymentHistory> query = null;
+		if(StringUtils.isNotEmpty(paymentType)){
+			query = getEm().createNamedQuery("paymentHistory_getHistoriesInDateRangeOnType", PaymentHistory.class);
+			query.setParameter("paymentType", paymentType);
+		} else {
+			query = getEm().createNamedQuery("paymentHistory_getHistoriesInDateRange", PaymentHistory.class);
+		}
 		query.setParameter("startDate", startDate);
 		query.setParameter("endDate", endDate);
 		query.setParameter("companyId", companyId);

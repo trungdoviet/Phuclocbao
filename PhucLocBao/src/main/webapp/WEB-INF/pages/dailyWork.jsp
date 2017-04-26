@@ -48,6 +48,21 @@
 												<form:errors path="endDate" cssClass="error" />
 											</div>
 										</spring:bind>
+									<div class="pull-left">
+										<strong style="line-height: 32px;">Loại:</strong>
+									</div>
+									<spring:bind path="paymentType">
+										<div class="form-group ${status.error ? 'has-error' : ''} pull-left stay-left" >
+											<form:select class="form-control" id="paymentType"  
+												name="paymentType" path="paymentType">
+												<form:option value="" label="--Tất cả--" />
+												<form:options items="${historyView.paymentTypes}" itemValue="type"
+													itemLabel="name" />
+											</form:select>
+											<form:errors path="paymentType"
+												cssClass="error" />
+										</div>
+									</spring:bind>
 									<button id="btnSearch" type="submit" class="btn btn-primary pull-left stay-left" name="search">
 										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 										Tìm

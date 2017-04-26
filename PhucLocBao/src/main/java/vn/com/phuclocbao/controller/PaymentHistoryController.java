@@ -1,4 +1,5 @@
 package vn.com.phuclocbao.controller;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +49,8 @@ public class PaymentHistoryController extends BaseController {
 		ModelAndView model = new ModelAndView(MenuDefinition.DAILY_WORK.getName());
 		PLBSession plbSession = (PLBSession) request.getSession().getAttribute(PLBSession.SESSION_ATTRIBUTE_KEY);
 		try {
-			List<PaymentHistoryDto> paymentDtos = paymentHistoryService.getHistories(plbSession.getCompanyId(), paymentHistory.getStartDate(), DateTimeUtil.addMoreDate(paymentHistory.getEndDate(), 1));
+			List<PaymentHistoryDto> paymentDtos = paymentHistoryService.getHistories(plbSession.getCompanyId(), paymentHistory.getStartDate(), DateTimeUtil.addMoreDate(paymentHistory.getEndDate(), 1), paymentHistory.getPaymentType());
+			paymentHistory.setPaymentTypes(Arrays.asList(PaymentHistoryType.values()));
 			paymentHistory.setPaymentHistories(paymentDtos);
 			model.addObject("historyView", paymentHistory);
 		} catch (BusinessException e) {
