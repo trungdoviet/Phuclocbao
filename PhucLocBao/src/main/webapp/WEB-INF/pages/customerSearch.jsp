@@ -112,7 +112,7 @@
 															<div class="list-group-item-label">
 																<a class="list-group-link"
 																	onclick="openContractDetail(${contract.id})"
-																	data-id='${contract.id}' href="#">Hợp đồng ngày
+																	data-id='${contract.id}' href="#">Ngày
 																	${contract.startDate}</a><br>
 															</div>
 														</div>

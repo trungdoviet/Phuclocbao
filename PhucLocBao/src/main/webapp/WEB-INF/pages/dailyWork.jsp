@@ -48,7 +48,7 @@
 												<form:errors path="endDate" cssClass="error" />
 											</div>
 										</spring:bind>
-									<div class="pull-left">
+									<div class="pull-left stay-left">
 										<strong style="line-height: 32px;">Loại:</strong>
 									</div>
 									<spring:bind path="paymentType">
@@ -151,6 +151,14 @@
 								    	</c:forEach>
 								    </tbody>
 								</table>
+								<c:if test="${historyView.totalPayment != null }">
+								<div>
+									<label>Tổng cộng:</label>
+									<fmt:formatNumber  currencySymbol=" "  value="${historyView.totalPayment}" type="currency" maxFractionDigits="0" var="totalPayment"/>
+														${fn:replace(totalPayment, ",", ".")}
+														VNĐ
+								</div>
+								</c:if>
 							</div>
 						</div>
 					</div>

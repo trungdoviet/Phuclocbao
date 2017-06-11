@@ -52,6 +52,7 @@ public class PaymentHistoryController extends BaseController {
 			List<PaymentHistoryDto> paymentDtos = paymentHistoryService.getHistories(plbSession.getCompanyId(), paymentHistory.getStartDate(), DateTimeUtil.addMoreDate(paymentHistory.getEndDate(), 1), paymentHistory.getPaymentType());
 			paymentHistory.setPaymentTypes(Arrays.asList(PaymentHistoryType.values()));
 			paymentHistory.setPaymentHistories(paymentDtos);
+			paymentHistory.calculateTotalPayment();
 			model.addObject("historyView", paymentHistory);
 		} catch (BusinessException e) {
 			logger.error(e);

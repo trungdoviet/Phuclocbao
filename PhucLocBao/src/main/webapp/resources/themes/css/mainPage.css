@@ -435,11 +435,14 @@ a.mute-link-style:hover {
 /*customer search */
 /*contract*/
 .customer-search div.list-group-item{
-	width:14%;
+	width:57%;
 	float:left;
 	margin-left: 5px;
 	padding:1px 8px;
 	border-radius:4px;
+	font-size: 12px;
+    height: 18px;
+
 }
 .customer-search .list-group-item-label{
 	float:left;
