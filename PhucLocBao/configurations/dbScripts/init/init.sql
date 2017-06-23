@@ -58,6 +58,7 @@ use c43phuclocbao;
         customerDebt double precision,
         payoffDate datetime,
         company_id integer,
+        isBad varchar(1),
         primary key (id)
     );
 

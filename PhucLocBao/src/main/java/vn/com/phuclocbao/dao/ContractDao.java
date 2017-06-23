@@ -22,4 +22,6 @@ public interface ContractDao {
 	public Double sumContractValueByStatusAndCompanyId(ContractStatusType state, Integer id) throws BusinessException;
 	public Long countContractByCompanyId(Integer companyId) throws BusinessException;
 	public int updateBadContract(Integer companyId) throws BusinessException;
+	public List<Integer> getAllUsedToBadContractIds() throws BusinessException;
+	public List<Integer> getUsedToBadContractIdsByCompany(Integer companyId) throws BusinessException;
 }

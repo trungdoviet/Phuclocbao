@@ -38,6 +38,7 @@ public class ContractDto implements IBaseDTO {
 	private java.lang.Double companyDebt;
 	private java.lang.Double customerDebt;
 	private java.util.List<PaymentHistoryDto> histories;
+	private String isBad;
 	private transient Long totalContractDays;
 	private transient Long totalLateDays;
 	private transient Double totalUnpaidFee;
@@ -356,5 +357,11 @@ public class ContractDto implements IBaseDTO {
 
 	public void setTotalContractDays(Long totalContractDays) {
 		this.totalContractDays = totalContractDays;
+	}
+	public String getIsBad() {
+		return isBad;
+	}
+	public void setIsBad(String isBad) {
+		this.isBad = isBad;
 	}
 }

@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import vn.com.phuclocbao.dto.ContractDto;
 import vn.com.phuclocbao.dto.CustomerDto;
@@ -20,7 +21,9 @@ import vn.com.phuclocbao.entity.TransportOwner;
 import vn.com.phuclocbao.enums.ContractStatusType;
 import vn.com.phuclocbao.enums.ContractType;
 import vn.com.phuclocbao.exception.BusinessException;
+import vn.com.phuclocbao.exception.errorcode.PLBErrorCode;
 import vn.com.phuclocbao.service.VietnamCityService;
+import vn.com.phuclocbao.util.ConstantVariable;
 import vn.com.phuclocbao.util.DateTimeUtil;
 import vn.com.phuclocbao.util.LambdaExceptionUtil;
 import vn.com.phuclocbao.view.ContractView;
@@ -76,6 +79,7 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 		entity.setCustomer(new Customer());
 		entity.setOwner(new TransportOwner());
 		entity.setPaymentSchedules(new HashSet<>());
+		entity.setIsBad(ConstantVariable.NO_OPTION);
 		entity.setCustomer(CustomerConverter.getInstance().toEntity(dto.getCustomer(), entity.getCustomer(),"id"));
 		entity.setOwner(TransportOwnerConverter.getInstance().toEntity(dto.getOwner(), entity.getOwner(),"id"));
 		entity.setPaymentSchedules(PaymentScheduleConverter.getInstance().toEntities(dto.getPaymentSchedules(),"id"));
@@ -125,6 +129,11 @@ public class ContractConverter extends BaseConverter<ContractDto, Contract>{
 	
 	public Contract updateContractInPayOffTime(ContractDto dto, Contract entity) throws BusinessException {
 		updateContract(dto, entity);
+		if(StringUtils.equalsIgnoreCase(ContractStatusType.BAD.getName(), entity.getState())){
+			entity.setIsBad(ConstantVariable.YES_OPTION);
+		} else {
+			entity.setIsBad(ConstantVariable.NO_OPTION);
+		}
 		entity.setState(ContractStatusType.FINISH.getName());
 		entity.setPayoffDate(dto.getPayoffDate());
 		entity.setCustomerDebt(dto.getCustomerDebt());

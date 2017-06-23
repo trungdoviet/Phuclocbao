@@ -1250,6 +1250,7 @@ function sendProfitDetailAjax(companyId, year, month){
 				$("#totalRunningContractInDateRange").text(ctr_formatNumeric(data.monthlyProfitDetail.totalRunningContractInDateRange) +" VNĐ");
 				$("#totalTakeOffRefund").text(ctr_formatNumeric(data.monthlyProfitDetail.totalTakeOffRefund) +" VNĐ");
 				$("#totalProfit").text(ctr_formatNumeric(data.monthlyProfitDetail.totalProfit) +" VNĐ");
+				$("#totalRefundingForCompanyOfBadContract").text(ctr_formatNumeric(data.monthlyProfitDetail.totalRefundingOfBadContract) +" VNĐ");
 				$('#monthlyProfit').modal("show");	
 				
 			} else {

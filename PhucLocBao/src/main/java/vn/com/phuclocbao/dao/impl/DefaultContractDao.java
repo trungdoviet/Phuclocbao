@@ -110,4 +110,15 @@ public class DefaultContractDao extends BaseDaoJpaImpl<Contract, Integer> implem
 		}
 		return ((Number)result).doubleValue();
 	}
+	@Override
+	public List<Integer> getAllUsedToBadContractIds() throws BusinessException {
+		TypedQuery<Integer> query = getEm().createNamedQuery("Contract_getAllUsedToBadContractId", Integer.class);
+		return query.getResultList();
+	}
+	@Override
+	public List<Integer> getUsedToBadContractIdsByCompany(Integer companyId) throws BusinessException {
+		TypedQuery<Integer> query = getEm().createNamedQuery("Contract_getUsedToBadContractIdByCompanyId", Integer.class);
+		query.setParameter("companyId", companyId);
+		return query.getResultList();
+	}
 }

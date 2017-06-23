@@ -1,5 +1,6 @@
 package vn.com.phuclocbao.entity;
 
+import javax.persistence.Column;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
@@ -11,6 +12,8 @@ import vn.com.phuclocbao.entity.base.IBaseEntity;
 @javax.persistence.Table(name = "tblContract")
 @NamedQueries({
 		@NamedQuery(name = "Contract_getContractByStatusAndCompany", query = "SELECT DISTINCT contract FROM Contract contract WHERE contract.state LIKE :contractState AND contract.company.id = :companyId"),
+		@NamedQuery(name = "Contract_getAllUsedToBadContractId", query = "SELECT DISTINCT contract.id FROM Contract contract WHERE contract.isBad LIKE 'Y'"),
+		@NamedQuery(name = "Contract_getUsedToBadContractIdByCompanyId", query = "SELECT DISTINCT contract.id FROM Contract contract WHERE contract.isBad LIKE 'Y' AND contract.company.id = :companyId"),
 		@NamedQuery(name = "Contract_getContractByIdAndCompany", query = "SELECT DISTINCT contract FROM Contract contract WHERE contract.id = :contractId AND contract.company.id = :companyId"),
 		@NamedQuery(name = "Contract_countContractByStatusAndCompanyAndCustomerName", query = "SELECT DISTINCT contract FROM Contract contract WHERE contract.state LIKE :contractState AND contract.company.id = :companyId AND contract.customer.name LIKE :customerName"),
 		@NamedQuery(name = "Contract_getContractByDateAndcompanyId", query = "SELECT DISTINCT contract FROM Contract contract LEFT OUTER JOIN contract.paymentSchedules ps WHERE contract.company.id = :companyId and contract.state= :contractState AND ((ps.notifiedDate <= :inputDate AND ps.finish='N') OR contract.expireDate <= :inputDate)"),
@@ -52,6 +55,8 @@ public class Contract implements IBaseEntity {
 	private java.lang.String note;
 	@javax.persistence.Column(nullable = false)
 	private java.lang.String contractType;
+	@Column(nullable=true)
+	private String isBad;
 	@javax.persistence.OneToOne(cascade = {javax.persistence.CascadeType.ALL }, fetch = javax.persistence.FetchType.EAGER, optional = false, mappedBy = "contract", orphanRemoval = true)
 	private vn.com.phuclocbao.entity.Customer customer;
 	@javax.persistence.OneToOne(cascade = {javax.persistence.CascadeType.ALL }, fetch = javax.persistence.FetchType.EAGER, mappedBy = "contract", orphanRemoval = true)
@@ -377,5 +382,11 @@ public class Contract implements IBaseEntity {
 		paymentSchedules = _paymentSchedules;
 	}
 
-	
+	public String getIsBad() {
+		return isBad;
+	}
+
+	public void setIsBad(String isBad) {
+		this.isBad = isBad;
+	}
 }

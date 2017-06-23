@@ -29,6 +29,8 @@ public class MonthlyProfitDetail {
 	private Double totalRunningContractInDateRange;
 	@JsonView(Views.ProfitStatistic.class)
 	private Double totalTakeOffRefund;
+	@JsonView(Views.ProfitStatistic.class)
+	private Double totalRefundingOfBadContract;
 	
 	public MonthlyProfitDetail(){
 		totalContractAmount = 0D;
@@ -44,6 +46,7 @@ public class MonthlyProfitDetail {
 		totalProfit = 0D;
 		totalRunningContractInDateRange = 0D;
 		totalTakeOffRefund = 0D;
+		totalRefundingOfBadContract = 0D;
 	}
 	
 
@@ -52,6 +55,14 @@ public class MonthlyProfitDetail {
 	}
 
 
+	public Double getTotalRefundingOfBadContract() {
+		return totalRefundingOfBadContract;
+	}
+
+
+	public void setTotalRefundingOfBadContract(Double totalRefundingOfBadContract) {
+		this.totalRefundingOfBadContract = totalRefundingOfBadContract;
+	}
 
 
 	public void setTotalTakeOffRefund(Double totalTakeOffRefund) {

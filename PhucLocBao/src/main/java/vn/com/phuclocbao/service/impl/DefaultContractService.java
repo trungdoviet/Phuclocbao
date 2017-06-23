@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import vn.com.phuclocbao.bean.MonthlyProfitDetail;
 import vn.com.phuclocbao.bean.StatisticInfo;
 import vn.com.phuclocbao.converter.ContractConverter;
@@ -713,7 +714,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 				view.setTotalNotification(totalNotificationToDay);
 				view.setStatistic(new StatisticInfo());
 				int currentYear = view.getStatistic().getYear();
-				view.getStatistic().setCompanyId(companyId);
+				view.getStatistic().setCompanyId(companyId); 
 				buildProfitStatistic(companyId, view.getStatistic(), currentYear);
 				return view;
 			}
@@ -724,11 +725,12 @@ public class DefaultContractService extends BaseService implements ContractServi
 	private StatisticInfo buildProfitStatistic(Integer companyId, StatisticInfo statistic, int currentYear)
 			throws BusinessException {
 		List<PaymentHistory> payments =paymentHistoryDao.getHistoriesInDateRange(companyId, DateTimeUtil.getFirstDateOfYear(currentYear), DateTimeUtil.getFirstDateOfYear(currentYear+1), StringUtils.EMPTY);
-		buildPaymentStatisticForCompany(statistic, payments);
+		List<Integer> usedToBadContractIdsByCompany = contractDao.getUsedToBadContractIdsByCompany(companyId);
+		buildPaymentStatisticForCompany(statistic, payments, usedToBadContractIdsByCompany);
 		return statistic;
 	}
 	
-	private void buildPaymentStatisticForCompany(StatisticInfo statistic, List<PaymentHistory> payments) {
+	private void buildPaymentStatisticForCompany(StatisticInfo statistic, List<PaymentHistory> payments, List<Integer> usedToBadContractIds) {
 		if(CollectionUtils.isNotEmpty(payments)){
 				//collect cost= renting new +other cost
 				payments.stream()
@@ -807,7 +809,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 			    });
 				
 				payments.stream()
-				.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.REFUNDING_FOR_COMPANY.getType()) )
+				.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.REFUNDING_FOR_COMPANY.getType()) && !isMarkedBadContract( usedToBadContractIds, item.getContractId()))
 				.collect(Collectors.groupingBy(
 						PaymentHistory::getLogMonth, Collectors.summingDouble(PaymentHistory::getFee)	
 				)).entrySet().stream().sorted((o1,o2) -> o1.getKey().compareTo(o2.getKey())).forEachOrdered(item->{
@@ -879,6 +881,12 @@ public class DefaultContractService extends BaseService implements ContractServi
 		return Math.round( (item /1000000) * 100.0 ) / 100.0;
 	}
 	
+	private boolean isMarkedBadContract(List<Integer> usedToBeBadContractIds, Integer contractId){
+		if(CollectionUtils.isNotEmpty(usedToBeBadContractIds)){
+			return usedToBeBadContractIds.stream().filter(item -> item.intValue() == contractId.intValue()).findFirst().isPresent();
+		}
+		return false;
+	}
 	
 	@Override
 	public StatisticInfo collectProfitStatistic(Integer companyId, int year) throws BusinessException {
@@ -966,13 +974,14 @@ public class DefaultContractService extends BaseService implements ContractServi
 			@Override
 			public List<StatisticInfo> execute() throws BusinessException, ClassNotFoundException, IOException {
 				List<PaymentHistory> payments = paymentHistoryDao.getHistoriesInDateRangeAllCompany(DateTimeUtil.getFirstDateOfYear(currentYear), DateTimeUtil.getFirstDateOfYear(currentYear+1));
+				List<Integer> contractUsedToBeBad = contractDao.getAllUsedToBadContractIds();
 				List<StatisticInfo> result = new ArrayList<>();
 				if(CollectionUtils.isNotEmpty(payments)){
 					Map<Integer, List<PaymentHistory>> paymentByCompany = payments.stream().collect(Collectors.groupingBy(PaymentHistory::getCompanyId));
 					paymentByCompany.forEach((k,v) -> {
 						StatisticInfo stat = new StatisticInfo();
 						stat.setCompanyId(k);
-						buildPaymentStatisticForCompany(stat, v);
+						buildPaymentStatisticForCompany(stat, v, contractUsedToBeBad);
 						Double totalProfit = stat.getProfitByMonth().stream().reduce(0D, (x,y) -> x+y);
 						Double totalCost = stat.getRentingCostByMonth().stream().reduce(0D, (x,y) -> x+y);
 						stat.getProfitByMonth().add(Math.round( (totalProfit) * 100.0 ) / 100.0);
@@ -1028,7 +1037,7 @@ public class DefaultContractService extends BaseService implements ContractServi
 				Double totalRunningContractValueInCurrentDateRange = contractDao.sumContractByDateRangeAndStatusAndCompanyId(ContractStatusType.IN_PROGRESS, companyId, endDate, startDate);
 				detail.setTotalRunningContractInDateRange(totalRunningContractValueInCurrentDateRange);
 				List<PaymentHistory> monthlyHistories = paymentHistoryDao.getHistoriesInDateRange(companyId, startDate, endDate, StringUtils.EMPTY);
-				
+				List<Integer> usedToBadContractIdsByCompany = contractDao.getUsedToBadContractIdsByCompany(companyId);
 				if(CollectionUtils.isNotEmpty(monthlyHistories)){
 					//revenue
 					Double totalRentingCost = monthlyHistories.stream()
@@ -1050,9 +1059,14 @@ public class DefaultContractService extends BaseService implements ContractServi
 							.collect(Collectors.summingDouble(PaymentHistory::getFee));
 					
 					Double totalRefundingForCompany = monthlyHistories.stream()
-							.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.REFUNDING_FOR_COMPANY.getType()))
+							.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.REFUNDING_FOR_COMPANY.getType()) && !isMarkedBadContract(usedToBadContractIdsByCompany, item.getContractId()))
 							.collect(Collectors.summingDouble(PaymentHistory::getFee));
 					
+					Double totalRefundingForCompanyOfBadContract = monthlyHistories.stream()
+							.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.REFUNDING_FOR_COMPANY.getType()) && isMarkedBadContract(usedToBadContractIdsByCompany, item.getContractId()))
+							.collect(Collectors.summingDouble(PaymentHistory::getFee));
+					detail.setTotalRefundingOfBadContract(totalRefundingForCompanyOfBadContract);
+
 					Double totalRefundingForCustomer = monthlyHistories.stream()
 							.filter(item -> item.getHistoryType().equalsIgnoreCase(PaymentHistoryType.REFUNDING_FOR_CUSTOMER.getType()))
 							.collect(Collectors.summingDouble(PaymentHistory::getFee));
@@ -1105,5 +1119,5 @@ public class DefaultContractService extends BaseService implements ContractServi
 	private double roundUp(Double amount) {
 		return Math.round( (amount) * 100.0 ) / 100.0;
 	}
-	
+
 }
